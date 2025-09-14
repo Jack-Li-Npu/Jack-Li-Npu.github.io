@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>数据建模 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>数据建模</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2021/12/13
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                数据建模
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" style="color: #00a596">
+                    数据建模
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="1-数据预处理"><a href="#1-数据预处理" class="headerlink" title="1. 数据预处理"></a>1. 数据预处理</h2><h3 id="（1）数据清洗"><a href="#（1）数据清洗" class="headerlink" title="（1）数据清洗"></a>（1）数据清洗</h3><h4 id="1-1-缺失值处理"><a href="#1-1-缺失值处理" class="headerlink" title="1.1 缺失值处理"></a>1.1 缺失值处理</h4><h4 id="1-2-异常值处理"><a href="#1-2-异常值处理" class="headerlink" title="1.2 异常值处理"></a>1.2 异常值处理</h4><h4 id="1-3-数据规约"><a href="#1-3-数据规约" class="headerlink" title="1.3 数据规约"></a>1.3 数据规约</h4><h4 id="1-4-数据变换"><a href="#1-4-数据变换" class="headerlink" title="1.4 数据变换"></a>1.4 数据变换</h4><h2 id="1-数据分析"><a href="#1-数据分析" class="headerlink" title="1. 数据分析"></a>1. 数据分析</h2><h3 id="（1）初步分析"><a href="#（1）初步分析" class="headerlink" title="（1）初步分析"></a>（1）初步分析</h3><h5 id="查看样例数据"><a href="#查看样例数据" class="headerlink" title="查看样例数据"></a>查看样例数据</h5><p>data.head(5)</p>
+<h5 id="查看形状"><a href="#查看形状" class="headerlink" title="查看形状"></a>查看形状</h5><p>data.shape()</p>
+<h3 id="（2）质量分析"><a href="#（2）质量分析" class="headerlink" title="（2）质量分析"></a>（2）质量分析</h3><h5 id="判断唯一索引是否有重复值"><a href="#判断唯一索引是否有重复值" class="headerlink" title="判断唯一索引是否有重复值"></a>判断唯一索引是否有重复值</h5><p>data[‘ . ‘].nunique() &#x3D;&#x3D; data.shape[0]</p>
+<h5 id="缺失值检验"><a href="#缺失值检验" class="headerlink" title="缺失值检验"></a>缺失值检验</h5><p>data.isnull().sum()</p>
+<h5 id="异常值检测"><a href="#异常值检测" class="headerlink" title="异常值检测"></a>异常值检测</h5><p>​	打印各个属性的直方图</p>
+<pre><code class="language-python">sns.set()
+for col in cols:
+    statistic = data.describe()
+    plt.figure(figsize=(6,6))
+    sns.hisplot(data[col], kde=True) # kde核密度曲线，若与直方图走向一致则说明没有异常值
+    plt.title...
+    plt.show()
+</code></pre>
+<h5 id="规律一致性检测"><a href="#规律一致性检测" class="headerlink" title="规律一致性检测"></a>规律一致性检测</h5><p>对于单变量且离散数据，可以用以下的方法进行简要判断</p>
+<p>​	判断train表与test表是否出自同一分布</p>
+<pre><code class="language-python">train_count = train.shape[0]
+test_count = test.shape[0]
+features = [&#39;Pclass&#39;, &#39;Sex&#39;, &#39;Age&#39;, &#39;SibSp&#39;, &#39;Parch&#39;, &#39;Fare&#39;, &#39;Cabin&#39;, &#39;Embarked&#39;]
+
+i = 1
+plt.figure(figsize=(18, 18))
+for feature in features:
+    plt.subplot(3, 3, i)
+    (train[feature].value_counts().sort_index()/train_count).plot()
+    (test[feature].value_counts().sort_index()/test_count).plot()
+    plt.legend([&#39;train&#39;, &#39;test&#39;])
+    plt.xlabel(feature)
+    plt.ylabel(&#39;radio&#39;)
+    plt.show
+    i+=1
+</code></pre>
+<p>同时还可以进行多变量联合分布</p>
+<p>指的是将离散变量两两组合，然后查看这个新变量的相对占比分布。例如特征1有0&#x2F;1两个取值水平，特征2有A&#x2F;B两个取值水平，则联合分布中就将存在0A、0B、1A、1B四种不同取值水平，然后进一步查看这四种不同取值水平出现的分布情况。</p>
+<pre><code class="language-python">def combine_feature(df):
+    cols = df.columns
+    feature1 = df[cols[0]].astype(str).values.tolist()
+    feature2 = df[cols[1]].astype(str).values.tolist()
+    return pd.Series([feature1[i]+&#39;&amp;&#39;+feature2[i] for i in range(df.shape[0])])
+
+cols = [features[0], features[1]]
+
+# 查看合并后结果
+train_com = combine_feature(train[cols])
+
+train_dis = train_com.value_counts().sort_index()/train_count
+test_dis = combine_feature(test[cols]).value_counts().sort_index()/test_count
+
+# 创建新的index
+index_dis = pd.Series(train_dis.index.tolist() + test_dis.index.tolist()).drop_duplicates().sort_values()
+
+# 对缺失值填补为0
+(index_dis.map(train_dis).fillna(0)).plot()
+(index_dis.map(train_dis).fillna(0)).plot()
+
+# 绘图
+plt.legend([&#39;train&#39;,&#39;test&#39;])
+plt.xlabel(&#39;&amp;&#39;.join(cols))
+plt.ylabel(&#39;ratio&#39;)
+plt.show()
+</code></pre>
+<h2 id="2-数据预处理"><a href="#2-数据预处理" class="headerlink" title="2. 数据预处理"></a>2. 数据预处理</h2><h3 id="（1）缺失值填充"><a href="#（1）缺失值填充" class="headerlink" title="（1）缺失值填充"></a>（1）缺失值填充</h3><p>分别依据情况将缺失值填充为均值或众数（对于离散型数据）或前向后向值（对于连续型数据）</p>
+<pre><code class="language-python">data[col] = data[col].fillna(data[col].mean()/data[col].mode()[0])
+
+data[col].ffill(inplcae=True)# 前向填充
+data[col].bfill(inplace=True)# 后向填充
+</code></pre>
+<h3 id="（2）将object类型转换为字典编码"><a href="#（2）将object类型转换为字典编码" class="headerlink" title="（2）将object类型转换为字典编码"></a>（2）将object类型转换为字典编码</h3><p>data.info()查看数据类型</p>
+<pre><code class="language-python">def change_object_cols(se):
+    # 1. 获取该列的唯一值，并转成列表
+    value = se.unique().tolist()
+    
+    # 2. 对唯一值排序，保证编码的顺序固定（从小到大）
+    value.sort()
+    
+    # 3. 构造一个映射表：唯一值 → 数字索引
+    #    例如：[&#39;C&#39;, &#39;Q&#39;, &#39;S&#39;] → &#123; &#39;C&#39;:0, &#39;Q&#39;:1, &#39;S&#39;:2 &#125;
+    mapping = pd.Series(range(len(value)), index=value)
+    
+    # 4. 将原始序列 se 映射成数值序列
+    return se.map(mapping).values
+
+
+for col in cols:
+    data[col] = change_object_cols(col)
+</code></pre>
+<h2 id="3-特征工程"><a href="#3-特征工程" class="headerlink" title="3. 特征工程"></a>3. 特征工程</h2><h3 id="（1）确定离散、连续变量"><a href="#（1）确定离散、连续变量" class="headerlink" title="（1）确定离散、连续变量"></a>（1）确定离散、连续变量</h3><p>这是个很好的问题 👍。在 Kaggle 这种建模比赛里，区分 <strong>离散字段（categorical features）</strong> 和 <strong>连续字段（numerical features）</strong> 是特征工程的第一步，直接影响后续的编码方式、特征衍生、模型效果。一般的经验如下：</p>
+<hr>
+<ol>
+<li><strong>离散字段（Categorical Features）的判定</strong></li>
+</ol>
+<p>常见特征类型：</p>
+<ul>
+<li><strong>字符串型</strong>：比如性别（Sex）、职业（job_title）。</li>
+<li><strong>整数型但取值有限</strong>：例如舱位等级（Pclass: 1&#x2F;2&#x2F;3）、星期几（1–7）、地区编号。</li>
+<li><strong>ID类特征</strong>：如 PassengerId、订单号，虽然是字符串&#x2F;数字，但每个取值都唯一 → 通常丢弃或转化为计数特征。</li>
+</ul>
+<p>📌 经验：</p>
+<ul>
+<li><strong>唯一值数量远小于样本数</strong>（如几种类别，而不是几千上万），基本都算离散变量。</li>
+<li><strong>整数型变量</strong>要小心，比如邮编、编号，它们表面是数字，其实是分类特征。</li>
+<li><strong>高基数特征</strong>（类别数太多）：<ul>
+<li>可以尝试 <strong>频率编码（frequency encoding）</strong></li>
+<li>或 <strong>target encoding &#x2F; mean encoding</strong>（比赛里常用，但要注意泄露，要交叉验证编码）</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ol start="2">
+<li><strong>连续字段（Numerical Features）的判定</strong></li>
+</ol>
+<p>常见特征类型：</p>
+<ul>
+<li><strong>实数型</strong>：身高、体重、金额、时间差。</li>
+<li><strong>取值范围大且近似连续的整数</strong>：年龄（0–100）、乘客数量、房价。</li>
+</ul>
+<p>📌 经验：</p>
+<ul>
+<li>数值的大小 <strong>有顺序且差值有意义</strong>（例如价格 100 和 200 相差一倍） → 连续特征。</li>
+<li>对于这些特征，常用的处理包括：<ul>
+<li>标准化（StandardScaler）、归一化（MinMaxScaler）</li>
+<li>分箱（binning），转化为类别 → 提高树模型稳定性</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ol start="3">
+<li><strong>混合情况（容易误判的字段）</strong></li>
+</ol>
+<ul>
+<li><strong>Age（年龄）</strong>：是连续的，但可以尝试分箱（儿童&#x2F;青年&#x2F;中年&#x2F;老年），当做离散变量。</li>
+<li><strong>Fare（票价）</strong>：连续型，但分布通常长尾，可以对数化（log transform）。</li>
+<li><strong>Cabin（船舱号）</strong>：原始是字符串（离散），但如果只取首字母（A&#x2F;B&#x2F;C&#x2F;D&#x2F;E&#x2F;F），相当于类别。</li>
+</ul>
+<p>📌 Kaggle 常见技巧：</p>
+<ul>
+<li><strong>连续变量离散化</strong>（binning）后有时比直接用效果更好，尤其在树模型中。</li>
+<li>同一个特征既保留原始数值，又加一个分箱类别特征，让模型自己选择。</li>
+</ul>
+<hr>
+<ol start="4">
+<li><strong>比赛经验总结</strong></li>
+</ol>
+<ul>
+<li><strong>EDA（探索性数据分析）优先</strong>：先用 <code>describe()</code>、<code>value_counts()</code>、直方图、箱线图，直观判断分布。</li>
+<li><strong>看唯一值个数（nunique）</strong>：<ul>
+<li>nunique ≪ 样本数 → 倾向离散</li>
+<li>nunique ≈ 样本数 → 可能是 ID，直接舍弃或做 count encoding</li>
+</ul>
+</li>
+<li><strong>树模型 vs 线性模型的不同</strong>：<ul>
+<li>树模型（LightGBM、XGBoost、CatBoost）：不太怕离散编码（甚至 CatBoost 可以直接处理类别）。</li>
+<li>线性模型、神经网络：更依赖标准化和 One-Hot。</li>
+</ul>
+</li>
+<li><strong>比赛 Top 选手习惯</strong>：同一个特征会做多种处理方式（原始连续 &#x2F; 分箱类别 &#x2F; 平滑编码），让模型选择。</li>
+</ul>
+<hr>
+<p>✅ <strong>一句话经验</strong>：</p>
+<ul>
+<li>“值的大小有顺序和间距意义 → 连续特征”</li>
+<li>“值只是标签、没有数值含义 → 离散特征”</li>
+<li>模型前期：多做几种处理方式（连续 &#x2F; 离散化 &#x2F; target encoding），交给模型和 CV 去筛选。</li>
+</ul>
+<h3 id="（2）连续变量处理："><a href="#（2）连续变量处理：" class="headerlink" title="（2）连续变量处理："></a>（2）连续变量处理：</h3><h4 id="无穷值处理："><a href="#无穷值处理：" class="headerlink" title="无穷值处理："></a>无穷值处理：</h4><p>天花板盖帽法：即将inf改为最大的显式数值</p>
+<pre><code class="language-python">inf_cols = [&#39;avg_purchases_lag3&#39;, &#39;avg_purchases_lag6&#39;, &#39;avg_purchases_lag12&#39;]
+merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].replace(np.inf, -99).max().max())
+</code></pre>
+<p>整体流程</p>
+<ol>
+<li>拿到数据及其对应的解释，划分连续型字段与离散型字段，重点关注object类型，是否存在时序类型、文本类型字段</li>
+<li>正确性校验：是否unique</li>
+<li>特征变化：连续变量：考虑是否归一化、分箱，离散型变量：考虑是否要独热编码、自然数编码</li>
+<li>考虑缺失值：（1）numpy.NAN；（2）none；（3）特殊缺失值：空格（可能会被识别转换成字符串）——&gt;业务方面的判断。</li>
+</ol>
+<p>用均值、众数、预测值进行填充。或者可以先用特殊字符代表，比如说离散性数据进行独热编码后可以用-1表示缺失值</p>
+<ol start="5">
+<li>异常值分析：识别方式：（1）三倍标准差（对于趋近于标准正态分布的数据）、（2）箱线图法；处理方法：（1）天花板盖帽法；（2）单独识别异常值为某一类</li>
+</ol>
+<p>特征工程：</p>
+<p>（2）根据业务进行扩展：eg：金额连续型——&gt;均值、总额、方差、偏度、离散型——&gt;众数…</p>
+<p>根据业务含义划分离散字段category_cols与连续字段numeric_cols。</p>
+<p>对非数值型的离散字段进行字典排序编码。</p>
+<p>为了能够更方便统计，进行缺失值的处理，对离散字段统一用-1进行填充。</p>
+<p>对离散型字段探查发现有正无穷值，这是特征提取以及模型所不能接受的，因此需要对无限值进行处理，此处采用最大值进行替换。</p>
+<p>去除与transaction交易记录表格重复的列，以及merchant_id的重复记录。</p>
+<p>特征工程</p>
+<p>通过特征工程新建了很多特征，包含了一些冗余、稀疏特征，虽然最终选用树模型时都可以筛选出最有效的特征，但是过多的特征会影响到建模的效率。因此需要我们提前进行特征筛选，根据与标签相关性初筛出特征。</p>
+<p>初筛：<br>Filter相关系数特征筛选方法</p>
+<p>使用corr，得出前300个特征</p>
+<p>模型训练需要与超参数的选定过程绑定在一起（使模型具有一定的泛化能力）</p>
+<p><strong>Filter 特征筛选</strong>：通过统计指标（相关性、卡方检验、互信息等）先对原始特征进行“粗筛”，去掉明显无关或冗余的特征。</p>
+<p><strong>随机森林建模</strong>：用筛选后的特征训练一个随机森林模型，得到基准性能。</p>
+<p><strong>网格搜索调优</strong>：在筛选后的特征集上，用交叉验证和网格搜索寻找随机森林的最佳超参数组合。</p>
+<p>Wrapper方法</p>
+<p><strong>Wrapper 特征筛选</strong>：利用模型性能作为评价标准，逐步选择或剔除特征（例如递归特征消除 RFE）。</p>
+<p><strong>LightGBM 建模</strong>：用筛选出的特征训练 LightGBM 模型，作为基准模型。</p>
+<p><strong>TPE 调优</strong>：通过贝叶斯优化（TPE 算法）高效搜索 LightGBM 的超参数，提升性能。</p>
+<p>使用tpe调优前，最好先用warpper方法训练一次lgb先</p>
+<p><strong>Voting 是一种固定规则的集成方法，通过对多个基模型的预测结果直接做多数投票（分类）或平均（回归）来得到最终输出；而 Stacking 则是更灵活的堆叠方法，它把多个基模型的预测结果作为新的特征，再训练一个“元学习器”去自动学习最优的加权组合方式，从而通常能比简单投票获得更强的泛化性能。</strong></p>
+<p>Stacking流程：在第一层训练过程中，每一个基模型经过5折交叉验证后会得到5个训练集上结果拼接成的验证集结果，以及5个测试集上的结果平均后的总测试集结果，之后在第二层学习过程中，所有基模型的验证集结果作为训练的x，目标是真实标签y，然后学习x的权重参数a，最终对所有基模型的总测试集结果应用学习完毕的权重a进行组合得到最终结果</p>
+<hr>
+<h4 id="🔹-第一层（基模型训练）"><a href="#🔹-第一层（基模型训练）" class="headerlink" title="🔹 第一层（基模型训练）"></a>🔹 第一层（基模型训练）</h4><ul>
+<li>每个基模型做 <strong>5 折交叉验证</strong>：<ul>
+<li><strong>训练集 OOF 预测</strong>：每一折的验证集预测拼接 → 得到完整的 OOF 预测结果（对应训练集所有样本）。</li>
+<li><strong>测试集预测</strong>：每一折在训练完毕后对测试集预测 → 5 次预测结果取平均，得到该基模型在测试集上的最终预测。</li>
+</ul>
+</li>
+</ul>
+<p>👉 输出：</p>
+<ul>
+<li><code>OOF_i</code>：基模型 i 的训练集预测（n 行 1 列）。</li>
+<li><code>Test_i</code>：基模型 i 的测试集预测（m 行 1 列）。</li>
+</ul>
+<hr>
+<h4 id="🔹-第二层（元学习器）"><a href="#🔹-第二层（元学习器）" class="headerlink" title="🔹 第二层（元学习器）"></a>🔹 第二层（元学习器）</h4><ul>
+<li><p><strong>输入特征 X</strong>：所有基模型的 OOF 拼接 → 维度 <code>(n, k)</code>，k 为基模型数量。</p>
+</li>
+<li><p><strong>目标 y</strong>：真实标签（n 行 1 列）。</p>
+</li>
+<li><p><strong>训练</strong>：用贝叶斯岭回归（或别的模型）学习一个函数：</p>
+<p>y^&#x3D;a1⋅OOF1+a2⋅OOF2+⋯+ak⋅OOFk+b\hat{y} &#x3D; a_1 \cdot OOF_1 + a_2 \cdot OOF_2 + \dots + a_k \cdot OOF_k + b</p>
+</li>
+</ul>
+<p>👉 元学习器本质上是在学习一组 <strong>权重参数 a</strong>，告诉我们“每个基模型在最终预测中该占多大比重”。</p>
+<hr>
+<h4 id="🔹-最终预测"><a href="#🔹-最终预测" class="headerlink" title="🔹 最终预测"></a>🔹 最终预测</h4><ul>
+<li><p>把学习到的权重 a 应用到测试集的预测：</p>
+<p>y^test&#x3D;a1⋅Test1+a2⋅Test2+⋯+ak⋅Testk+b\hat{y}_{test} &#x3D; a_1 \cdot Test_1 + a_2 \cdot Test_2 + \dots + a_k \cdot Test_k + b</p>
+</li>
+</ul>
+<p>👉 最终结果就是 <strong>测试集上各基模型预测结果的加权组合</strong>。</p>
+<p>交叉验证（Cross Validation，简称 CV）是一种常用的模型评估方法，用来检验机器学习模型在<strong>未见过的数据上的泛化能力</strong>。它的核心思想是：把已有的数据集划分成多个部分，轮流用其中一部分做验证集，剩余部分做训练集，最终综合评估结果。</p>
+<hr>
+<h4 id="为什么需要交叉验证？"><a href="#为什么需要交叉验证？" class="headerlink" title="为什么需要交叉验证？"></a>为什么需要交叉验证？</h4><p>如果只用一次<strong>训练集 &#x2F; 测试集划分</strong>来评估模型，结果可能会受到划分方式的偶然性影响（比如某次划分刚好测试集比较难）。交叉验证通过多次划分并取平均，可以更稳定地反映模型的真实性能。</p>
+<hr>
+<h4 id="常见的交叉验证方法"><a href="#常见的交叉验证方法" class="headerlink" title="常见的交叉验证方法"></a>常见的交叉验证方法</h4><ol>
+<li><strong>k 折交叉验证（k-Fold CV）</strong><ul>
+<li>将数据集平均分成 k 份。</li>
+<li>每次用其中 1 份作为验证集，剩下 k-1 份作为训练集。</li>
+<li>重复 k 次，得到 k 个结果，取平均值作为最终性能。</li>
+<li>常见选择：k &#x3D; 5 或 10。</li>
+</ul>
+</li>
+<li><strong>留一交叉验证（LOOCV, Leave-One-Out CV）</strong><ul>
+<li>特殊情况：k 等于样本数。</li>
+<li>每次只留 1 个样本做验证，其余作为训练。</li>
+<li>计算量大，但对小样本数据很有用。</li>
+</ul>
+</li>
+<li><strong>分层交叉验证（Stratified k-Fold CV）</strong><ul>
+<li>用于分类问题。</li>
+<li>保证每折中的类别比例与整体数据集一致，避免某些类别在某折中消失。</li>
+</ul>
+</li>
+<li><strong>重复交叉验证（Repeated k-Fold CV）</strong><ul>
+<li>在 k 折交叉验证的基础上，重复多次（每次随机划分）。</li>
+<li>可以进一步降低划分的偶然性。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="交叉验证的优点"><a href="#交叉验证的优点" class="headerlink" title="交叉验证的优点"></a>交叉验证的优点</h4><ul>
+<li>更稳定和可靠的性能估计。</li>
+<li>避免单次划分可能造成的高估或低估。</li>
+<li>在样本较少时能更充分利用数据。</li>
+</ul>
+<hr>
+<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>假设有 100 条数据，采用 <strong>5 折交叉验证</strong>：</p>
+<ul>
+<li>第一次：第 1–20 条做验证，21–100 条做训练。</li>
+<li>第二次：第 21–40 条做验证，其他做训练。</li>
+<li>…依此类推，总共 5 次。<br> 最后取 5 次验证结果的平均作为模型最终得分。</li>
+</ul>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>

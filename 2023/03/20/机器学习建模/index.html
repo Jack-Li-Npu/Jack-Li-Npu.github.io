@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>机器学习建模 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>机器学习建模</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/3/20
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                    机器学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id="机器学习建模"><a href="#机器学习建模" class="headerlink" title="机器学习建模"></a>机器学习建模</h2><h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><h3 id="1-信息熵-Entropy"><a href="#1-信息熵-Entropy" class="headerlink" title="1. 信息熵 (Entropy)"></a><strong>1. 信息熵 (Entropy)</strong></h3><p>衡量一个系统（数据集）中不确定性的大小。</p>
+<p>公式：</p>
+<p>$H(X) &#x3D; - \sum_{i&#x3D;1}^n p_i \log_2 p_i$</p>
+<p>其中，$p_i $表示随机变量 X 取第 i 类的概率。</p>
+<p>作用：当类别分布越均匀，熵越大；当分布越偏向单一类别，熵越小。</p>
+<hr>
+<h3 id="2-条件熵-Conditional-Entropy"><a href="#2-条件熵-Conditional-Entropy" class="headerlink" title="2. 条件熵 (Conditional Entropy)"></a>2. <strong>条件熵 (Conditional Entropy)</strong></h3><p>表示在已知特征 A 的情况下，类别 Y还剩多少不确定性。</p>
+<p>公式：</p>
+<p>$H(Y|A) &#x3D; \sum_{j&#x3D;1}^m p(a_j) H(Y|A&#x3D;a_j)$</p>
+<p>其中，$p(a_j)$ 是特征 A 取值为 $a_j $的概率，</p>
+<p>$H(Y|A&#x3D;a_j) &#x3D; -\sum_{i&#x3D;1}^n p(y_i|a_j) \log_2 p(y_i|a_j)$</p>
+<hr>
+<h3 id="3-信息增益-Information-Gain-IG"><a href="#3-信息增益-Information-Gain-IG" class="headerlink" title="3. 信息增益 (Information Gain, IG)"></a>3. <strong>信息增益 (Information Gain, IG)</strong></h3><p>衡量特征 A 带来的不确定性减少量，是决策树（ID3, C4.5）的核心。</p>
+<p>公式：</p>
+<p>$IG(Y, A) &#x3D; H(Y) - H(Y|A)$</p>
+<p>即原始信息熵减去条件熵，数值越大说明特征 A 越能有效区分样本。</p>
+<hr>
+<h3 id="4-基尼指数-Gini-Index"><a href="#4-基尼指数-Gini-Index" class="headerlink" title="4. 基尼指数 (Gini Index)"></a>4. <strong>基尼指数 (Gini Index)</strong></h3><p>另一种衡量数据纯度的方法（常用于 CART 决策树）。</p>
+<p>公式：</p>
+<p>$Gini(D) &#x3D; 1 - \sum_{i&#x3D;1}^n p_i^2$</p>
+<p>其中，$p_i $是第 i 类的概率。越小表示样本越“纯”。</p>
+<p>若用特征 A划分：</p>
+<p>$Gini(D, A) &#x3D; \sum_{j&#x3D;1}^m \frac{|D_j|}{|D|} Gini(D_j)$</p>
+<p>选择能最小化 Gini 的特征作为划分点。</p>
+<hr>
+<h3 id="5-在决策树中的作用"><a href="#5-在决策树中的作用" class="headerlink" title="5. 在决策树中的作用"></a>5. <strong>在决策树中的作用</strong></h3><ul>
+<li><strong>ID3 决策树</strong>：用 <strong>信息增益</strong> 最大的特征作为划分点。</li>
+<li><strong>C4.5 决策树</strong>：改进信息增益，使用 <strong>信息增益率</strong>。</li>
+<li><strong>CART 决策树</strong>：用 <strong>基尼指数最小</strong> 的特征作为划分点。</li>
+</ul>
+<hr>
+<h2 id="（1）决策树"><a href="#（1）决策树" class="headerlink" title="（1）决策树"></a>（1）决策树</h2><h3 id="1-ID3方法（分类任务）"><a href="#1-ID3方法（分类任务）" class="headerlink" title="1. ID3方法（分类任务）"></a>1. ID3方法（分类任务）</h3><ul>
+<li>输入数据集：算法接受一个已标记的数据集，其中包含一系列样本，每个样本都有一组特征和一个类别标签。</li>
+<li>特征选择：从所有可能的特征中选择一个最佳的特征来进行分割。这通常通过计算每个特征的信息增益（或信息熵）来完成。信息增益表示在选择某个特征后，数据集的不确定性减少的程度。信息增益高的特征被认为是最佳的选择。</li>
+<li>创建一个决策节点：将选定的特征用于创建一个决策节点，并将数据集分割成多个子集，每个子集对应于该特征的不同取值。</li>
+<li>递归操作：对每个子集重复上述步骤，直到满足停止条件。停止条件可以是以下之一：所有样本都属于同一类别，或者没有更多的特征可用于分割数据。</li>
+<li>构建决策树：最终，算法通过连接所有的决策节点来构建一个完整的决策树，其中叶节点表示最终的分类结果。</li>
+</ul>
+<h3 id="2-C4-5算法（分类任务）"><a href="#2-C4-5算法（分类任务）" class="headerlink" title="2. C4.5算法（分类任务）"></a>2. C4.5算法（分类任务）</h3><p>根据信息增益率进行特征选择，引入悲观剪枝策略进行后剪枝</p>
+<p>工作原理：</p>
+<p>特征选择：</p>
+<ul>
+<li>特征选择：与ID3类似，C4.5也通过计算特征的信息增益来选择最佳的特征进行分割。不过，C4.5引入了一个新的概念，称为”信息增益比”，以解决ID3在特征取值较多时的不公平问题。信息增益比考虑了特征取值的数量，从而更加公平地对待不同数量的取值。</li>
+<li>处理连续型特征：C4.5能够处理连续型特征，而不仅仅是离散型特征。它通过尝试不同的分割点来将连续特征离散化，并选择最佳的分割点以最大化信息增益或信息增益比。</li>
+<li>剪枝：C4.5引入了剪枝机制，以减小生成的决策树的复杂性，防止过拟合。剪枝是通过验证数据集来确定哪些子树可以被删除或保留的。这有助于生成更简单、更具泛化能力的决策树。</li>
+<li>处理缺失值：C4.5能够处理数据中的缺失值，允许在构建决策树时处理包含缺失数据的样本。</li>
+<li>生成决策树：通过递归地选择最佳特征、分割数据、剪枝等步骤，C4.5最终生成一个用于分类或回归的决策树。</li>
+</ul>
+<h3 id="3-CART算法（分类-回归任务）"><a href="#3-CART算法（分类-回归任务）" class="headerlink" title="3. CART算法（分类&#x2F;回归任务）"></a>3. CART算法（分类&#x2F;回归任务）</h3><p>基于二叉树，既可分类也可回归，使用基尼指数来进行特征选择</p>
+<p><strong>工作原理</strong>：</p>
+<ul>
+<li>二叉树结构：CART算法生成的决策树是二叉树结构，每个非叶子节点都有两个子节点。这意味着每个特征在每个节点处只进行一次二分分割，而不是多分割。</li>
+<li>特征选择：CART算法使用一种称为“Gini不纯度”（Gini impurity）的指标来选择最佳的特征进行分割。Gini不纯度度量了一个数据集中样本被错误分类的概率。算法选择能够最大程度地减小Gini不纯度的特征进行分割。</li>
+<li>处理连续型特征：CART能够处理连续型特征，它通过尝试不同的阈值来将连续特征二分化，并选择最佳的分割点。</li>
+<li>剪枝：CART算法也支持剪枝，以减小决策树的复杂性和防止过拟合。剪枝是通过验证数据集来确定哪些子树可以被删除或保留的。</li>
+<li>多分类和回归：CART算法不仅可以用于分类问题，还可以用于回归问题。对于分类问题，CART生成的树将每个叶节点标记为某个类别。对于回归问题，叶节点包含一个连续的数值。</li>
+</ul>
+<p>后剪枝与预剪枝</p>
+<p>预剪枝：在建树的过程中对每一次分裂都进行判断（使用验证集计算分裂后的回归预测正确率），若效果下降，则减去该分支</p>
+<p>后剪枝：建树后再自底向上逐一判断。。。</p>
+<h2 id="（2）LightGBM"><a href="#（2）LightGBM" class="headerlink" title="（2）LightGBM"></a>（2）LightGBM</h2><h2 id="（3）GBDT梯度提升决策树"><a href="#（3）GBDT梯度提升决策树" class="headerlink" title="（3）GBDT梯度提升决策树"></a>（3）GBDT梯度提升决策树</h2><p>为boosting的一种（在计算过程中串行），使用多个弱决策器（树）的结果累加而成。首先使用一棵树进行模糊回归预测，得到较大的残差（与真实值），然后训练另外一棵树对该残差进行拟合（即目标是找到合适的分裂节点，能使得该残差往最小的方向去），依次累加，最终使得残差为0。然后将所有弱决策器的回归预测累加而成记得GBDT的最终回归预测。</p>
+<blockquote>
+<p>更准确的回答：GBDT 是一种串行的梯度提升方法，使用多棵浅回归树作为基学习器。先用常数或一棵树得到初始预测；第 mmm 轮计算当前模型在训练集上的<strong>负梯度（伪残差）</strong>，训练一棵小回归树去拟合它；再在每个叶子上求使<strong>损失函数</strong>最小的叶值，并以学习率缩减后加到当前模型上。重复多轮，最终模型是各棵树输出的加和。在 L2 回归时，这等价于“逐轮拟合残差并累加”；在分类&#x2F;排序等任务中则拟合相应损失的梯度信号</p>
+</blockquote>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>

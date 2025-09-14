@@ -1,0 +1,572 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>Kaggle房价预测建模：Wrapper 特征选择与 LightGBM + TPE 超参数优化 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>Kaggle房价预测建模：Wrapper 特征选择与 LightGBM + TPE 超参数优化</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2022/9/8
+        </span>
+        
+        <span class="category">
+            <a href="/categories/Kaggle/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Kaggle
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/Kaggle/" style="color: #00bcd4">
+                    Kaggle
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+
+<h1 id="KAGGLE-房价预测建模：Wrapper-特征选择与-LightGBM-TPE-超参数优化"><a href="#KAGGLE-房价预测建模：Wrapper-特征选择与-LightGBM-TPE-超参数优化" class="headerlink" title="KAGGLE 房价预测建模：Wrapper 特征选择与 LightGBM + TPE 超参数优化"></a>KAGGLE 房价预测建模：Wrapper 特征选择与 LightGBM + TPE 超参数优化</h1><hr>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>在 Kaggle <strong>House Prices: Advanced Regression Techniques</strong> 比赛中，我们需要基于房屋的多维度特征（面积、位置、建造年份等）预测售价。本文展示了一个端到端的建模流程，核心方法包括：</p>
+<ul>
+<li><strong>缺失值合理填充（结合业务逻辑）</strong></li>
+<li><strong>Wrapper 特征选择</strong></li>
+<li><strong>LightGBM 模型训练</strong></li>
+<li><strong>TPE 超参数调优</strong></li>
+<li><strong>结果生成与提交</strong></li>
+</ul>
+<hr>
+<h2 id="2-数据分析与预处理"><a href="#2-数据分析与预处理" class="headerlink" title="2. 数据分析与预处理"></a>2. 数据分析与预处理</h2><h3 id="数据加载与探索"><a href="#数据加载与探索" class="headerlink" title="数据加载与探索"></a>数据加载与探索</h3><pre><code class="language-python">import pandas as pd
+import numpy as np
+
+train_df = pd.read_csv(&#39;../input/house-prices-advanced-regression-techniques/train.csv&#39;)
+test_df = pd.read_csv(&#39;../input/house-prices-advanced-regression-techniques/test.csv&#39;)
+
+train_df.info()
+train_df = train_df.drop(&#39;Id&#39;, axis=1)
+</code></pre>
+<pre><code class="language-python">train_df.head(5)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081008796.png" alt="image-20250908100815685"></p>
+<p>查看数据类型，判断哪些是离散型变量（object），哪些是连续型变量（int64,float64）</p>
+<pre><code class="language-python">train_df.info()
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081009889.png" alt="image-20250908100921833"></p>
+<pre><code class="language-python">train_df[&#39;Id&#39;].nunique() == train_df.shape[0]  # 检查 Id 唯一性
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081008347.png" alt="image-20250908100851310"></p>
+<h3 id="缺失值分析与处理"><a href="#缺失值分析与处理" class="headerlink" title="缺失值分析与处理"></a>缺失值分析与处理</h3><h4 id="离散型变量缺失值"><a href="#离散型变量缺失值" class="headerlink" title="离散型变量缺失值"></a>离散型变量缺失值</h4><pre><code class="language-python">cat_cols = train_df.select_dtypes(include=[&#39;object&#39;]).columns
+missing_cat_cols = train_df[cat_cols].columns[train_df[cat_cols].isnull().any()]
+
+missing_cat_dict = &#123;&#125;
+for col in missing_cat_cols:
+    missing_cat_dict[col] = train_df[col].unique()
+
+# 填充为 &#39;missing&#39;
+train_df[cat_cols] = train_df[cat_cols].fillna(&#39;missing&#39;)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081009024.png" alt="image-20250908100951906"></p>
+<p>因为类别不多，所以都可以直接填充为missing，然后再使用编码器进行编码</p>
+<h4 id="连续型变量缺失值"><a href="#连续型变量缺失值" class="headerlink" title="连续型变量缺失值"></a>连续型变量缺失值</h4><p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081010565.png" alt="image-20250908101020482"></p>
+<pre><code class="language-python">num_cols = train_df.select_dtypes(include=[&#39;int64&#39;, &#39;float64&#39;]).columns
+train_df[num_cols].isnull().sum()
+
+# 查看缺失分布
+train_df[train_df[num_cols].columns[train_df[num_cols].isnull().any()]].describe()
+
+# 针对具体列的填充策略
+train_df[&#39;LotFrontage&#39;] = train_df.groupby(&#39;Neighborhood&#39;)[&#39;LotFrontage&#39;].transform(lambda x: x.fillna(x.median()))
+train_df[&#39;MasVnrArea&#39;] = train_df[&#39;MasVnrArea&#39;].fillna(0)
+train_df[&#39;GarageYrBlt&#39;] = train_df[&#39;GarageYrBlt&#39;].fillna(train_df[&#39;GarageYrBlt&#39;].mean())
+</code></pre>
+<ul>
+<li><strong>LotFrontage（地块临街长度）</strong>：按街区中位数填充，避免极端值影响。</li>
+<li><strong>MasVnrArea（贴面石材面积）</strong>：缺失意味着“无贴面”，填充为 0。</li>
+<li><strong>GarageYrBlt（车库建造年份）</strong>：缺失意味着“无车库”，采用均值填充。</li>
+</ul>
+<h3 id="特征编码"><a href="#特征编码" class="headerlink" title="特征编码"></a>特征编码</h3><pre><code class="language-python">from sklearn.preprocessing import LabelEncoder
+
+for col in cat_cols:
+    le = LabelEncoder()
+    train_df[col] = le.fit_transform(train_df[col].astype(str))
+    test_df[col] = le.transform(test_df[col].astype(str))
+</code></pre>
+<hr>
+<h2 id="3-Wrapper-特征选择"><a href="#3-Wrapper-特征选择" class="headerlink" title="3. Wrapper 特征选择"></a>3. Wrapper 特征选择</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>**Wrapper 特征选择（封装式特征选择）**是一种基于模型性能来评估特征重要性的方法。与 <strong>Filter 方法</strong>（依靠统计量，如相关系数、卡方检验）或 <strong>Embedded 方法</strong>（如 L1 正则化直接稀疏化特征）不同，Wrapper 方法会在训练模型的过程中动态评估特征的贡献，并通过迭代或交叉验证来挑选最优特征子集。</p>
+<p>在本项目中，Wrapper 特征选择的核心流程如下：</p>
+<ol>
+<li><strong>使用 LightGBM 训练并获取特征重要性</strong><ul>
+<li>LightGBM 在训练过程中会计算每个特征的 <strong>分裂增益（Gain）</strong>，即该特征用于分裂时对损失函数减少的贡献。</li>
+<li>在每棵树构建完成后，LightGBM 会累积各个特征的重要性得分。特征的重要性越高，说明它在分裂过程中越常被使用，并且能有效减少预测误差。</li>
+</ul>
+</li>
+<li><strong>KFold 交叉验证累积特征重要性</strong><ul>
+<li>单次模型训练可能会受样本划分影响，导致特征重要性不稳定。</li>
+<li>为了减少偶然性，Wrapper 方法会采用 <strong>K 折交叉验证</strong>（KFold CV）：<ul>
+<li>将数据划分为 K 个子集</li>
+<li>每次用 K-1 个子集训练，1 个子集验证</li>
+<li>重复 K 次，保证每个样本都参与训练和验证</li>
+</ul>
+</li>
+<li>在每一次训练结束后，提取特征重要性，并累加到一个全局向量中。</li>
+<li>最终，得到的特征重要性是 <strong>跨 K 折平均后的结果</strong>，比单次训练更稳健。</li>
+</ul>
+</li>
+<li><strong>选取前 *k* 个重要特征</strong><ul>
+<li>当所有 K 折训练结束后，会得到一个按特征排序的重要性得分序列。</li>
+<li>通过排序（降序），选取前 <em>k</em> 个特征作为最终的特征子集。</li>
+</ul>
+</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code class="language-python">from lightgbm import early_stopping, log_evaluation
+from sklearn.model_selection import KFold
+import lightgbm as lgb
+
+def feature_select_wrapper(train, topk=50):
+    label = &#39;SalePrice&#39;
+    features = [col for col in train.columns if col != label and train[col].nunique() &gt; 1]
+    y_log = np.log1p(train[label])
+
+    params_initial = &#123;
+        &#39;num_leaves&#39;: 30,
+        &#39;learning_rate&#39;: 0.05,
+        &#39;boosting&#39;: &#39;gbdt&#39;,
+        &#39;min_child_samples&#39;: 10,
+        &#39;bagging_seed&#39;: 2020,
+        &#39;bagging_fraction&#39;: 0.7,
+        &#39;bagging_freq&#39;: 1,
+        &#39;feature_fraction&#39;: 0.7,
+        &#39;max_depth&#39;: -1,
+        &#39;metric&#39;: &#39;rmse&#39;,
+        &#39;reg_alpha&#39;: 0,
+        &#39;reg_lambda&#39;: 1,
+        &#39;objective&#39;: &#39;regression&#39;
+    &#125;
+
+    NBR = 50000
+    kf = KFold(n_splits=5, random_state=2020, shuffle=True)
+    fse = pd.Series(0, index=features)
+
+    for train_idx, eval_idx in kf.split(train[features], y_log):
+        train_part = lgb.Dataset(train[features].iloc[train_idx], y_log.iloc[train_idx])
+        eval_part = lgb.Dataset(train[features].iloc[eval_idx], y_log.iloc[eval_idx])
+        
+        bst = lgb.train(
+            params_initial, train_part, num_boost_round=NBR,
+            valid_sets=[train_part, eval_part],
+            valid_names=[&#39;train&#39;, &#39;valid&#39;],
+            callbacks=[early_stopping(100), log_evaluation(100)]
+        )
+        fse += pd.Series(bst.feature_importance(importance_type=&quot;gain&quot;), index=features)
+
+    return fse.sort_values(ascending=False).index.tolist()[:topk]
+</code></pre>
+<hr>
+<h2 id="4-LightGBM-建模"><a href="#4-LightGBM-建模" class="headerlink" title="4. LightGBM 建模"></a>4. LightGBM 建模</h2><h3 id="为什么选择-LightGBM"><a href="#为什么选择-LightGBM" class="headerlink" title="为什么选择 LightGBM"></a>为什么选择 LightGBM</h3><ul>
+<li>速度快（直方图算法）</li>
+<li>内存高效</li>
+<li>支持类别特征</li>
+<li>叶子优先生长策略（leaf-wise）</li>
+</ul>
+<h3 id="LightGBM-的原理"><a href="#LightGBM-的原理" class="headerlink" title="LightGBM 的原理"></a>LightGBM 的原理</h3><p>具体可参考之前的文章[集成学习之Boosting方法系列_LightGBM](<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_62895602/article/details/135789720?spm=1001.2014.3001.5501">集成学习之Boosting方法系列_LightGBM_light gradient boosting-CSDN博客</a>)</p>
+<ul>
+<li>每轮拟合残差</li>
+<li>基于梯度提升更新</li>
+<li>内置正则化减少过拟合</li>
+</ul>
+<hr>
+<h2 id="5-TPE-超参数优化"><a href="#5-TPE-超参数优化" class="headerlink" title="5. TPE 超参数优化"></a>5. TPE 超参数优化</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>**TPE（Tree-structured Parzen Estimator，树结构化帕森估计器）**是一种基于贝叶斯思想的超参数优化方法，它的目标是在有限的试验次数内尽可能找到表现最优的参数组合。相比于传统的 <strong>Grid Search（网格搜索）</strong> 或 <strong>Random Search（随机搜索）</strong>，TPE 通过构建概率模型来“有策略地”探索参数空间，从而显著提升调参效率。</p>
+<p>其核心思想可以分为以下几个步骤：</p>
+<ol>
+<li><p><strong>贝叶斯优化框架</strong></p>
+<ul>
+<li>在超参数优化问题中，我们要最小化一个目标函数 f(x)f(x)，其中 xx 是参数组合（如 LightGBM 的 <code>num_leaves</code>、<code>learning_rate</code> 等）。</li>
+<li>贝叶斯优化的基本思想是：<ul>
+<li>用一个概率模型（如高斯过程或 TPE）来近似目标函数。</li>
+<li>在每一轮迭代时，利用概率模型选择最有希望的参数区域进行试验。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>概率建模</strong></p>
+<ul>
+<li>与高斯过程不同，TPE 使用了 <strong>密度估计</strong> 的方法来建模。</li>
+<li>在优化过程中，TPE 将历史试验结果按照性能阈值 γ\gamma（如前 20% 的结果）划分为两类：<ul>
+<li><strong>好的参数分布</strong>$l(x) &#x3D; p(x|f(x) &lt; \gamma)$</li>
+<li><strong>差的参数分布</strong> $g(x) &#x3D; p(x|f(x) \geq \gamma)$</li>
+</ul>
+</li>
+<li>这里的 $l(x) $和 $g(x) $都通过 <strong>Parzen 窗估计（核密度估计的一种）</strong> 来近似。</li>
+</ul>
+</li>
+<li><p><strong>采样准则</strong></p>
+<ul>
+<li><p>TPE 选择新参数的原则是最大化以下比值：</p>
+<p>$\text{argmax}_x \ \frac{l(x)}{g(x)}$</p>
+</li>
+<li><p>含义是：倾向于选择那些更可能来自“好分布”而不是“坏分布”的参数点。</p>
+</li>
+<li><p>与随机搜索相比，这种方法能够 <strong>自适应地聚焦在表现更优的区域</strong>，提高搜索效率。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>树结构化空间支持</strong></p>
+<ul>
+<li>与普通贝叶斯优化不同，TPE 能够处理 <strong>树状依赖关系的搜索空间</strong>（Tree-structured Search Space）。</li>
+<li>比如：如果选择 <code>boosting=gbdt</code>，才会去搜索 <code>num_leaves</code> 和 <code>feature_fraction</code>；如果选择 <code>boosting=rf</code>，则会去搜索 <code>subsample_freq</code> 等。</li>
+<li>这种灵活性使得 TPE 特别适合机器学习调参中 <strong>条件依赖</strong> 的情况。</li>
+</ul>
+</li>
+</ol>
+<p>在本项目里，TPE 用于优化 LightGBM 的关键参数（如 <code>num_leaves</code>、<code>learning_rate</code>、<code>feature_fraction</code> 等），通过有限的 20 次试验，就能找到比默认参数更优的组合，从而降低 RMSE。</p>
+<h3 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code class="language-python">from hyperopt import fmin, tpe, hp
+
+def params_append(params):
+    params[&#39;feature_pre_filter&#39;] = False
+    params[&#39;objective&#39;] = &#39;regression&#39;
+    params[&#39;metric&#39;] = &#39;rmse&#39;
+    params[&#39;bagging_seed&#39;] = 2020
+    params[&#39;max_depth&#39;] = -1
+    return params
+
+def param_hyperopt(train_df, train_label):
+    train_label_log = np.log1p(train_label)
+    train_data = lgb.Dataset(train_df, label=train_label_log)
+
+    def hyperopt_objective(params):
+        params = params_append(params)
+        res = lgb.cv(
+            params,
+            train_data,
+            num_boost_round=800,
+            nfold=3,
+            stratified=False,
+            shuffle=True,
+            callbacks=[early_stopping(50), log_evaluation(100)]
+        )
+        return min(res[&#39;valid rmse-mean&#39;])
+
+    params_space = &#123;
+        &#39;learning_rate&#39;: hp.uniform(&#39;learning_rate&#39;, 0.05, 0.1),
+        &#39;bagging_fraction&#39;: hp.uniform(&#39;bagging_fraction&#39;, 0.7, 1),
+        &#39;feature_fraction&#39;: hp.uniform(&#39;feature_fraction&#39;, 0.7, 1),
+        &#39;num_leaves&#39;: hp.choice(&#39;num_leaves&#39;, list(range(10, 30, 2))),
+    &#125;
+
+    params_best = fmin(
+        fn=hyperopt_objective,
+        space=params_space,
+        algo=tpe.suggest,
+        max_evals=20
+    )
+    return params_best
+</code></pre>
+<hr>
+<h2 id="6-最终建模与结果提交"><a href="#6-最终建模与结果提交" class="headerlink" title="6. 最终建模与结果提交"></a>6. 最终建模与结果提交</h2><pre><code class="language-python"># 特征选择
+feature_select = feature_select_wrapper(train_df, topk=50)
+rf_train_df = train_df[feature_select]
+rf_train_label = train_df[&#39;SalePrice&#39;]
+
+# TPE 调优得到最佳参数
+best_rf_params = param_hyperopt(rf_train_df, rf_train_label)
+
+# 最优模型
+best_model = lgb.LGBMRegressor(**best_rf_params, n_jobs=-1)
+best_model.fit(rf_train_df, rf_train_label)
+
+# 预测
+rf_test_df = test_df[feature_select]
+y_pred = best_model.predict(rf_test_df)
+
+# 提交文件
+submission = pd.DataFrame(&#123;
+    &quot;Id&quot;: test_df[&quot;Id&quot;],
+    &quot;SalePrice&quot;: y_pred
+&#125;)
+submission.to_csv(&quot;/kaggle/working/submission.csv&quot;, index=False)
+</code></pre>
+<hr>
+<h2 id="7-实验结果与分析"><a href="#7-实验结果与分析" class="headerlink" title="7. 实验结果与分析"></a>7. 实验结果与分析</h2><ul>
+<li><strong>Baseline LightGBM</strong>：RMSE ≈ 0.155</li>
+<li><strong>Wrapper 特征选择后</strong>：RMSE ≈ 0.148</li>
+<li><strong>Wrapper + LightGBM + TPE 调优</strong>：RMSE ≈ 0.141</li>
+</ul>
+<p>结果表明：</p>
+<ul>
+<li>Wrapper 有效减少冗余特征</li>
+<li>TPE 自动调参提升了模型性能</li>
+</ul>
+<hr>
+<h2 id="8-总结与展望"><a href="#8-总结与展望" class="headerlink" title="8. 总结与展望"></a>8. 总结与展望</h2><p>本文展示了完整的 Kaggle 房价预测流程：</p>
+<ul>
+<li>合理的缺失值处理</li>
+<li>Wrapper 特征选择</li>
+<li>LightGBM 高效建模</li>
+<li>TPE 超参数调优</li>
+</ul>
+<p>未来可以进一步尝试：</p>
+<ul>
+<li>模型集成（XGBoost、CatBoost）</li>
+<li>使用 Optuna 替代 Hyperopt</li>
+<li>特征交互与自动特征工程</li>
+</ul>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>
