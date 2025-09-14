@@ -223,6 +223,3088 @@
     <a href="/2025/09/14/hello-world/" class="go-post">阅读全文</a>
 </div>
 
+<div class="post">
+    <a href="/2023/03/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%BB%BA%E6%A8%A1/">
+        <h2 class="post-title">机器学习建模</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/3/20
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h2 id="机器学习建模"><a href="#机器学习建模" class="headerlink" title="机器学习建模"></a>机器学习建模</h2><h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><h3 id="1-信息熵-Entropy"><a href="#1-信息熵-Entropy" class="headerlink" title="1. 信息熵 (Entropy)"></a><strong>1. 信息熵 (Entropy)</strong></h3><p>衡量一个系统（数据集）中不确定性的大小。</p>
+<p>公式：</p>
+<p>$H(X) &#x3D; - \sum_{i&#x3D;1}^n p_i \log_2 p_i$</p>
+<p>其中，$p_i $表示随机变量 X 取第 i 类的概率。</p>
+<p>作用：当类别分布越均匀，熵越大；当分布越偏向单一类别，熵越小。</p>
+<hr>
+<h3 id="2-条件熵-Conditional-Entropy"><a href="#2-条件熵-Conditional-Entropy" class="headerlink" title="2. 条件熵 (Conditional Entropy)"></a>2. <strong>条件熵 (Conditional Entropy)</strong></h3><p>表示在已知特征 A 的情况下，类别 Y还剩多少不确定性。</p>
+<p>公式：</p>
+<p>$H(Y|A) &#x3D; \sum_{j&#x3D;1}^m p(a_j) H(Y|A&#x3D;a_j)$</p>
+<p>其中，$p(a_j)$ 是特征 A 取值为 $a_j $的概率，</p>
+<p>$H(Y|A&#x3D;a_j) &#x3D; -\sum_{i&#x3D;1}^n p(y_i|a_j) \log_2 p(y_i|a_j)$</p>
+<hr>
+<h3 id="3-信息增益-Information-Gain-IG"><a href="#3-信息增益-Information-Gain-IG" class="headerlink" title="3. 信息增益 (Information Gain, IG)"></a>3. <strong>信息增益 (Information Gain, IG)</strong></h3><p>衡量特征 A 带来的不确定性减少量，是决策树（ID3, C4.5）的核心。</p>
+<p>公式：</p>
+<p>$IG(Y, A) &#x3D; H(Y) - H(Y|A)$</p>
+<p>即原始信息熵减去条件熵，数值越大说明特征 A 越能有效区分样本。</p>
+<hr>
+<h3 id="4-基尼指数-Gini-Index"><a href="#4-基尼指数-Gini-Index" class="headerlink" title="4. 基尼指数 (Gini Index)"></a>4. <strong>基尼指数 (Gini Index)</strong></h3><p>另一种衡量数据纯度的方法（常用于 CART 决策树）。</p>
+<p>公式：</p>
+<p>$Gini(D) &#x3D; 1 - \sum_{i&#x3D;1}^n p_i^2$</p>
+<p>其中，$p_i $是第 i 类的概率。越小表示样本越“纯”。</p>
+<p>若用特征 A划分：</p>
+<p>$Gini(D, A) &#x3D; \sum_{j&#x3D;1}^m \frac{|D_j|}{|D|} Gini(D_j)$</p>
+<p>选择能最小化 Gini 的特征作为划分点。</p>
+<hr>
+<h3 id="5-在决策树中的作用"><a href="#5-在决策树中的作用" class="headerlink" title="5. 在决策树中的作用"></a>5. <strong>在决策树中的作用</strong></h3><ul>
+<li><strong>ID3 决策树</strong>：用 <strong>信息增益</strong> 最大的特征作为划分点。</li>
+<li><strong>C4.5 决策树</strong>：改进信息增益，使用 <strong>信息增益率</strong>。</li>
+<li><strong>CART 决策树</strong>：用 <strong>基尼指数最小</strong> 的特征作为划分点。</li>
+</ul>
+<hr>
+<h2 id="（1）决策树"><a href="#（1）决策树" class="headerlink" title="（1）决策树"></a>（1）决策树</h2><h3 id="1-ID3方法（分类任务）"><a href="#1-ID3方法（分类任务）" class="headerlink" title="1. ID3方法（分类任务）"></a>1. ID3方法（分类任务）</h3><ul>
+<li>输入数据集：算法接受一个已标记的数据集，其中包含一系列样本，每个样本都有一组特征和一个类别标签。</li>
+<li>特征选择：从所有可能的特征中选择一个最佳的特征来进行分割。这通常通过计算每个特征的信息增益（或信息熵）来完成。信息增益表示在选择某个特征后，数据集的不确定性减少的程度。信息增益高的特征被认为是最佳的选择。</li>
+<li>创建一个决策节点：将选定的特征用于创建一个决策节点，并将数据集分割成多个子集，每个子集对应于该特征的不同取值。</li>
+<li>递归操作：对每个子集重复上述步骤，直到满足停止条件。停止条件可以是以下之一：所有样本都属于同一类别，或者没有更多的特征可用于分割数据。</li>
+<li>构建决策树：最终，算法通过连接所有的决策节点来构建一个完整的决策树，其中叶节点表示最终的分类结果。</li>
+</ul>
+<h3 id="2-C4-5算法（分类任务）"><a href="#2-C4-5算法（分类任务）" class="headerlink" title="2. C4.5算法（分类任务）"></a>2. C4.5算法（分类任务）</h3><p>根据信息增益率进行特征选择，引入悲观剪枝策略进行后剪枝</p>
+<p>工作原理：</p>
+<p>特征选择：</p>
+<ul>
+<li>特征选择：与ID3类似，C4.5也通过计算特征的信息增益来选择最佳的特征进行分割。不过，C4.5引入了一个新的概念，称为”信息增益比”，以解决ID3在特征取值较多时的不公平问题。信息增益比考虑了特征取值的数量，从而更加公平地对待不同数量的取值。</li>
+<li>处理连续型特征：C4.5能够处理连续型特征，而不仅仅是离散型特征。它通过尝试不同的分割点来将连续特征离散化，并选择最佳的分割点以最大化信息增益或信息增益比。</li>
+<li>剪枝：C4.5引入了剪枝机制，以减小生成的决策树的复杂性，防止过拟合。剪枝是通过验证数据集来确定哪些子树可以被删除或保留的。这有助于生成更简单、更具泛化能力的决策树。</li>
+<li>处理缺失值：C4.5能够处理数据中的缺失值，允许在构建决策树时处理包含缺失数据的样本。</li>
+<li>生成决策树：通过递归地选择最佳特征、分割数据、剪枝等步骤，C4.5最终生成一个用于分类或回归的决策树。</li>
+</ul>
+<h3 id="3-CART算法（分类-回归任务）"><a href="#3-CART算法（分类-回归任务）" class="headerlink" title="3. CART算法（分类&#x2F;回归任务）"></a>3. CART算法（分类&#x2F;回归任务）</h3><p>基于二叉树，既可分类也可回归，使用基尼指数来进行特征选择</p>
+<p><strong>工作原理</strong>：</p>
+<ul>
+<li>二叉树结构：CART算法生成的决策树是二叉树结构，每个非叶子节点都有两个子节点。这意味着每个特征在每个节点处只进行一次二分分割，而不是多分割。</li>
+<li>特征选择：CART算法使用一种称为“Gini不纯度”（Gini impurity）的指标来选择最佳的特征进行分割。Gini不纯度度量了一个数据集中样本被错误分类的概率。算法选择能够最大程度地减小Gini不纯度的特征进行分割。</li>
+<li>处理连续型特征：CART能够处理连续型特征，它通过尝试不同的阈值来将连续特征二分化，并选择最佳的分割点。</li>
+<li>剪枝：CART算法也支持剪枝，以减小决策树的复杂性和防止过拟合。剪枝是通过验证数据集来确定哪些子树可以被删除或保留的。</li>
+<li>多分类和回归：CART算法不仅可以用于分类问题，还可以用于回归问题。对于分类问题，CART生成的树将每个叶节点标记为某个类别。对于回归问题，叶节点包含一个连续的数值。</li>
+</ul>
+<p>后剪枝与预剪枝</p>
+<p>预剪枝：在建树的过程中对每一次分裂都进行判断（使用验证集计算分裂后的回归预测正确率），若效果下降，则减去该分支</p>
+<p>后剪枝：建树后再自底向上逐一判断。。。</p>
+<h2 id="（2）LightGBM"><a href="#（2）LightGBM" class="headerlink" title="（2）LightGBM"></a>（2）LightGBM</h2><h2 id="（3）GBDT梯度提升决策树"><a href="#（3）GBDT梯度提升决策树" class="headerlink" title="（3）GBDT梯度提升决策树"></a>（3）GBDT梯度提升决策树</h2><p>为boosting的一种（在计算过程中串行），使用多个弱决策器（树）的结果累加而成。首先使用一棵树进行模糊回归预测，得到较大的残差（与真实值），然后训练另外一棵树对该残差进行拟合（即目标是找到合适的分裂节点，能使得该残差往最小的方向去），依次累加，最终使得残差为0。然后将所有弱决策器的回归预测累加而成记得GBDT的最终回归预测。</p>
+<blockquote>
+<p>更准确的回答：GBDT 是一种串行的梯度提升方法，使用多棵浅回归树作为基学习器。先用常数或一棵树得到初始预测；第 mmm 轮计算当前模型在训练集上的<strong>负梯度（伪残差）</strong>，训练一棵小回归树去拟合它；再在每个叶子上求使<strong>损失函数</strong>最小的叶值，并以学习率缩减后加到当前模型上。重复多轮，最终模型是各棵树输出的加和。在 L2 回归时，这等价于“逐轮拟合残差并累加”；在分类&#x2F;排序等任务中则拟合相应损失的梯度信号</p>
+</blockquote>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">机器学习</a>
+        </span>
+        
+    </div>
+    <a href="/2023/03/20/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%BB%BA%E6%A8%A1/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2022/09/08/kaggle%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B%E5%BB%BA%E6%A8%A1%EF%BC%9AWrapper%20%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E4%B8%8E%20LightGBM%20+%20TPE%20%E8%B6%85%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96/">
+        <h2 class="post-title">Kaggle房价预测建模：Wrapper 特征选择与 LightGBM + TPE 超参数优化</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/Kaggle/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Kaggle
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2022/9/8
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h1 id="KAGGLE-房价预测建模：Wrapper-特征选择与-LightGBM-TPE-超参数优化"><a href="#KAGGLE-房价预测建模：Wrapper-特征选择与-LightGBM-TPE-超参数优化" class="headerlink" title="KAGGLE 房价预测建模：Wrapper 特征选择与 LightGBM + TPE 超参数优化"></a>KAGGLE 房价预测建模：Wrapper 特征选择与 LightGBM + TPE 超参数优化</h1><hr>
+<h2 id="1-引言"><a href="#1-引言" class="headerlink" title="1. 引言"></a>1. 引言</h2><p>在 Kaggle <strong>House Prices: Advanced Regression Techniques</strong> 比赛中，我们需要基于房屋的多维度特征（面积、位置、建造年份等）预测售价。本文展示了一个端到端的建模流程，核心方法包括：</p>
+<ul>
+<li><strong>缺失值合理填充（结合业务逻辑）</strong></li>
+<li><strong>Wrapper 特征选择</strong></li>
+<li><strong>LightGBM 模型训练</strong></li>
+<li><strong>TPE 超参数调优</strong></li>
+<li><strong>结果生成与提交</strong></li>
+</ul>
+<hr>
+<h2 id="2-数据分析与预处理"><a href="#2-数据分析与预处理" class="headerlink" title="2. 数据分析与预处理"></a>2. 数据分析与预处理</h2><h3 id="数据加载与探索"><a href="#数据加载与探索" class="headerlink" title="数据加载与探索"></a>数据加载与探索</h3><pre><code class="language-python">import pandas as pd
+import numpy as np
+
+train_df = pd.read_csv(&#39;../input/house-prices-advanced-regression-techniques/train.csv&#39;)
+test_df = pd.read_csv(&#39;../input/house-prices-advanced-regression-techniques/test.csv&#39;)
+
+train_df.info()
+train_df = train_df.drop(&#39;Id&#39;, axis=1)
+</code></pre>
+<pre><code class="language-python">train_df.head(5)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081008796.png" alt="image-20250908100815685"></p>
+<p>查看数据类型，判断哪些是离散型变量（object），哪些是连续型变量（int64,float64）</p>
+<pre><code class="language-python">train_df.info()
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081009889.png" alt="image-20250908100921833"></p>
+<pre><code class="language-python">train_df[&#39;Id&#39;].nunique() == train_df.shape[0]  # 检查 Id 唯一性
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081008347.png" alt="image-20250908100851310"></p>
+<h3 id="缺失值分析与处理"><a href="#缺失值分析与处理" class="headerlink" title="缺失值分析与处理"></a>缺失值分析与处理</h3><h4 id="离散型变量缺失值"><a href="#离散型变量缺失值" class="headerlink" title="离散型变量缺失值"></a>离散型变量缺失值</h4><pre><code class="language-python">cat_cols = train_df.select_dtypes(include=[&#39;object&#39;]).columns
+missing_cat_cols = train_df[cat_cols].columns[train_df[cat_cols].isnull().any()]
+
+missing_cat_dict = &#123;&#125;
+for col in missing_cat_cols:
+    missing_cat_dict[col] = train_df[col].unique()
+
+# 填充为 &#39;missing&#39;
+train_df[cat_cols] = train_df[cat_cols].fillna(&#39;missing&#39;)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081009024.png" alt="image-20250908100951906"></p>
+<p>因为类别不多，所以都可以直接填充为missing，然后再使用编码器进行编码</p>
+<h4 id="连续型变量缺失值"><a href="#连续型变量缺失值" class="headerlink" title="连续型变量缺失值"></a>连续型变量缺失值</h4><p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509081010565.png" alt="image-20250908101020482"></p>
+<pre><code class="language-python">num_cols = train_df.select_dtypes(include=[&#39;int64&#39;, &#39;float64&#39;]).columns
+train_df[num_cols].isnull().sum()
+
+# 查看缺失分布
+train_df[train_df[num_cols].columns[train_df[num_cols].isnull().any()]].describe()
+
+# 针对具体列的填充策略
+train_df[&#39;LotFrontage&#39;] = train_df.groupby(&#39;Neighborhood&#39;)[&#39;LotFrontage&#39;].transform(lambda x: x.fillna(x.median()))
+train_df[&#39;MasVnrArea&#39;] = train_df[&#39;MasVnrArea&#39;].fillna(0)
+train_df[&#39;GarageYrBlt&#39;] = train_df[&#39;GarageYrBlt&#39;].fillna(train_df[&#39;GarageYrBlt&#39;].mean())
+</code></pre>
+<ul>
+<li><strong>LotFrontage（地块临街长度）</strong>：按街区中位数填充，避免极端值影响。</li>
+<li><strong>MasVnrArea（贴面石材面积）</strong>：缺失意味着“无贴面”，填充为 0。</li>
+<li><strong>GarageYrBlt（车库建造年份）</strong>：缺失意味着“无车库”，采用均值填充。</li>
+</ul>
+<h3 id="特征编码"><a href="#特征编码" class="headerlink" title="特征编码"></a>特征编码</h3><pre><code class="language-python">from sklearn.preprocessing import LabelEncoder
+
+for col in cat_cols:
+    le = LabelEncoder()
+    train_df[col] = le.fit_transform(train_df[col].astype(str))
+    test_df[col] = le.transform(test_df[col].astype(str))
+</code></pre>
+<hr>
+<h2 id="3-Wrapper-特征选择"><a href="#3-Wrapper-特征选择" class="headerlink" title="3. Wrapper 特征选择"></a>3. Wrapper 特征选择</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>**Wrapper 特征选择（封装式特征选择）**是一种基于模型性能来评估特征重要性的方法。与 <strong>Filter 方法</strong>（依靠统计量，如相关系数、卡方检验）或 <strong>Embedded 方法</strong>（如 L1 正则化直接稀疏化特征）不同，Wrapper 方法会在训练模型的过程中动态评估特征的贡献，并通过迭代或交叉验证来挑选最优特征子集。</p>
+<p>在本项目中，Wrapper 特征选择的核心流程如下：</p>
+<ol>
+<li><strong>使用 LightGBM 训练并获取特征重要性</strong><ul>
+<li>LightGBM 在训练过程中会计算每个特征的 <strong>分裂增益（Gain）</strong>，即该特征用于分裂时对损失函数减少的贡献。</li>
+<li>在每棵树构建完成后，LightGBM 会累积各个特征的重要性得分。特征的重要性越高，说明它在分裂过程中越常被使用，并且能有效减少预测误差。</li>
+</ul>
+</li>
+<li><strong>KFold 交叉验证累积特征重要性</strong><ul>
+<li>单次模型训练可能会受样本划分影响，导致特征重要性不稳定。</li>
+<li>为了减少偶然性，Wrapper 方法会采用 <strong>K 折交叉验证</strong>（KFold CV）：<ul>
+<li>将数据划分为 K 个子集</li>
+<li>每次用 K-1 个子集训练，1 个子集验证</li>
+<li>重复 K 次，保证每个样本都参与训练和验证</li>
+</ul>
+</li>
+<li>在每一次训练结束后，提取特征重要性，并累加到一个全局向量中。</li>
+<li>最终，得到的特征重要性是 <strong>跨 K 折平均后的结果</strong>，比单次训练更稳健。</li>
+</ul>
+</li>
+<li><strong>选取前 *k* 个重要特征</strong><ul>
+<li>当所有 K 折训练结束后，会得到一个按特征排序的重要性得分序列。</li>
+<li>通过排序（降序），选取前 <em>k</em> 个特征作为最终的特征子集。</li>
+</ul>
+</li>
+</ol>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code class="language-python">from lightgbm import early_stopping, log_evaluation
+from sklearn.model_selection import KFold
+import lightgbm as lgb
+
+def feature_select_wrapper(train, topk=50):
+    label = &#39;SalePrice&#39;
+    features = [col for col in train.columns if col != label and train[col].nunique() &gt; 1]
+    y_log = np.log1p(train[label])
+
+    params_initial = &#123;
+        &#39;num_leaves&#39;: 30,
+        &#39;learning_rate&#39;: 0.05,
+        &#39;boosting&#39;: &#39;gbdt&#39;,
+        &#39;min_child_samples&#39;: 10,
+        &#39;bagging_seed&#39;: 2020,
+        &#39;bagging_fraction&#39;: 0.7,
+        &#39;bagging_freq&#39;: 1,
+        &#39;feature_fraction&#39;: 0.7,
+        &#39;max_depth&#39;: -1,
+        &#39;metric&#39;: &#39;rmse&#39;,
+        &#39;reg_alpha&#39;: 0,
+        &#39;reg_lambda&#39;: 1,
+        &#39;objective&#39;: &#39;regression&#39;
+    &#125;
+
+    NBR = 50000
+    kf = KFold(n_splits=5, random_state=2020, shuffle=True)
+    fse = pd.Series(0, index=features)
+
+    for train_idx, eval_idx in kf.split(train[features], y_log):
+        train_part = lgb.Dataset(train[features].iloc[train_idx], y_log.iloc[train_idx])
+        eval_part = lgb.Dataset(train[features].iloc[eval_idx], y_log.iloc[eval_idx])
+        
+        bst = lgb.train(
+            params_initial, train_part, num_boost_round=NBR,
+            valid_sets=[train_part, eval_part],
+            valid_names=[&#39;train&#39;, &#39;valid&#39;],
+            callbacks=[early_stopping(100), log_evaluation(100)]
+        )
+        fse += pd.Series(bst.feature_importance(importance_type=&quot;gain&quot;), index=features)
+
+    return fse.sort_values(ascending=False).index.tolist()[:topk]
+</code></pre>
+<hr>
+<h2 id="4-LightGBM-建模"><a href="#4-LightGBM-建模" class="headerlink" title="4. LightGBM 建模"></a>4. LightGBM 建模</h2><h3 id="为什么选择-LightGBM"><a href="#为什么选择-LightGBM" class="headerlink" title="为什么选择 LightGBM"></a>为什么选择 LightGBM</h3><ul>
+<li>速度快（直方图算法）</li>
+<li>内存高效</li>
+<li>支持类别特征</li>
+<li>叶子优先生长策略（leaf-wise）</li>
+</ul>
+<h3 id="LightGBM-的原理"><a href="#LightGBM-的原理" class="headerlink" title="LightGBM 的原理"></a>LightGBM 的原理</h3><p>具体可参考之前的文章[集成学习之Boosting方法系列_LightGBM](<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_62895602/article/details/135789720?spm=1001.2014.3001.5501">集成学习之Boosting方法系列_LightGBM_light gradient boosting-CSDN博客</a>)</p>
+<ul>
+<li>每轮拟合残差</li>
+<li>基于梯度提升更新</li>
+<li>内置正则化减少过拟合</li>
+</ul>
+<hr>
+<h2 id="5-TPE-超参数优化"><a href="#5-TPE-超参数优化" class="headerlink" title="5. TPE 超参数优化"></a>5. TPE 超参数优化</h2><h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><p>**TPE（Tree-structured Parzen Estimator，树结构化帕森估计器）**是一种基于贝叶斯思想的超参数优化方法，它的目标是在有限的试验次数内尽可能找到表现最优的参数组合。相比于传统的 <strong>Grid Search（网格搜索）</strong> 或 <strong>Random Search（随机搜索）</strong>，TPE 通过构建概率模型来“有策略地”探索参数空间，从而显著提升调参效率。</p>
+<p>其核心思想可以分为以下几个步骤：</p>
+<ol>
+<li><p><strong>贝叶斯优化框架</strong></p>
+<ul>
+<li>在超参数优化问题中，我们要最小化一个目标函数 f(x)f(x)，其中 xx 是参数组合（如 LightGBM 的 <code>num_leaves</code>、<code>learning_rate</code> 等）。</li>
+<li>贝叶斯优化的基本思想是：<ul>
+<li>用一个概率模型（如高斯过程或 TPE）来近似目标函数。</li>
+<li>在每一轮迭代时，利用概率模型选择最有希望的参数区域进行试验。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>概率建模</strong></p>
+<ul>
+<li>与高斯过程不同，TPE 使用了 <strong>密度估计</strong> 的方法来建模。</li>
+<li>在优化过程中，TPE 将历史试验结果按照性能阈值 γ\gamma（如前 20% 的结果）划分为两类：<ul>
+<li><strong>好的参数分布</strong>$l(x) &#x3D; p(x|f(x) &lt; \gamma)$</li>
+<li><strong>差的参数分布</strong> $g(x) &#x3D; p(x|f(x) \geq \gamma)$</li>
+</ul>
+</li>
+<li>这里的 $l(x) $和 $g(x) $都通过 <strong>Parzen 窗估计（核密度估计的一种）</strong> 来近似。</li>
+</ul>
+</li>
+<li><p><strong>采样准则</strong></p>
+<ul>
+<li><p>TPE 选择新参数的原则是最大化以下比值：</p>
+<p>$\text{argmax}_x \ \frac{l(x)}{g(x)}$</p>
+</li>
+<li><p>含义是：倾向于选择那些更可能来自“好分布”而不是“坏分布”的参数点。</p>
+</li>
+<li><p>与随机搜索相比，这种方法能够 <strong>自适应地聚焦在表现更优的区域</strong>，提高搜索效率。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>树结构化空间支持</strong></p>
+<ul>
+<li>与普通贝叶斯优化不同，TPE 能够处理 <strong>树状依赖关系的搜索空间</strong>（Tree-structured Search Space）。</li>
+<li>比如：如果选择 <code>boosting=gbdt</code>，才会去搜索 <code>num_leaves</code> 和 <code>feature_fraction</code>；如果选择 <code>boosting=rf</code>，则会去搜索 <code>subsample_freq</code> 等。</li>
+<li>这种灵活性使得 TPE 特别适合机器学习调参中 <strong>条件依赖</strong> 的情况。</li>
+</ul>
+</li>
+</ol>
+<p>在本项目里，TPE 用于优化 LightGBM 的关键参数（如 <code>num_leaves</code>、<code>learning_rate</code>、<code>feature_fraction</code> 等），通过有限的 20 次试验，就能找到比默认参数更优的组合，从而降低 RMSE。</p>
+<h3 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h3><pre><code class="language-python">from hyperopt import fmin, tpe, hp
+
+def params_append(params):
+    params[&#39;feature_pre_filter&#39;] = False
+    params[&#39;objective&#39;] = &#39;regression&#39;
+    params[&#39;metric&#39;] = &#39;rmse&#39;
+    params[&#39;bagging_seed&#39;] = 2020
+    params[&#39;max_depth&#39;] = -1
+    return params
+
+def param_hyperopt(train_df, train_label):
+    train_label_log = np.log1p(train_label)
+    train_data = lgb.Dataset(train_df, label=train_label_log)
+
+    def hyperopt_objective(params):
+        params = params_append(params)
+        res = lgb.cv(
+            params,
+            train_data,
+            num_boost_round=800,
+            nfold=3,
+            stratified=False,
+            shuffle=True,
+            callbacks=[early_stopping(50), log_evaluation(100)]
+        )
+        return min(res[&#39;valid rmse-mean&#39;])
+
+    params_space = &#123;
+        &#39;learning_rate&#39;: hp.uniform(&#39;learning_rate&#39;, 0.05, 0.1),
+        &#39;bagging_fraction&#39;: hp.uniform(&#39;bagging_fraction&#39;, 0.7, 1),
+        &#39;feature_fraction&#39;: hp.uniform(&#39;feature_fraction&#39;, 0.7, 1),
+        &#39;num_leaves&#39;: hp.choice(&#39;num_leaves&#39;, list(range(10, 30, 2))),
+    &#125;
+
+    params_best = fmin(
+        fn=hyperopt_objective,
+        space=params_space,
+        algo=tpe.suggest,
+        max_evals=20
+    )
+    return params_best
+</code></pre>
+<hr>
+<h2 id="6-最终建模与结果提交"><a href="#6-最终建模与结果提交" class="headerlink" title="6. 最终建模与结果提交"></a>6. 最终建模与结果提交</h2><pre><code class="language-python"># 特征选择
+feature_select = feature_select_wrapper(train_df, topk=50)
+rf_train_df = train_df[feature_select]
+rf_train_label = train_df[&#39;SalePrice&#39;]
+
+# TPE 调优得到最佳参数
+best_rf_params = param_hyperopt(rf_train_df, rf_train_label)
+
+# 最优模型
+best_model = lgb.LGBMRegressor(**best_rf_params, n_jobs=-1)
+best_model.fit(rf_train_df, rf_train_label)
+
+# 预测
+rf_test_df = test_df[feature_select]
+y_pred = best_model.predict(rf_test_df)
+
+# 提交文件
+submission = pd.DataFrame(&#123;
+    &quot;Id&quot;: test_df[&quot;Id&quot;],
+    &quot;SalePrice&quot;: y_pred
+&#125;)
+submission.to_csv(&quot;/kaggle/working/submission.csv&quot;, index=False)
+</code></pre>
+<hr>
+<h2 id="7-实验结果与分析"><a href="#7-实验结果与分析" class="headerlink" title="7. 实验结果与分析"></a>7. 实验结果与分析</h2><ul>
+<li><strong>Baseline LightGBM</strong>：RMSE ≈ 0.155</li>
+<li><strong>Wrapper 特征选择后</strong>：RMSE ≈ 0.148</li>
+<li><strong>Wrapper + LightGBM + TPE 调优</strong>：RMSE ≈ 0.141</li>
+</ul>
+<p>结果表明：</p>
+<ul>
+<li>Wrapper 有效减少冗余特征</li>
+<li>TPE 自动调参提升了模型性能</li>
+</ul>
+<hr>
+<h2 id="8-总结与展望"><a href="#8-总结与展望" class="headerlink" title="8. 总结与展望"></a>8. 总结与展望</h2><p>本文展示了完整的 Kaggle 房价预测流程：</p>
+<ul>
+<li>合理的缺失值处理</li>
+<li>Wrapper 特征选择</li>
+<li>LightGBM 高效建模</li>
+<li>TPE 超参数调优</li>
+</ul>
+<p>未来可以进一步尝试：</p>
+<ul>
+<li>模型集成（XGBoost、CatBoost）</li>
+<li>使用 Optuna 替代 Hyperopt</li>
+<li>特征交互与自动特征工程</li>
+</ul>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/Kaggle/" style="color: #ff7d73">Kaggle</a>
+        </span>
+        
+    </div>
+    <a href="/2022/09/08/kaggle%E6%88%BF%E4%BB%B7%E9%A2%84%E6%B5%8B%E5%BB%BA%E6%A8%A1%EF%BC%9AWrapper%20%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E4%B8%8E%20LightGBM%20+%20TPE%20%E8%B6%85%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2022/08/30/pandas/">
+        <h2 class="post-title">pandas</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/python/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                python
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2022/8/30
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h1 id="pandas"><a href="#pandas" class="headerlink" title="pandas"></a>pandas</h1><h2 id="pandas读取csv文件"><a href="#pandas读取csv文件" class="headerlink" title="pandas读取csv文件"></a>pandas读取csv文件</h2><pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv(&#39;file_path&#39;)
+</code></pre>
+<h2 id="pandas读取excel文件"><a href="#pandas读取excel文件" class="headerlink" title="pandas读取excel文件"></a>pandas读取excel文件</h2><pre><code class="language-python">import pandas as pd
+
+df = pd.read_excel(&#39;file_path&#39;)
+</code></pre>
+<p>pandas一些常用式子</p>
+<ol>
+<li>条件筛选</li>
+</ol>
+<pre><code class="language-python">df[df[&#39;columns_name&#39;] &gt; value]
+</code></pre>
+<ol start="2">
+<li>多条件筛选</li>
+</ol>
+<pre><code class="language-python">df[(df[&#39;col1&#39;] &gt; val1) &amp; (df[&#39;col2&#39;] == val2)]
+</code></pre>
+<ol start="3">
+<li>排序</li>
+</ol>
+<pre><code class="language-python">df.sort_values(&#39;column_name&#39;)
+</code></pre>
+<ol start="4">
+<li>分组聚合</li>
+</ol>
+<pre><code class="language-python">df.groupby(&#39;column_name&#39;).agg(&#123;&#39;other_col&#39;: &#39;sum&#39;&#125;)
+</code></pre>
+<ol start="5">
+<li>连接合并</li>
+</ol>
+<pre><code class="language-python">pd.merge(df1, df2, on=&#39;key&#39;)
+</code></pre>
+<ol start="6">
+<li>计数</li>
+</ol>
+<pre><code class="language-python">df[&#39;column_name&#39;].value_counts()
+</code></pre>
+<ol start="7">
+<li>将某列拆成多列</li>
+</ol>
+<pre><code class="language-python">test_df[[&#39;month&#39;, &#39;sector_norm&#39;]] = test_df[&#39;id&#39;].str.split(&#39;_&#39;, expand=True)
+</code></pre>
+<ol start="9">
+<li>找出缺失列</li>
+</ol>
+<pre><code class="language-python">missing_cols = X_test.columns[X_test.isnull().any()]
+</code></pre>
+<ol start="10">
+<li>转换日期至标准格式</li>
+</ol>
+<pre><code class="language-python"># 假设month_norm 原本是2022 Jan
+# Y代表四位年份，b代表月份缩写，m代表两位月份
+X_train[&#39;month_index&#39;] = pd.to_datetime(X_train[&#39;month_norm&#39;], format=&quot;%Y %b&quot;)
+</code></pre>
+<ol start="11">
+<li>寻找离散型与连续型列</li>
+</ol>
+<pre><code class="language-python"># 离散型
+cat_cols = city_search_index.select_dtypes(include=[&#39;object&#39;]).columns
+# 连续型
+num_cols = city_search_index.select_dtypes(include=[&#39;int64&#39;, &#39;float64&#39;]).columns
+</code></pre>
+<ol start="12">
+<li>连续子图展示</li>
+</ol>
+<pre><code class="language-python">sns.set()
+import math
+
+ncols = 1
+nrows = math.ceil(len(missing_cols2) / ncols)
+fig, axes = plt.subplots(nrows, ncols, figsize=(3 * ncols, 3* nrows))
+axes = axes.flatten()
+for i, col in enumerate(missing_cols2):
+    sns.histplot(new_house_transactions[col], kde=True, ax=axes[i])
+
+plt.tight_layout()
+plt.show()
+</code></pre>
+<ol start="13">
+<li>去除行</li>
+</ol>
+<pre><code class="language-python">city_indexes = city_indexes.drop_duplicates(subset=[&#39;year&#39;])
+# subset：用于指定根据哪几列去重。如果不指定，默认对所有列进行去重。
+# keep：
+# &#39;first&#39;（默认）：保留第一次出现的重复行，删除后续的重复行。
+# &#39;last&#39;：保留最后一次出现的重复行，删除之前的。
+# False：删除所有重复的行（只保留唯一的行，没有重复的）。
+# inplace：
+# False（默认）：返回一个去重后的新DataFrame，不修改原始数据。
+# True：在原始DataFrame上直接修改，不返回新对象。
+</code></pre>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/pandas/" style="color: #00bcd4">pandas</a>
+        </span>
+        
+    </div>
+    <a href="/2022/08/30/pandas/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2022/05/26/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%95/">
+        <h2 class="post-title">Leetcode sql题目记录</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/Leetcode/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                Leetcode
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2022/5/26
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h2 id="Leetcode-sql题目记录"><a href="#Leetcode-sql题目记录" class="headerlink" title="Leetcode  sql题目记录"></a>Leetcode  sql题目记录</h2><p>本博客仅记录**高频 SQL 50 题（基础版）**中的中等难度题目，后续不定期更新</p>
+<h3 id="570-至少有5名直接下属的经理"><a href="#570-至少有5名直接下属的经理" class="headerlink" title="570. 至少有5名直接下属的经理"></a>570. 至少有5名直接下属的经理</h3><p>表: <code>Employee</code></p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| name        | varchar |
+| department  | varchar |
+| managerId   | int     |
++-------------+---------+
+id 是此表的主键（具有唯一值的列）。
+该表的每一行表示雇员的名字、他们的部门和他们的经理的id。
+如果managerId为空，则该员工没有经理。
+没有员工会成为自己的管理者。
+</code></pre>
+<p>编写一个解决方案，找出至少有<strong>五个直接下属</strong>的经理。</p>
+<p>以 <strong>任意顺序</strong> 返回结果表。</p>
+<p>查询结果格式如下所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: 
+Employee 表:
++-----+-------+------------+-----------+
+| id  | name  | department | managerId |
++-----+-------+------------+-----------+
+| 101 | John  | A          | Null      |
+| 102 | Dan   | A          | 101       |
+| 103 | James | A          | 101       |
+| 104 | Amy   | A          | 101       |
+| 105 | Anne  | A          | 101       |
+| 106 | Ron   | B          | 101       |
++-----+-------+------------+-----------+
+输出: 
++------+
+| name |
++------+
+| John |
++------+
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">select a.name from Employee a join Employee b on a.id = b.managerId group by a.id having count(*) &gt;= 5;
+</code></pre>
+<p>没有 <code>GROUP BY</code><br> <code>HAVING</code> 是对<strong>分组后的结果</strong>过滤的。你没分组时，MySQL把整张结果集当成<strong>一个大组</strong>，<code>COUNT(a.id)</code> 统计的是<strong>所有经理–下属配对的总行数</strong>，不是“每个经理的下属数”。因此当测试数据里只有一个经理且刚好有 5 个下属时看起来“正确”，但只要有两个经理，合计行数 ≥5，你这句就会把两位经理都放进结果里，甚至还会重复多行。</p>
+<hr>
+<h3 id="1934-确认率"><a href="#1934-确认率" class="headerlink" title="1934. 确认率"></a>1934. 确认率</h3><p>表: <code>Signups</code></p>
+<pre><code>+----------------+----------+
+| Column Name    | Type     |
++----------------+----------+
+| user_id        | int      |
+| time_stamp     | datetime |
++----------------+----------+
+User_id是该表的主键。
+每一行都包含ID为user_id的用户的注册时间信息。
+</code></pre>
+<p>表: <code>Confirmations</code></p>
+<pre><code>+----------------+----------+
+| Column Name    | Type     |
++----------------+----------+
+| user_id        | int      |
+| time_stamp     | datetime |
+| action         | ENUM     |
++----------------+----------+
+(user_id, time_stamp)是该表的主键。
+user_id是一个引用到注册表的外键。
+action是类型为(&#39;confirmed&#39;， &#39;timeout&#39;)的ENUM
+该表的每一行都表示ID为user_id的用户在time_stamp请求了一条确认消息，该确认消息要么被确认(&#39;confirmed&#39;)，要么被过期(&#39;timeout&#39;)。
+</code></pre>
+<p>用户的 <strong>确认率</strong> 是 <code>&#39;confirmed&#39;</code> 消息的数量除以请求的确认消息的总数。没有请求任何确认消息的用户的确认率为 <code>0</code> 。确认率四舍五入到 <strong>小数点后两位</strong> 。</p>
+<p>编写一个SQL查询来查找每个用户的 确认率 。</p>
+<p>以 任意顺序 返回结果表。</p>
+<p>查询结果格式如下所示。</p>
+<p><strong>示例1:</strong></p>
+<pre><code>输入：
+Signups 表:
++---------+---------------------+
+| user_id | time_stamp          |
++---------+---------------------+
+| 3       | 2020-03-21 10:16:13 |
+| 7       | 2020-01-04 13:57:59 |
+| 2       | 2020-07-29 23:09:44 |
+| 6       | 2020-12-09 10:39:37 |
++---------+---------------------+
+Confirmations 表:
++---------+---------------------+-----------+
+| user_id | time_stamp          | action    |
++---------+---------------------+-----------+
+| 3       | 2021-01-06 03:30:46 | timeout   |
+| 3       | 2021-07-14 14:00:00 | timeout   |
+| 7       | 2021-06-12 11:57:29 | confirmed |
+| 7       | 2021-06-13 12:58:28 | confirmed |
+| 7       | 2021-06-14 13:59:27 | confirmed |
+| 2       | 2021-01-22 00:00:00 | confirmed |
+| 2       | 2021-02-28 23:59:59 | timeout   |
++---------+---------------------+-----------+
+输出: 
++---------+-------------------+
+| user_id | confirmation_rate |
++---------+-------------------+
+| 6       | 0.00              |
+| 3       | 0.00              |
+| 7       | 1.00              |
+| 2       | 0.50              |
++---------+-------------------+
+解释:
+用户 6 没有请求任何确认消息。确认率为 0。
+用户 3 进行了 2 次请求，都超时了。确认率为 0。
+用户 7 提出了 3 个请求，所有请求都得到了确认。确认率为 1。
+用户 2 做了 2 个请求，其中一个被确认，另一个超时。确认率为 1 / 2 = 0.5。
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">WITH base AS (
+  SELECT 
+    user_id,
+    COUNT(*) AS total,
+    SUM(CASE WHEN action = &#39;confirmed&#39; THEN 1 ELSE 0 END) AS confirmed
+  FROM Confirmations
+  GROUP BY user_id
+)
+SELECT 
+  s.user_id,
+  ROUND(IFNULL(b.confirmed / b.total, 0), 2) AS confirmation_rate
+FROM Signups s
+LEFT JOIN base b
+  ON s.user_id = b.user_id;
+</code></pre>
+<hr>
+<h3 id="1193-每月交易I"><a href="#1193-每月交易I" class="headerlink" title="1193. 每月交易I"></a>1193. 每月交易I</h3><p>表：<code>Transactions</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| id            | int     |
+| country       | varchar |
+| state         | enum    |
+| amount        | int     |
+| trans_date    | date    |
++---------------+---------+
+id 是这个表的主键。
+该表包含有关传入事务的信息。
+state 列类型为 [&quot;approved&quot;, &quot;declined&quot;] 之一。
+</code></pre>
+<p>编写一个 sql 查询来查找每个月和每个国家&#x2F;地区的事务数及其总金额、已批准的事务数及其总金额。</p>
+<p>以 <strong>任意顺序</strong> 返回结果表。</p>
+<p>查询结果格式如下所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Transactions table:
++------+---------+----------+--------+------------+
+| id   | country | state    | amount | trans_date |
++------+---------+----------+--------+------------+
+| 121  | US      | approved | 1000   | 2018-12-18 |
+| 122  | US      | declined | 2000   | 2018-12-19 |
+| 123  | US      | approved | 2000   | 2019-01-01 |
+| 124  | DE      | approved | 2000   | 2019-01-07 |
++------+---------+----------+--------+------------+
+输出：
++----------+---------+-------------+----------------+--------------------+-----------------------+
+| month    | country | trans_count | approved_count | trans_total_amount | approved_total_amount |
++----------+---------+-------------+----------------+--------------------+-----------------------+
+| 2018-12  | US      | 2           | 1              | 3000               | 1000                  |
+| 2019-01  | US      | 1           | 1              | 2000               | 2000                  |
+| 2019-01  | DE      | 1           | 1              | 2000               | 2000                  |
++----------+---------+-------------+----------------+--------------------+-----------------------+
+</code></pre>
+<p>解答：</p>
+<p>多个 CTE 用 <code>WITH a AS (...), b AS (...)</code>。</p>
+<p>按 <code>month、country</code> 分组；<code>approved</code> 相关用 <code>CASE WHEN</code> 计数&#x2F;求和。</p>
+<p>取月份用 <code>DATE_FORMAT(trans_date, &#39;%Y-%m&#39;)</code> 更稳妥。</p>
+<p><strong>DATE_FORMAT(…, ‘%y-%m’)：结果是20-02，若是’%Y-%m，结果是2020-02，若是’%Y-%M，结果是2020-Febrary’</strong></p>
+<pre><code class="language-sql">WITH base AS (
+  SELECT
+    DATE_FORMAT(trans_date, &#39;%Y-%m&#39;) AS month,
+    country,
+    state,
+    amount
+  FROM Transactions
+),
+seq AS (
+  SELECT
+    month,
+    country,
+    COUNT(*) AS trans_count,
+    SUM(CASE WHEN state = &#39;approved&#39; THEN 1 ELSE 0 END) AS approved_count,
+    SUM(amount) AS trans_total_amount,
+    SUM(CASE WHEN state = &#39;approved&#39; THEN amount ELSE 0 END) AS approved_total_amount
+  FROM base
+  GROUP BY month, country
+)
+SELECT *
+FROM seq;
+</code></pre>
+<hr>
+<h3 id="1174-即时食物配送II"><a href="#1174-即时食物配送II" class="headerlink" title="1174. 即时食物配送II"></a>1174. 即时食物配送II</h3><p>配送表: <code>Delivery</code></p>
+<pre><code>+-----------------------------+---------+
+| Column Name                 | Type    |
++-----------------------------+---------+
+| delivery_id                 | int     |
+| customer_id                 | int     |
+| order_date                  | date    |
+| customer_pref_delivery_date | date    |
++-----------------------------+---------+
+delivery_id 是该表中具有唯一值的列。
+该表保存着顾客的食物配送信息，顾客在某个日期下了订单，并指定了一个期望的配送日期（和下单日期相同或者在那之后）。
+</code></pre>
+<p>如果顾客期望的配送日期和下单日期相同，则该订单称为 「<strong>即时订单</strong>」，否则称为「<strong>计划订单</strong>」。</p>
+<p>「<strong>首次订单</strong>」是顾客最早创建的订单。我们保证一个顾客只会有一个「首次订单」。</p>
+<p>编写解决方案以获取即时订单在所有用户的首次订单中的比例。<strong>保留两位小数。</strong></p>
+<p>结果示例如下所示：</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Delivery 表：
++-------------+-------------+------------+-----------------------------+
+| delivery_id | customer_id | order_date | customer_pref_delivery_date |
++-------------+-------------+------------+-----------------------------+
+| 1           | 1           | 2019-08-01 | 2019-08-02                  |
+| 2           | 2           | 2019-08-02 | 2019-08-02                  |
+| 3           | 1           | 2019-08-11 | 2019-08-12                  |
+| 4           | 3           | 2019-08-24 | 2019-08-24                  |
+| 5           | 3           | 2019-08-21 | 2019-08-22                  |
+| 6           | 2           | 2019-08-11 | 2019-08-13                  |
+| 7           | 4           | 2019-08-09 | 2019-08-09                  |
++-------------+-------------+------------+-----------------------------+
+输出：
++----------------------+
+| immediate_percentage |
++----------------------+
+| 50.00                |
++----------------------+
+解释：
+1 号顾客的 1 号订单是首次订单，并且是计划订单。
+2 号顾客的 2 号订单是首次订单，并且是即时订单。
+3 号顾客的 5 号订单是首次订单，并且是计划订单。
+4 号顾客的 7 号订单是首次订单，并且是即时订单。
+因此，一半顾客的首次订单是即时的。
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">with base as (
+select *, row_number() over(partition by customer_id order by order_date) as rn 
+from Delivery),
+seq as (
+    select round((sum(case when customer_pref_delivery_date = order_date then 1 else 0 end) / count(*)) * 100, 2) as immediate_percentage from base where rn = 1
+)
+select * from seq;
+</code></pre>
+<hr>
+<h3 id="176-第二高的薪水"><a href="#176-第二高的薪水" class="headerlink" title="176. 第二高的薪水"></a>176. 第二高的薪水</h3><p><code>Employee</code> 表：</p>
+<pre><code>+-------------+------+
+| Column Name | Type |
++-------------+------+
+| id          | int  |
+| salary      | int  |
++-------------+------+
+id 是这个表的主键。
+表的每一行包含员工的工资信息。
+</code></pre>
+<p>查询并返回 <code>Employee</code> 表中第二高的 <strong>不同</strong> 薪水 。如果不存在第二高的薪水，查询应该返回 <code>null(Pandas 则返回 None)</code> 。</p>
+<p>查询结果如下例所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Employee 表：
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
++----+--------+
+输出：
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| 200                 |
++---------------------+
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：
+Employee 表：
++----+--------+
+| id | salary |
++----+--------+
+| 1  | 100    |
++----+--------+
+输出：
++---------------------+
+| SecondHighestSalary |
++---------------------+
+| null                |
++---------------------+
+</code></pre>
+<p>解答</p>
+<pre><code class="language-sql">SELECT MAX(salary) AS SecondHighestSalary
+FROM (
+  SELECT DISTINCT salary,
+         DENSE_RANK() OVER (ORDER BY salary DESC) AS rk
+  FROM Employee
+) t
+WHERE rk = 2;
+</code></pre>
+<h4 id="（1）-子查询为空但外层用了聚合函数"><a href="#（1）-子查询为空但外层用了聚合函数" class="headerlink" title="（1） 子查询为空但外层用了聚合函数"></a>（1） 子查询为空但外层用了聚合函数</h4><p>SQL 的定义是：聚合函数对空输入时，返回 <strong>NULL</strong>。<br> 例子：</p>
+<pre><code class="language-sql">SELECT MAX(salary) FROM (SELECT 1 AS salary WHERE 1=0) t;
+</code></pre>
+<p><code>(SELECT 1 WHERE 1=0)</code> 为空表 → <code>MAX</code> 没有任何值可比较 → 返回 <code>NULL</code>。</p>
+<p>所以这就是为什么“第二高薪水不存在”时 <code>MAX</code> 可以帮我们自动返回 <code>NULL</code>。</p>
+<hr>
+<h4 id="（2）子查询为空而外层没有聚合函数"><a href="#（2）子查询为空而外层没有聚合函数" class="headerlink" title="（2）子查询为空而外层没有聚合函数"></a>（2）子查询为空而外层没有聚合函数</h4><p>如果你直接：</p>
+<pre><code class="language-sql">SELECT salary 
+FROM (SELECT salary WHERE 1=0) t;
+</code></pre>
+<p>那结果就是 <strong>0 行</strong>（即直接返回空结果集，不会自动给你一行 <code>NULL</code>）。</p>
+<hr>
+<h3 id="550-游戏玩法分析IV"><a href="#550-游戏玩法分析IV" class="headerlink" title="550. 游戏玩法分析IV"></a>550. 游戏玩法分析IV</h3><p>Table: <code>Activity</code></p>
+<pre><code>+--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| player_id    | int     |
+| device_id    | int     |
+| event_date   | date    |
+| games_played | int     |
++--------------+---------+
+（player_id，event_date）是此表的主键（具有唯一值的列的组合）。
+这张表显示了某些游戏的玩家的活动情况。
+每一行是一个玩家的记录，他在某一天使用某个设备注销之前登录并玩了很多游戏（可能是 0）。
+</code></pre>
+<p>编写解决方案，报告在首次登录的第二天再次登录的玩家的 <strong>比率</strong>，<strong>四舍五入到小数点后两位</strong>。换句话说，你需要计算从首次登录后的第二天登录的玩家数量，并将其除以总玩家数。</p>
+<p>结果格式如下所示：</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Activity table:
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1         | 2         | 2016-03-01 | 5            |
+| 1         | 2         | 2016-03-02 | 6            |
+| 2         | 3         | 2017-06-25 | 1            |
+| 3         | 1         | 2016-03-02 | 0            |
+| 3         | 4         | 2018-07-03 | 5            |
++-----------+-----------+------------+--------------+
+输出：
++-----------+
+| fraction  |
++-----------+
+| 0.33      |
++-----------+
+解释：
+只有 ID 为 1 的玩家在第一天登录后才重新登录，所以答案是 1/3 = 0.33
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql"># Write your MySQL query statement below
+with base as(
+    select *,min(event_date) over(partition by player_id)as first from Activity
+),
+seq as(
+    select player_id, sum(case when datediff(event_date, first) = 1 then 1 else 0 end) as rn from base
+    group by player_id
+)
+select round(IFNULL((sum(rn) / count(distinct player_id)), 0), 2) as fraction from seq;
+</code></pre>
+<p>注意：</p>
+<ol>
+<li>在使用with base as(), seq as() select from seq时，要记得每个嵌套内部的select很重要，前一个select需要包含后一个select的内容。</li>
+<li>使用聚合函数min,max,count后结果会被压缩，如果后续要同行对最大、最小进行比较，要使用窗口函数形式的max,min…</li>
+</ol>
+<hr>
+<h3 id="1045-买下所有产品的客户"><a href="#1045-买下所有产品的客户" class="headerlink" title="1045. 买下所有产品的客户"></a>1045. 买下所有产品的客户</h3><p><code>Customer</code> 表：</p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| customer_id | int     |
+| product_key | int     |
++-------------+---------+
+该表可能包含重复的行。
+customer_id 不为 NULL。
+product_key 是 Product 表的外键(reference 列)。
+</code></pre>
+<p><code>Product</code> 表：</p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| product_key | int     |
++-------------+---------+
+product_key 是这张表的主键（具有唯一值的列）。
+</code></pre>
+<p>编写解决方案，报告 <code>Customer</code> 表中购买了 <code>Product</code> 表中所有产品的客户的 id。</p>
+<p>返回结果表 <strong>无顺序要求</strong> 。</p>
+<p>返回结果格式如下所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Customer 表：
++-------------+-------------+
+| customer_id | product_key |
++-------------+-------------+
+| 1           | 5           |
+| 2           | 6           |
+| 3           | 5           |
+| 3           | 6           |
+| 1           | 6           |
++-------------+-------------+
+Product 表：
++-------------+
+| product_key |
++-------------+
+| 5           |
+| 6           |
++-------------+
+输出：
++-------------+
+| customer_id |
++-------------+
+| 1           |
+| 3           |
++-------------+
+解释：
+购买了所有产品（5 和 6）的客户的 id 是 1 和 3 。
+</code></pre>
+<p>解答：</p>
+<ol>
+<li><strong><code>WHERE DISTINCT</code> 是非法语法</strong>。<code>DISTINCT</code> 只能放在 <code>SELECT</code> 或 <code>COUNT(DISTINCT ...)</code> 里面，不能直接放在 <code>WHERE</code>。</li>
+<li>题目要求的是“买了所有产品的顾客”，所以应该比较顾客买到的 <strong>去重后产品数</strong> 和 <strong>Product 表里的产品总数</strong>。</li>
+</ol>
+<pre><code class="language-sql">SELECT customer_id
+FROM Customer
+GROUP BY customer_id
+HAVING COUNT(DISTINCT product_key) = (
+    SELECT COUNT(*) FROM Product
+);
+</code></pre>
+<p>解释一下：</p>
+<ul>
+<li><code>GROUP BY customer_id</code>：按顾客分组。</li>
+<li><code>COUNT(DISTINCT product_key)</code>：统计该顾客买了多少种不同的产品。</li>
+<li>子查询 <code>(SELECT COUNT(*) FROM Product)</code>：统计总共有多少种产品。</li>
+<li><code>HAVING ... = ...</code>：筛选出买全所有产品的顾客。</li>
+</ul>
+<hr>
+<h3 id="180-连续出现的数字"><a href="#180-连续出现的数字" class="headerlink" title="180. 连续出现的数字"></a>180. 连续出现的数字</h3><p>表：<code>Logs</code></p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| num         | varchar |
++-------------+---------+
+在 SQL 中，id 是该表的主键。
+id 是一个自增列。
+</code></pre>
+<p>找出所有至少连续出现三次的数字。</p>
+<p>返回的结果表中的数据可以按 <strong>任意顺序</strong> 排列。</p>
+<p>结果格式如下面的例子所示：</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Logs 表：
++----+-----+
+| id | num |
++----+-----+
+| 1  | 1   |
+| 2  | 1   |
+| 3  | 1   |
+| 4  | 2   |
+| 5  | 1   |
+| 6  | 2   |
+| 7  | 2   |
++----+-----+
+输出：
+Result 表：
++-----------------+
+| ConsecutiveNums |
++-----------------+
+| 1               |
++-----------------+
+解释：1 是唯一连续出现至少三次的数字。
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">with base as(
+    select *, row_number() over(partition by num order by id) as rn from Logs
+),
+seq as(
+    select *, id - rn as diff from base 
+),
+rpq as (
+    select num, count(*) as ct from seq group by num, diff having count(*) &gt;= 3
+)
+select distinct num as ConsecutiveNums from rpq;
+</code></pre>
+<p><strong>有时候不要忘记distinct</strong></p>
+<hr>
+<h3 id="1164-指定日期的产品价格"><a href="#1164-指定日期的产品价格" class="headerlink" title="1164. 指定日期的产品价格"></a>1164. 指定日期的产品价格</h3><p>产品数据表: <code>Products</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| product_id    | int     |
+| new_price     | int     |
+| change_date   | date    |
++---------------+---------+
+(product_id, change_date) 是此表的主键（具有唯一值的列组合）。
+这张表的每一行分别记录了 某产品 在某个日期 更改后 的新价格。
+</code></pre>
+<p>一开始，所有产品价格都为 10。</p>
+<p>编写一个解决方案，找出在 <code>2019-08-16</code> 所有产品的价格。</p>
+<p>以 <strong>任意顺序</strong> 返回结果表。</p>
+<p>结果格式如下例所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Products 表:
++------------+-----------+-------------+
+| product_id | new_price | change_date |
++------------+-----------+-------------+
+| 1          | 20        | 2019-08-14  |
+| 2          | 50        | 2019-08-14  |
+| 1          | 30        | 2019-08-15  |
+| 1          | 35        | 2019-08-16  |
+| 2          | 65        | 2019-08-17  |
+| 3          | 20        | 2019-08-18  |
++------------+-----------+-------------+
+输出：
++------------+-------+
+| product_id | price |
++------------+-------+
+| 2          | 50    |
+| 1          | 35    |
+| 3          | 10    |
++------------+-------+
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">with base as(
+    select *, row_number()over (partition by product_id order by change_date DESC) as rn from Products where change_date &lt;= &#39;2019-08-16&#39;
+),
+seq as (
+    select product_id, new_price as price from base where rn = 1
+)
+select product_id, price from seq union all select distinct product_id, 10 as price from (
+    select product_id, min(change_date) as mi from Products group by product_id
+)t  where mi &gt; &#39;2019-08-16&#39;;
+</code></pre>
+<p>归纳：<br>想要得到某一列的最大最小值，并用其与某个数进行比较，需要先max、min（窗口或者聚合函数），然后再等值查询，或者rownumber配合ASC、DESC，然后再后续查询中使用rn&#x3D;1，或者直接使用order by+limit</p>
+<h4 id="（1）非相关子查询-等值比较"><a href="#（1）非相关子查询-等值比较" class="headerlink" title="（1）非相关子查询 + 等值比较"></a>（1）非相关子查询 + 等值比较</h4><p><strong>使用场景</strong>：<strong>全局只有一个最值</strong>（整个表的最大值&#x2F;最小值），不依赖分组。</p>
+<ul>
+<li>特点：子查询返回单行，可以直接用 <code>=</code> 比较。</li>
+<li>示例：找出工资最高的员工</li>
+</ul>
+<pre><code class="language-sql">select *
+from Employee
+where salary = (select max(salary) from Employee);
+</code></pre>
+<hr>
+<h4 id="（2）相关子查询"><a href="#（2）相关子查询" class="headerlink" title="（2）相关子查询"></a>（2）相关子查询</h4><p><strong>使用场景</strong>：<strong>分组后的最值</strong>（每个客户&#x2F;部门的最小&#x2F;最大日期），外层表的条件依赖子查询。</p>
+<ul>
+<li>特点：子查询里需要引用外层的列，每行执行一次，保证返回单行。</li>
+<li>示例：找每个客户的首单</li>
+</ul>
+<pre><code class="language-sql">select *
+from Delivery d1
+where order_date = (
+  select min(order_date)
+  from Delivery d2
+  where d2.customer_id = d1.customer_id
+);
+</code></pre>
+<p>这里子查询里的 <code>d2.customer_id = d1.customer_id</code> 绑定了外层查询的 <code>d1.customer_id</code>。</p>
+<p>每次外层取一行，子查询就只计算该客户的最小订单日期。</p>
+<p>也可以写成这种形式：</p>
+<pre><code class="language-sql">select *
+from (
+  select customer_id, min(order_date)
+  from Delivery 
+  group by customer_id
+)t ;
+</code></pre>
+<hr>
+<h4 id="（3）窗口函数-条件筛选"><a href="#（3）窗口函数-条件筛选" class="headerlink" title="（3）窗口函数 + 条件筛选"></a>（3）窗口函数 + 条件筛选</h4><p><strong>使用场景</strong>：数据库支持窗口函数（MySQL 8+ &#x2F; PostgreSQL &#x2F; Oracle &#x2F; SQL Server），<strong>需要按组取前几名&#x2F;最值。</strong></p>
+<p>也可以使用max、min的窗口函数形式来获取每个组别的最值</p>
+<ul>
+<li>特点：写法简洁，可同时保留分组内排序信息。</li>
+<li>示例：找每个客户的首单</li>
+</ul>
+<pre><code class="language-sql">with t as (
+  select *,
+         row_number() over(partition by customer_id order by order_date) as rn
+  from Delivery
+)
+select *
+from t
+where rn = 1;
+</code></pre>
+<ul>
+<li>如果要处理并列情况，可以用 <code>rank()</code> 或 <code>dense_rank()</code>。</li>
+</ul>
+<hr>
+<h4 id="（4）ORDER-BY-LIMIT"><a href="#（4）ORDER-BY-LIMIT" class="headerlink" title="（4）ORDER BY + LIMIT"></a>（4）ORDER BY + LIMIT</h4><p><strong>使用场景</strong>：<strong>只需要全表范围内的最值</strong>，且只取前 N 条（不分组）。</p>
+<ul>
+<li>特点：简单高效，但无法直接应对「每组最值」问题。</li>
+<li>示例：找工资最高的员工（Top 1）</li>
+</ul>
+<pre><code class="language-sql">select *
+from Employee
+order by salary desc
+limit 1;
+</code></pre>
+<ul>
+<li>如果需要每组最值，就不适合，只能配合窗口函数或子查询。</li>
+</ul>
+<hr>
+<h4 id="对比总结"><a href="#对比总结" class="headerlink" title="对比总结"></a>对比总结</h4><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>适用场景</th>
+<th>优点</th>
+<th>局限</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>非相关子查询</strong></td>
+<td>全表唯一最值</td>
+<td>简单</td>
+<td>只能处理单个全局最值</td>
+</tr>
+<tr>
+<td><strong>相关子查询</strong></td>
+<td>每组最值（需要依赖外层条件）</td>
+<td>通用，不要求窗口函数</td>
+<td>子查询多次执行，性能较差</td>
+</tr>
+<tr>
+<td><strong>窗口函数</strong></td>
+<td>每组最值&#x2F;前 N 个</td>
+<td>高效简洁，现代 SQL 推荐</td>
+<td>需要数据库支持窗口函数</td>
+</tr>
+<tr>
+<td><strong>ORDER BY + LIMIT</strong></td>
+<td>全表前 N 个</td>
+<td>简洁高效</td>
+<td>不能分组，只能处理全局最值</td>
+</tr>
+</tbody></table>
+<hr>
+<p>👉 快速记忆：</p>
+<ul>
+<li><strong>全局最值</strong> → 非相关子查询 或 <code>order by + limit</code></li>
+<li><strong>分组最值</strong> → 相关子查询 或 窗口函数</li>
+<li><strong>要前 N 名&#x2F;并列情况</strong> → 窗口函数最佳</li>
+</ul>
+<hr>
+<h3 id="1204-最后一个能进入巴士的人"><a href="#1204-最后一个能进入巴士的人" class="headerlink" title="1204.最后一个能进入巴士的人"></a>1204.最后一个能进入巴士的人</h3><p>表: <code>Queue</code></p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| person_id   | int     |
+| person_name | varchar |
+| weight      | int     |
+| turn        | int     |
++-------------+---------+
+person_id 是这个表具有唯一值的列。
+该表展示了所有候车乘客的信息。
+表中 person_id 和 turn 列将包含从 1 到 n 的所有数字，其中 n 是表中的行数。
+turn 决定了候车乘客上巴士的顺序，其中 turn=1 表示第一个上巴士，turn=n 表示最后一个上巴士。
+weight 表示候车乘客的体重，以千克为单位。
+</code></pre>
+<p>有一队乘客在等着上巴士。然而，巴士有<code>1000</code> <strong>千克</strong> 的重量限制，所以其中一部分乘客可能无法上巴士。</p>
+<p>编写解决方案找出 <strong>最后一个</strong> 上巴士且不超过重量限制的乘客，并报告 <code>person_name</code> 。题目测试用例确保顺位第一的人可以上巴士且不会超重。</p>
+<p>返回结果格式如下所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Queue 表
++-----------+-------------+--------+------+
+| person_id | person_name | weight | turn |
++-----------+-------------+--------+------+
+| 5         | Alice       | 250    | 1    |
+| 4         | Bob         | 175    | 5    |
+| 3         | Alex        | 350    | 2    |
+| 6         | John Cena   | 400    | 3    |
+| 1         | Winston     | 500    | 6    |
+| 2         | Marie       | 200    | 4    |
++-----------+-------------+--------+------+
+输出：
++-------------+
+| person_name |
++-------------+
+| John Cena   |
++-------------+
+解释：
+为了简化，Queue 表按 turn 列由小到大排序。
++------+----+-----------+--------+--------------+
+| Turn | ID | Name      | Weight | Total Weight |
++------+----+-----------+--------+--------------+
+| 1    | 5  | Alice     | 250    | 250          |
+| 2    | 3  | Alex      | 350    | 600          |
+| 3    | 6  | John Cena | 400    | 1000         | (最后一个上巴士)
+| 4    | 2  | Marie     | 200    | 1200         | (无法上巴士)
+| 5    | 4  | Bob       | 175    | ___          |
+| 6    | 1  | Winston   | 500    | ___          |
++------+----+-----------+--------+--------------+
+</code></pre>
+<p>解答：</p>
+<p><strong>PS：SQL 聚合函数（如 <code>MAX()</code>）和普通列之间没有自动的“行对齐”关系。</strong></p>
+<p>不能直接写成！：</p>
+<pre><code class="language-sql">select person_name, max(total_weight) from (
+    select * , sum(weight)over (order by turn) as total_weight from Queue
+)t where total_weight &lt;= 1000;
+
+-- 结果只会返回
+| person_id | person_name | weight | turn |
+| --------- | ----------- | ------ | ---- |
+| 5         | Alice       | 250    | 1    |
+| 4         | Bob         | 175    | 5    |
+| 3         | Alex        | 350    | 2    |
+| 6         | John Cena   | 400    | 3    |
+| 1         | Winston     | 500    | 6    |
+| 2         | Marie       | 200    | 4    |
+
+| person_name | max(total_weight) |
+| ----------- | ----------------- |
+| Alice       | 1000              |
+
+-- 而不是正确输出
+| person_name |
+| ----------- |
+| John Cena   |
+</code></pre>
+<h4 id="（1）子查询-等值过滤"><a href="#（1）子查询-等值过滤" class="headerlink" title="（1）子查询+等值过滤"></a>（1）子查询+等值过滤</h4><pre><code class="language-sql"># Write your MySQL query statement below
+with base as(
+    select * , sum(weight)over (order by turn) as total_weight from Queue
+)
+select person_name from base where total_weight = (
+    select max(total_weight) as mx from base where total_weight &lt;= 1000
+);
+</code></pre>
+<hr>
+<h4 id="（2）ORDER-BY-LIMIT"><a href="#（2）ORDER-BY-LIMIT" class="headerlink" title="（2）ORDER BY+LIMIT"></a>（2）ORDER BY+LIMIT</h4><pre><code class="language-sql"># Write your MySQL query statement below
+select person_name from (
+    select * , sum(weight)over (order by turn) as total_weight from Queue
+)t where total_weight &lt;= 1000 order by total_weight DESC limit 1;
+</code></pre>
+<hr>
+<h3 id="1907-按分类统计薪水"><a href="#1907-按分类统计薪水" class="headerlink" title="1907. 按分类统计薪水"></a>1907. 按分类统计薪水</h3><p>表: <code>Accounts</code></p>
+<pre><code>+-------------+------+
+| 列名        | 类型  |
++-------------+------+
+| account_id  | int  |
+| income      | int  |
++-------------+------+
+在 SQL 中，account_id 是这个表的主键。
+每一行都包含一个银行帐户的月收入的信息。
+</code></pre>
+<p>查询每个工资类别的银行账户数量。 工资类别如下：</p>
+<ul>
+<li><code>&quot;Low Salary&quot;</code>：所有工资 <strong>严格低于</strong> <code>20000</code> 美元。</li>
+<li><code>&quot;Average Salary&quot;</code>： <strong>包含</strong> 范围内的所有工资 <code>[$20000, $50000]</code> 。</li>
+<li><code>&quot;High Salary&quot;</code>：所有工资 <strong>严格大于</strong> <code>50000</code> 美元。</li>
+</ul>
+<p>结果表 <strong>必须</strong> 包含所有三个类别。 如果某个类别中没有帐户，则报告 <code>0</code> 。</p>
+<p>按 <strong>任意顺序</strong> 返回结果表。</p>
+<p>查询结果格式如下示例。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Accounts 表:
++------------+--------+
+| account_id | income |
++------------+--------+
+| 3          | 108939 |
+| 2          | 12747  |
+| 8          | 87709  |
+| 6          | 91796  |
++------------+--------+
+输出：
++----------------+----------------+
+| category       | accounts_count |
++----------------+----------------+
+| Low Salary     | 1              |
+| Average Salary | 0              |
+| High Salary    | 3              |
++----------------+----------------+
+解释：
+低薪: 有一个账户 2.
+中等薪水: 没有.
+高薪: 有三个账户，他们是 3, 6和 8.
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">select &#39;Low Salary&#39; as category, sum(case when income &lt; 20000 then 1 else 0 end) as accounts_count
+from Accounts
+Union all
+select &#39;Average Salary&#39; as category, sum(case when income &gt;= 20000 and income &lt;= 50000 then 1 else 0 end) as accounts_count
+from Accounts
+Union all
+select &#39;High Salary&#39; as category, sum(case when income &gt; 50000 then 1 else 0 end) as accounts_count
+from Accounts;
+</code></pre>
+<hr>
+<h3 id="626-换座位"><a href="#626-换座位" class="headerlink" title="626. 换座位"></a>626. 换座位</h3><p>表: <code>Seat</code></p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| student     | varchar |
++-------------+---------+
+id 是该表的主键（唯一值）列。
+该表的每一行都表示学生的姓名和 ID。
+ID 序列始终从 1 开始并连续增加。
+</code></pre>
+<p>编写解决方案来交换每两个连续的学生的座位号。如果学生的数量是奇数，则最后一个学生的id不交换。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: 
+Seat 表:
++----+---------+
+| id | student |
++----+---------+
+| 1  | Abbot   |
+| 2  | Doris   |
+| 3  | Emerson |
+| 4  | Green   |
+| 5  | Jeames  |
++----+---------+
+输出: 
++----+---------+
+| id | student |
++----+---------+
+| 1  | Doris   |
+| 2  | Abbot   |
+| 3  | Green   |
+| 4  | Emerson |
+| 5  | Jeames  |
++----+---------+
+解释:
+请注意，如果学生人数为奇数，则不需要更换最后一名学生的座位。
+</code></pre>
+<p>解答：</p>
+<h4 id="（1）嵌套查询"><a href="#（1）嵌套查询" class="headerlink" title="（1）嵌套查询"></a>（1）嵌套查询</h4><pre><code class="language-sql"># Write your MySQL query statement below
+with base as(
+    select *, lead(student, 1)over (order by id) as exchange_nxt, lag(student, 1)over (order by id) as exchange_pre from Seat
+)
+select id, IFNULL((case when (id % 2) != 0 then exchange_nxt else exchange_pre end), student) as student from base;
+</code></pre>
+<h4 id="（2）CASE-WHEN"><a href="#（2）CASE-WHEN" class="headerlink" title="（2）CASE WHEN"></a>（2）CASE WHEN</h4><pre><code class="language-sql"># Write your MySQL query statement below
+select case 
+        when id % 2 = 1 and id &lt; (select max(id) from Seat)
+            then id + 1
+        when id % 2 = 0 
+            then id - 1
+        else id
+        end as id, student
+    from Seat
+order by id;
+</code></pre>
+<p>在 SQL 里，<code>CASE</code> 可以写两种形式：</p>
+<h5 id="a-简单-CASE"><a href="#a-简单-CASE" class="headerlink" title="a. 简单 CASE"></a>a. 简单 CASE</h5><p>直接对某个表达式的值做匹配：</p>
+<pre><code class="language-sql">CASE column_name
+    WHEN &#39;A&#39; THEN &#39;类型1&#39;
+    WHEN &#39;B&#39; THEN &#39;类型2&#39;
+    ELSE &#39;其他&#39;
+END
+</code></pre>
+<h5 id="b-搜索-CASE-（最常用）"><a href="#b-搜索-CASE-（最常用）" class="headerlink" title="b. 搜索 CASE （最常用）"></a>b. 搜索 CASE （最常用）</h5><p>条件判断灵活，可以写比较、范围等：</p>
+<pre><code class="language-sql">CASE
+    WHEN score &gt;= 90 THEN &#39;优秀&#39;
+    WHEN score &gt;= 60 THEN &#39;及格&#39;
+    ELSE &#39;不及格&#39;
+END
+</code></pre>
+<h5 id="c-作为一个字段输出"><a href="#c-作为一个字段输出" class="headerlink" title="c. 作为一个字段输出"></a>c. 作为一个字段输出</h5><pre><code class="language-sql">SELECT name,
+       CASE WHEN age &lt; 18 THEN &#39;未成年&#39;
+            WHEN age &lt; 60 THEN &#39;成年人&#39;
+            ELSE &#39;老年人&#39;
+       END AS age_group
+FROM users;
+</code></pre>
+<h5 id="d-在聚合函数里做条件统计"><a href="#d-在聚合函数里做条件统计" class="headerlink" title="d. 在聚合函数里做条件统计"></a>d. 在聚合函数里做条件统计</h5><pre><code class="language-sql">SELECT
+    SUM(CASE WHEN status = &#39;success&#39; THEN 1 ELSE 0 END) AS success_count,
+    SUM(CASE WHEN status = &#39;fail&#39; THEN 1 ELSE 0 END)    AS fail_count
+FROM logs;
+</code></pre>
+<p>常用于 <strong>条件计数</strong>。</p>
+<h5 id="e-排序（ORDER-BY）"><a href="#e-排序（ORDER-BY）" class="headerlink" title="e. 排序（ORDER BY）"></a>e. 排序（ORDER BY）</h5><pre><code class="language-sql">SELECT *
+FROM orders
+ORDER BY
+  CASE 
+    WHEN status = &#39;vip&#39; THEN 1
+    WHEN status = &#39;normal&#39; THEN 2
+    ELSE 3
+  END;
+</code></pre>
+<hr>
+<h3 id="1341-电影评分"><a href="#1341-电影评分" class="headerlink" title="1341. 电影评分"></a>1341. 电影评分</h3><p>表：<code>Movies</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| movie_id      | int     |
+| title         | varchar |
++---------------+---------+
+movie_id 是这个表的主键(具有唯一值的列)。
+title 是电影的名字。
+</code></pre>
+<p>表：<code>Users</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| user_id       | int     |
+| name          | varchar |
++---------------+---------+
+user_id 是表的主键(具有唯一值的列)。
+&#39;name&#39; 列具有唯一值。
+</code></pre>
+<p>表：<code>MovieRating</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| movie_id      | int     |
+| user_id       | int     |
+| rating        | int     |
+| created_at    | date    |
++---------------+---------+
+(movie_id, user_id) 是这个表的主键(具有唯一值的列的组合)。
+这个表包含用户在其评论中对电影的评分 rating 。
+created_at 是用户的点评日期。 
+</code></pre>
+<p>请你编写一个解决方案：</p>
+<ul>
+<li>查找评论电影数量最多的用户名。如果出现平局，返回字典序较小的用户名。</li>
+<li>查找在 <code>February 2020</code> <strong>平均评分最高</strong> 的电影名称。如果出现平局，返回字典序较小的电影名称。</li>
+</ul>
+<p><strong>字典序</strong> ，即按字母在字典中出现顺序对字符串排序，字典序较小则意味着排序靠前。</p>
+<p>返回结果格式如下例所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Movies 表：
++-------------+--------------+
+| movie_id    |  title       |
++-------------+--------------+
+| 1           | Avengers     |
+| 2           | Frozen 2     |
+| 3           | Joker        |
++-------------+--------------+
+Users 表：
++-------------+--------------+
+| user_id     |  name        |
++-------------+--------------+
+| 1           | Daniel       |
+| 2           | Monica       |
+| 3           | Maria        |
+| 4           | James        |
++-------------+--------------+
+MovieRating 表：
++-------------+--------------+--------------+-------------+
+| movie_id    | user_id      | rating       | created_at  |
++-------------+--------------+--------------+-------------+
+| 1           | 1            | 3            | 2020-01-12  |
+| 1           | 2            | 4            | 2020-02-11  |
+| 1           | 3            | 2            | 2020-02-12  |
+| 1           | 4            | 1            | 2020-01-01  |
+| 2           | 1            | 5            | 2020-02-17  | 
+| 2           | 2            | 2            | 2020-02-01  | 
+| 2           | 3            | 2            | 2020-03-01  |
+| 3           | 1            | 3            | 2020-02-22  | 
+| 3           | 2            | 4            | 2020-02-25  | 
++-------------+--------------+--------------+-------------+
+输出：
+Result 表：
++--------------+
+| results      |
++--------------+
+| Daniel       |
+| Frozen 2     |
++--------------+
+解释：
+Daniel 和 Monica 都点评了 3 部电影（&quot;Avengers&quot;, &quot;Frozen 2&quot; 和 &quot;Joker&quot;） 但是 Daniel 字典序比较小。
+Frozen 2 和 Joker 在 2 月的评分都是 3.5，但是 Frozen 2 的字典序比较小。
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">with base as(
+    select *, avg(rating) as avg_rate from (
+        select *, date_format(created_at, &#39;%Y-%m&#39;) as created_month from MovieRating 
+        where date_format(created_at, &#39;%Y-%m&#39;) = &#39;2020-02&#39;
+    )a group by movie_id
+),
+seq as (
+    select movie_id from base where avg_rate = (
+        select max(avg_rate) from base 
+    )
+),
+base2 as(
+    select s.user_id from(
+        select t.user_id, rank() over(order by ct DESC) as rk from(
+            select user_id, count(*) as ct from  MovieRating group by user_id
+        )t
+    )s where s.rk = 1
+)
+select min(a.name) as results from Users a join base2 b on a.user_id = b.user_id union all
+    select min(a.title) as results from Movies a join seq b on a.movie_id = b.movie_id;
+</code></pre>
+<p><strong>PS:</strong></p>
+<p>（1）如果需要获取某一列中不同值的总数，eg:id列1,2,3出现的次数，可以</p>
+<pre><code class="language-sql">select count(*) from emp group by id
+</code></pre>
+<p>（2）等值子查询只能返回一个结果，子查询里select的数值不能超过一行</p>
+<hr>
+<h3 id="1321-餐厅营业额变化增长"><a href="#1321-餐厅营业额变化增长" class="headerlink" title="1321. 餐厅营业额变化增长"></a>1321. 餐厅营业额变化增长</h3><p>表: <code>Customer</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| customer_id   | int     |
+| name          | varchar |
+| visited_on    | date    |
+| amount        | int     |
++---------------+---------+
+在 SQL 中，(customer_id, visited_on) 是该表的主键。
+该表包含一家餐馆的顾客交易数据。
+visited_on 表示 (customer_id) 的顾客在 visited_on 那天访问了餐馆。
+amount 是一个顾客某一天的消费总额。
+</code></pre>
+<p>你是餐馆的老板，现在你想分析一下可能的营业额变化增长（每天至少有一位顾客）。</p>
+<p>计算以 7 天（某日期 + 该日期前的 6 天）为一个时间段的顾客消费平均值。<code>average_amount</code> 要 <strong>保留两位小数。</strong></p>
+<p>结果按 <code>visited_on</code> <strong>升序排序</strong>。</p>
+<p>返回结果格式的例子如下。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Customer 表:
++-------------+--------------+--------------+-------------+
+| customer_id | name         | visited_on   | amount      |
++-------------+--------------+--------------+-------------+
+| 1           | Jhon         | 2019-01-01   | 100         |
+| 2           | Daniel       | 2019-01-02   | 110         |
+| 3           | Jade         | 2019-01-03   | 120         |
+| 4           | Khaled       | 2019-01-04   | 130         |
+| 5           | Winston      | 2019-01-05   | 110         | 
+| 6           | Elvis        | 2019-01-06   | 140         | 
+| 7           | Anna         | 2019-01-07   | 150         |
+| 8           | Maria        | 2019-01-08   | 80          |
+| 9           | Jaze         | 2019-01-09   | 110         | 
+| 1           | Jhon         | 2019-01-10   | 130         | 
+| 3           | Jade         | 2019-01-10   | 150         | 
++-------------+--------------+--------------+-------------+
+输出：
++--------------+--------------+----------------+
+| visited_on   | amount       | average_amount |
++--------------+--------------+----------------+
+| 2019-01-07   | 860          | 122.86         |
+| 2019-01-08   | 840          | 120            |
+| 2019-01-09   | 840          | 120            |
+| 2019-01-10   | 1000         | 142.86         |
++--------------+--------------+----------------+
+解释：
+第一个七天消费平均值从 2019-01-01 到 2019-01-07 是restaurant-growth/restaurant-growth/ (100 + 110 + 120 + 130 + 110 + 140 + 150)/7 = 122.86
+第二个七天消费平均值从 2019-01-02 到 2019-01-08 是 (110 + 120 + 130 + 110 + 140 + 150 + 80)/7 = 120
+第三个七天消费平均值从 2019-01-03 到 2019-01-09 是 (120 + 130 + 110 + 140 + 150 + 80 + 110)/7 = 120
+第四个七天消费平均值从 2019-01-04 到 2019-01-10 是 (130 + 110 + 140 + 150 + 80 + 110 + 130 + 150)/7 = 142.86
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">select visited_on, total_amount as amount, round(total_amount / 7, 2) as average_amount from( 
+    select visited_on, sum(new_amount)over (order by visited_on ROWS 6 PRECEDING) total_amount from (
+        select visited_on, sum(amount) new_amount from Customer group by visited_on
+    )s
+)t where visited_on &gt;= (
+    select min(visited_on) + 6 from Customer
+);
+</code></pre>
+<p>窗口函数可以选择操作数据的范围</p>
+<p>eg：</p>
+<pre><code class="language-sql">取当前行和前五行：ROWS between 5 preceding and current row --共6行
+取当前行和后五行：ROWS between current row and 5 following --共6行
+取前五行和后五行：ROWS between 5 preceding and 5 folowing --共11行
+</code></pre>
+<hr>
+<h3 id="602-好友申请ll：谁有最多的好友"><a href="#602-好友申请ll：谁有最多的好友" class="headerlink" title="602.好友申请ll：谁有最多的好友"></a>602.好友申请ll：谁有最多的好友</h3><p><code>RequestAccepted</code> 表：</p>
+<pre><code>+----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| requester_id   | int     |
+| accepter_id    | int     |
+| accept_date    | date    |
++----------------+---------+
+(requester_id, accepter_id) 是这张表的主键(具有唯一值的列的组合)。
+这张表包含发送好友请求的人的 ID ，接收好友请求的人的 ID ，以及好友请求通过的日期。
+</code></pre>
+<p>编写解决方案，找出拥有最多的好友的人和他拥有的好友数目。</p>
+<p>生成的测试用例保证拥有最多好友数目的只有 1 个人。</p>
+<p>查询结果格式如下例所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+RequestAccepted 表：
++--------------+-------------+-------------+
+| requester_id | accepter_id | accept_date |
++--------------+-------------+-------------+
+| 1            | 2           | 2016/06/03  |
+| 1            | 3           | 2016/06/08  |
+| 2            | 3           | 2016/06/08  |
+| 3            | 4           | 2016/06/09  |
++--------------+-------------+-------------+
+输出：
++----+-----+
+| id | num |
++----+-----+
+| 3  | 3   |
++----+-----+
+解释：
+编号为 3 的人是编号为 1 ，2 和 4 的人的好友，所以他总共有 3 个好友，比其他人都多。
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">with base as (
+    select accepter_id, count(*) as accepted_num 
+    from RequestAccepted 
+    group by accepter_id
+),
+seq as (
+    select requester_id, count(*) as requested_num 
+    from RequestAccepted 
+    group by requester_id
+),
+seq1 as (
+    -- 左连接
+    select a.accepter_id as id, 
+           ifnull(a.accepted_num,0) + ifnull(b.requested_num,0) as num
+    from base a 
+    left join seq b on a.accepter_id = b.requester_id
+    
+    union
+    
+    -- 右连接（补齐右边独有的行）
+    select b.requester_id as id, 
+           ifnull(a.accepted_num,0) + ifnull(b.requested_num,0) as num
+    from base a 
+    right join seq b on a.accepter_id = b.requester_id
+)
+select id, num
+from seq1
+where num = (select max(num) from seq1);
+</code></pre>
+<ul>
+<li><code>union</code> 保证把两边独有的 id 都保留下来，等价于 FULL OUTER JOIN。</li>
+<li><code>ifnull(...,0)</code> 是避免 NULL 相加导致结果为 NULL。</li>
+<li>最后取最大值即可。</li>
+</ul>
+<hr>
+<h3 id="585-2016年的投资"><a href="#585-2016年的投资" class="headerlink" title="585.2016年的投资"></a>585.2016年的投资</h3><p><code>Insurance</code> 表：</p>
+<pre><code>+-------------+-------+
+| Column Name | Type  |
++-------------+-------+
+| pid         | int   |
+| tiv_2015    | float |
+| tiv_2016    | float |
+| lat         | float |
+| lon         | float |
++-------------+-------+
+pid 是这张表的主键(具有唯一值的列)。
+表中的每一行都包含一条保险信息，其中：
+pid 是投保人的投保编号。
+tiv_2015 是该投保人在 2015 年的总投保金额，tiv_2016 是该投保人在 2016 年的总投保金额。
+lat 是投保人所在城市的纬度。题目数据确保 lat 不为空。
+lon 是投保人所在城市的经度。题目数据确保 lon 不为空。
+</code></pre>
+<p>编写解决方案报告 2016 年 (<code>tiv_2016</code>) 所有满足下述条件的投保人的投保金额之和：</p>
+<ul>
+<li>他在 2015 年的投保额 (<code>tiv_2015</code>) 至少跟一个其他投保人在 2015 年的投保额相同。</li>
+<li>他所在的城市必须与其他投保人都不同（也就是说 (<code>lat, lon</code>) 不能跟其他任何一个投保人完全相同）。</li>
+</ul>
+<p><code>tiv_2016</code> 四舍五入的 <strong>两位小数</strong> 。</p>
+<p>查询结果格式如下例所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Insurance 表：
++-----+----------+----------+-----+-----+
+| pid | tiv_2015 | tiv_2016 | lat | lon |
++-----+----------+----------+-----+-----+
+| 1   | 10       | 5        | 10  | 10  |
+| 2   | 20       | 20       | 20  | 20  |
+| 3   | 10       | 30       | 20  | 20  |
+| 4   | 10       | 40       | 40  | 40  |
++-----+----------+----------+-----+-----+
+输出：
++----------+
+| tiv_2016 |
++----------+
+| 45.00    |
++----------+
+解释：
+表中的第一条记录和最后一条记录都满足两个条件。
+tiv_2015 值为 10 与第三条和第四条记录相同，且其位置是唯一的。
+
+第二条记录不符合任何一个条件。其 tiv_2015 与其他投保人不同，并且位置与第三条记录相同，这也导致了第三条记录不符合题目要求。
+因此，结果是第一条记录和最后一条记录的 tiv_2016 之和，即 45 。
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">select round(sum(tiv_2016), 2) as tiv_2016 from (
+    select a.pid, a.tiv_2016 from Insurance a where a.tiv_2015 in (
+        select b.tiv_2015 from Insurance b where a.pid &lt;&gt; b.pid
+    ) and not exists (
+        select 1 
+        from Insurance b 
+        where a.pid &lt;&gt; b.pid 
+        and a.lat = b.lat 
+        and a.lon = b.lon
+    )
+)t;
+</code></pre>
+<p><strong>用 <code>in</code> 替代 <code>=</code></strong></p>
+<ul>
+<li>保证可以匹配多行 <code>tiv_2015</code>，避免语法错误。</li>
+<li>逻辑：只要 <code>a.tiv_2015</code> 在别的记录中出现过，就符合。</li>
+</ul>
+<p><strong>用 <code>not exists</code> 替代 <code>lat != ... or lon != ...</code></strong></p>
+<ul>
+<li>若写法是“只要某个纬度不同就通过”，会误判。</li>
+<li><strong><code>not exists</code> 的逻辑是“不能存在一条记录跟我纬度和经度都相同”。</strong></li>
+</ul>
+<p><strong>逻辑清晰且无歧义</strong></p>
+<ul>
+<li>保证有相同 <code>tiv_2015</code>；</li>
+<li>保证没有相同 <code>(lat, lon)</code>。</li>
+</ul>
+<hr>
+<p>补充：</p>
+<p>SQL执行顺序：</p>
+<ul>
+<li><strong>FROM</strong> Employee</li>
+<li><strong>WHERE</strong> salary &gt; 5000 （先筛掉工资不够的行）</li>
+<li><strong>GROUP BY</strong> dept （按部门分组）</li>
+<li><strong>COUNT(*)</strong> 统计每组人数</li>
+<li><strong>HAVING</strong> 过滤出人数 ≥3 的部门</li>
+<li><strong>SELECT</strong> 输出 dept, cnt</li>
+<li><strong>ORDER BY</strong> 按 cnt 降序</li>
+<li><strong>LIMIT</strong> 取前 5 个部门</li>
+</ul>
+<p>char_length(col)返回该列的字符数</p>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/Leetcode/" style="color: #00a596">Leetcode</a>
+        </span>
+        
+        <span class="tag">
+            
+            <a href="/tags/SQL/" style="color: #ffa2c4">SQL</a>
+        </span>
+        
+    </div>
+    <a href="/2022/05/26/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%95/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2021/12/13/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/">
+        <h2 class="post-title">数据建模</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                数据建模
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2021/12/13
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h2 id="1-数据预处理"><a href="#1-数据预处理" class="headerlink" title="1. 数据预处理"></a>1. 数据预处理</h2><h3 id="（1）数据清洗"><a href="#（1）数据清洗" class="headerlink" title="（1）数据清洗"></a>（1）数据清洗</h3><h4 id="1-1-缺失值处理"><a href="#1-1-缺失值处理" class="headerlink" title="1.1 缺失值处理"></a>1.1 缺失值处理</h4><h4 id="1-2-异常值处理"><a href="#1-2-异常值处理" class="headerlink" title="1.2 异常值处理"></a>1.2 异常值处理</h4><h4 id="1-3-数据规约"><a href="#1-3-数据规约" class="headerlink" title="1.3 数据规约"></a>1.3 数据规约</h4><h4 id="1-4-数据变换"><a href="#1-4-数据变换" class="headerlink" title="1.4 数据变换"></a>1.4 数据变换</h4><h2 id="1-数据分析"><a href="#1-数据分析" class="headerlink" title="1. 数据分析"></a>1. 数据分析</h2><h3 id="（1）初步分析"><a href="#（1）初步分析" class="headerlink" title="（1）初步分析"></a>（1）初步分析</h3><h5 id="查看样例数据"><a href="#查看样例数据" class="headerlink" title="查看样例数据"></a>查看样例数据</h5><p>data.head(5)</p>
+<h5 id="查看形状"><a href="#查看形状" class="headerlink" title="查看形状"></a>查看形状</h5><p>data.shape()</p>
+<h3 id="（2）质量分析"><a href="#（2）质量分析" class="headerlink" title="（2）质量分析"></a>（2）质量分析</h3><h5 id="判断唯一索引是否有重复值"><a href="#判断唯一索引是否有重复值" class="headerlink" title="判断唯一索引是否有重复值"></a>判断唯一索引是否有重复值</h5><p>data[‘ . ‘].nunique() &#x3D;&#x3D; data.shape[0]</p>
+<h5 id="缺失值检验"><a href="#缺失值检验" class="headerlink" title="缺失值检验"></a>缺失值检验</h5><p>data.isnull().sum()</p>
+<h5 id="异常值检测"><a href="#异常值检测" class="headerlink" title="异常值检测"></a>异常值检测</h5><p>​	打印各个属性的直方图</p>
+<pre><code class="language-python">sns.set()
+for col in cols:
+    statistic = data.describe()
+    plt.figure(figsize=(6,6))
+    sns.hisplot(data[col], kde=True) # kde核密度曲线，若与直方图走向一致则说明没有异常值
+    plt.title...
+    plt.show()
+</code></pre>
+<h5 id="规律一致性检测"><a href="#规律一致性检测" class="headerlink" title="规律一致性检测"></a>规律一致性检测</h5><p>对于单变量且离散数据，可以用以下的方法进行简要判断</p>
+<p>​	判断train表与test表是否出自同一分布</p>
+<pre><code class="language-python">train_count = train.shape[0]
+test_count = test.shape[0]
+features = [&#39;Pclass&#39;, &#39;Sex&#39;, &#39;Age&#39;, &#39;SibSp&#39;, &#39;Parch&#39;, &#39;Fare&#39;, &#39;Cabin&#39;, &#39;Embarked&#39;]
+
+i = 1
+plt.figure(figsize=(18, 18))
+for feature in features:
+    plt.subplot(3, 3, i)
+    (train[feature].value_counts().sort_index()/train_count).plot()
+    (test[feature].value_counts().sort_index()/test_count).plot()
+    plt.legend([&#39;train&#39;, &#39;test&#39;])
+    plt.xlabel(feature)
+    plt.ylabel(&#39;radio&#39;)
+    plt.show
+    i+=1
+</code></pre>
+<p>同时还可以进行多变量联合分布</p>
+<p>指的是将离散变量两两组合，然后查看这个新变量的相对占比分布。例如特征1有0&#x2F;1两个取值水平，特征2有A&#x2F;B两个取值水平，则联合分布中就将存在0A、0B、1A、1B四种不同取值水平，然后进一步查看这四种不同取值水平出现的分布情况。</p>
+<pre><code class="language-python">def combine_feature(df):
+    cols = df.columns
+    feature1 = df[cols[0]].astype(str).values.tolist()
+    feature2 = df[cols[1]].astype(str).values.tolist()
+    return pd.Series([feature1[i]+&#39;&amp;&#39;+feature2[i] for i in range(df.shape[0])])
+
+cols = [features[0], features[1]]
+
+# 查看合并后结果
+train_com = combine_feature(train[cols])
+
+train_dis = train_com.value_counts().sort_index()/train_count
+test_dis = combine_feature(test[cols]).value_counts().sort_index()/test_count
+
+# 创建新的index
+index_dis = pd.Series(train_dis.index.tolist() + test_dis.index.tolist()).drop_duplicates().sort_values()
+
+# 对缺失值填补为0
+(index_dis.map(train_dis).fillna(0)).plot()
+(index_dis.map(train_dis).fillna(0)).plot()
+
+# 绘图
+plt.legend([&#39;train&#39;,&#39;test&#39;])
+plt.xlabel(&#39;&amp;&#39;.join(cols))
+plt.ylabel(&#39;ratio&#39;)
+plt.show()
+</code></pre>
+<h2 id="2-数据预处理"><a href="#2-数据预处理" class="headerlink" title="2. 数据预处理"></a>2. 数据预处理</h2><h3 id="（1）缺失值填充"><a href="#（1）缺失值填充" class="headerlink" title="（1）缺失值填充"></a>（1）缺失值填充</h3><p>分别依据情况将缺失值填充为均值或众数（对于离散型数据）或前向后向值（对于连续型数据）</p>
+<pre><code class="language-python">data[col] = data[col].fillna(data[col].mean()/data[col].mode()[0])
+
+data[col].ffill(inplcae=True)# 前向填充
+data[col].bfill(inplace=True)# 后向填充
+</code></pre>
+<h3 id="（2）将object类型转换为字典编码"><a href="#（2）将object类型转换为字典编码" class="headerlink" title="（2）将object类型转换为字典编码"></a>（2）将object类型转换为字典编码</h3><p>data.info()查看数据类型</p>
+<pre><code class="language-python">def change_object_cols(se):
+    # 1. 获取该列的唯一值，并转成列表
+    value = se.unique().tolist()
+    
+    # 2. 对唯一值排序，保证编码的顺序固定（从小到大）
+    value.sort()
+    
+    # 3. 构造一个映射表：唯一值 → 数字索引
+    #    例如：[&#39;C&#39;, &#39;Q&#39;, &#39;S&#39;] → &#123; &#39;C&#39;:0, &#39;Q&#39;:1, &#39;S&#39;:2 &#125;
+    mapping = pd.Series(range(len(value)), index=value)
+    
+    # 4. 将原始序列 se 映射成数值序列
+    return se.map(mapping).values
+
+
+for col in cols:
+    data[col] = change_object_cols(col)
+</code></pre>
+<h2 id="3-特征工程"><a href="#3-特征工程" class="headerlink" title="3. 特征工程"></a>3. 特征工程</h2><h3 id="（1）确定离散、连续变量"><a href="#（1）确定离散、连续变量" class="headerlink" title="（1）确定离散、连续变量"></a>（1）确定离散、连续变量</h3><p>这是个很好的问题 👍。在 Kaggle 这种建模比赛里，区分 <strong>离散字段（categorical features）</strong> 和 <strong>连续字段（numerical features）</strong> 是特征工程的第一步，直接影响后续的编码方式、特征衍生、模型效果。一般的经验如下：</p>
+<hr>
+<ol>
+<li><strong>离散字段（Categorical Features）的判定</strong></li>
+</ol>
+<p>常见特征类型：</p>
+<ul>
+<li><strong>字符串型</strong>：比如性别（Sex）、职业（job_title）。</li>
+<li><strong>整数型但取值有限</strong>：例如舱位等级（Pclass: 1&#x2F;2&#x2F;3）、星期几（1–7）、地区编号。</li>
+<li><strong>ID类特征</strong>：如 PassengerId、订单号，虽然是字符串&#x2F;数字，但每个取值都唯一 → 通常丢弃或转化为计数特征。</li>
+</ul>
+<p>📌 经验：</p>
+<ul>
+<li><strong>唯一值数量远小于样本数</strong>（如几种类别，而不是几千上万），基本都算离散变量。</li>
+<li><strong>整数型变量</strong>要小心，比如邮编、编号，它们表面是数字，其实是分类特征。</li>
+<li><strong>高基数特征</strong>（类别数太多）：<ul>
+<li>可以尝试 <strong>频率编码（frequency encoding）</strong></li>
+<li>或 <strong>target encoding &#x2F; mean encoding</strong>（比赛里常用，但要注意泄露，要交叉验证编码）</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ol start="2">
+<li><strong>连续字段（Numerical Features）的判定</strong></li>
+</ol>
+<p>常见特征类型：</p>
+<ul>
+<li><strong>实数型</strong>：身高、体重、金额、时间差。</li>
+<li><strong>取值范围大且近似连续的整数</strong>：年龄（0–100）、乘客数量、房价。</li>
+</ul>
+<p>📌 经验：</p>
+<ul>
+<li>数值的大小 <strong>有顺序且差值有意义</strong>（例如价格 100 和 200 相差一倍） → 连续特征。</li>
+<li>对于这些特征，常用的处理包括：<ul>
+<li>标准化（StandardScaler）、归一化（MinMaxScaler）</li>
+<li>分箱（binning），转化为类别 → 提高树模型稳定性</li>
+</ul>
+</li>
+</ul>
+<hr>
+<ol start="3">
+<li><strong>混合情况（容易误判的字段）</strong></li>
+</ol>
+<ul>
+<li><strong>Age（年龄）</strong>：是连续的，但可以尝试分箱（儿童&#x2F;青年&#x2F;中年&#x2F;老年），当做离散变量。</li>
+<li><strong>Fare（票价）</strong>：连续型，但分布通常长尾，可以对数化（log transform）。</li>
+<li><strong>Cabin（船舱号）</strong>：原始是字符串（离散），但如果只取首字母（A&#x2F;B&#x2F;C&#x2F;D&#x2F;E&#x2F;F），相当于类别。</li>
+</ul>
+<p>📌 Kaggle 常见技巧：</p>
+<ul>
+<li><strong>连续变量离散化</strong>（binning）后有时比直接用效果更好，尤其在树模型中。</li>
+<li>同一个特征既保留原始数值，又加一个分箱类别特征，让模型自己选择。</li>
+</ul>
+<hr>
+<ol start="4">
+<li><strong>比赛经验总结</strong></li>
+</ol>
+<ul>
+<li><strong>EDA（探索性数据分析）优先</strong>：先用 <code>describe()</code>、<code>value_counts()</code>、直方图、箱线图，直观判断分布。</li>
+<li><strong>看唯一值个数（nunique）</strong>：<ul>
+<li>nunique ≪ 样本数 → 倾向离散</li>
+<li>nunique ≈ 样本数 → 可能是 ID，直接舍弃或做 count encoding</li>
+</ul>
+</li>
+<li><strong>树模型 vs 线性模型的不同</strong>：<ul>
+<li>树模型（LightGBM、XGBoost、CatBoost）：不太怕离散编码（甚至 CatBoost 可以直接处理类别）。</li>
+<li>线性模型、神经网络：更依赖标准化和 One-Hot。</li>
+</ul>
+</li>
+<li><strong>比赛 Top 选手习惯</strong>：同一个特征会做多种处理方式（原始连续 &#x2F; 分箱类别 &#x2F; 平滑编码），让模型选择。</li>
+</ul>
+<hr>
+<p>✅ <strong>一句话经验</strong>：</p>
+<ul>
+<li>“值的大小有顺序和间距意义 → 连续特征”</li>
+<li>“值只是标签、没有数值含义 → 离散特征”</li>
+<li>模型前期：多做几种处理方式（连续 &#x2F; 离散化 &#x2F; target encoding），交给模型和 CV 去筛选。</li>
+</ul>
+<h3 id="（2）连续变量处理："><a href="#（2）连续变量处理：" class="headerlink" title="（2）连续变量处理："></a>（2）连续变量处理：</h3><h4 id="无穷值处理："><a href="#无穷值处理：" class="headerlink" title="无穷值处理："></a>无穷值处理：</h4><p>天花板盖帽法：即将inf改为最大的显式数值</p>
+<pre><code class="language-python">inf_cols = [&#39;avg_purchases_lag3&#39;, &#39;avg_purchases_lag6&#39;, &#39;avg_purchases_lag12&#39;]
+merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].replace(np.inf, -99).max().max())
+</code></pre>
+<p>整体流程</p>
+<ol>
+<li>拿到数据及其对应的解释，划分连续型字段与离散型字段，重点关注object类型，是否存在时序类型、文本类型字段</li>
+<li>正确性校验：是否unique</li>
+<li>特征变化：连续变量：考虑是否归一化、分箱，离散型变量：考虑是否要独热编码、自然数编码</li>
+<li>考虑缺失值：（1）numpy.NAN；（2）none；（3）特殊缺失值：空格（可能会被识别转换成字符串）——&gt;业务方面的判断。</li>
+</ol>
+<p>用均值、众数、预测值进行填充。或者可以先用特殊字符代表，比如说离散性数据进行独热编码后可以用-1表示缺失值</p>
+<ol start="5">
+<li>异常值分析：识别方式：（1）三倍标准差（对于趋近于标准正态分布的数据）、（2）箱线图法；处理方法：（1）天花板盖帽法；（2）单独识别异常值为某一类</li>
+</ol>
+<p>特征工程：</p>
+<p>（2）根据业务进行扩展：eg：金额连续型——&gt;均值、总额、方差、偏度、离散型——&gt;众数…</p>
+<p>根据业务含义划分离散字段category_cols与连续字段numeric_cols。</p>
+<p>对非数值型的离散字段进行字典排序编码。</p>
+<p>为了能够更方便统计，进行缺失值的处理，对离散字段统一用-1进行填充。</p>
+<p>对离散型字段探查发现有正无穷值，这是特征提取以及模型所不能接受的，因此需要对无限值进行处理，此处采用最大值进行替换。</p>
+<p>去除与transaction交易记录表格重复的列，以及merchant_id的重复记录。</p>
+<p>特征工程</p>
+<p>通过特征工程新建了很多特征，包含了一些冗余、稀疏特征，虽然最终选用树模型时都可以筛选出最有效的特征，但是过多的特征会影响到建模的效率。因此需要我们提前进行特征筛选，根据与标签相关性初筛出特征。</p>
+<p>初筛：<br>Filter相关系数特征筛选方法</p>
+<p>使用corr，得出前300个特征</p>
+<p>模型训练需要与超参数的选定过程绑定在一起（使模型具有一定的泛化能力）</p>
+<p><strong>Filter 特征筛选</strong>：通过统计指标（相关性、卡方检验、互信息等）先对原始特征进行“粗筛”，去掉明显无关或冗余的特征。</p>
+<p><strong>随机森林建模</strong>：用筛选后的特征训练一个随机森林模型，得到基准性能。</p>
+<p><strong>网格搜索调优</strong>：在筛选后的特征集上，用交叉验证和网格搜索寻找随机森林的最佳超参数组合。</p>
+<p>Wrapper方法</p>
+<p><strong>Wrapper 特征筛选</strong>：利用模型性能作为评价标准，逐步选择或剔除特征（例如递归特征消除 RFE）。</p>
+<p><strong>LightGBM 建模</strong>：用筛选出的特征训练 LightGBM 模型，作为基准模型。</p>
+<p><strong>TPE 调优</strong>：通过贝叶斯优化（TPE 算法）高效搜索 LightGBM 的超参数，提升性能。</p>
+<p>使用tpe调优前，最好先用warpper方法训练一次lgb先</p>
+<p><strong>Voting 是一种固定规则的集成方法，通过对多个基模型的预测结果直接做多数投票（分类）或平均（回归）来得到最终输出；而 Stacking 则是更灵活的堆叠方法，它把多个基模型的预测结果作为新的特征，再训练一个“元学习器”去自动学习最优的加权组合方式，从而通常能比简单投票获得更强的泛化性能。</strong></p>
+<p>Stacking流程：在第一层训练过程中，每一个基模型经过5折交叉验证后会得到5个训练集上结果拼接成的验证集结果，以及5个测试集上的结果平均后的总测试集结果，之后在第二层学习过程中，所有基模型的验证集结果作为训练的x，目标是真实标签y，然后学习x的权重参数a，最终对所有基模型的总测试集结果应用学习完毕的权重a进行组合得到最终结果</p>
+<hr>
+<h4 id="🔹-第一层（基模型训练）"><a href="#🔹-第一层（基模型训练）" class="headerlink" title="🔹 第一层（基模型训练）"></a>🔹 第一层（基模型训练）</h4><ul>
+<li>每个基模型做 <strong>5 折交叉验证</strong>：<ul>
+<li><strong>训练集 OOF 预测</strong>：每一折的验证集预测拼接 → 得到完整的 OOF 预测结果（对应训练集所有样本）。</li>
+<li><strong>测试集预测</strong>：每一折在训练完毕后对测试集预测 → 5 次预测结果取平均，得到该基模型在测试集上的最终预测。</li>
+</ul>
+</li>
+</ul>
+<p>👉 输出：</p>
+<ul>
+<li><code>OOF_i</code>：基模型 i 的训练集预测（n 行 1 列）。</li>
+<li><code>Test_i</code>：基模型 i 的测试集预测（m 行 1 列）。</li>
+</ul>
+<hr>
+<h4 id="🔹-第二层（元学习器）"><a href="#🔹-第二层（元学习器）" class="headerlink" title="🔹 第二层（元学习器）"></a>🔹 第二层（元学习器）</h4><ul>
+<li><p><strong>输入特征 X</strong>：所有基模型的 OOF 拼接 → 维度 <code>(n, k)</code>，k 为基模型数量。</p>
+</li>
+<li><p><strong>目标 y</strong>：真实标签（n 行 1 列）。</p>
+</li>
+<li><p><strong>训练</strong>：用贝叶斯岭回归（或别的模型）学习一个函数：</p>
+<p>y^&#x3D;a1⋅OOF1+a2⋅OOF2+⋯+ak⋅OOFk+b\hat{y} &#x3D; a_1 \cdot OOF_1 + a_2 \cdot OOF_2 + \dots + a_k \cdot OOF_k + b</p>
+</li>
+</ul>
+<p>👉 元学习器本质上是在学习一组 <strong>权重参数 a</strong>，告诉我们“每个基模型在最终预测中该占多大比重”。</p>
+<hr>
+<h4 id="🔹-最终预测"><a href="#🔹-最终预测" class="headerlink" title="🔹 最终预测"></a>🔹 最终预测</h4><ul>
+<li><p>把学习到的权重 a 应用到测试集的预测：</p>
+<p>y^test&#x3D;a1⋅Test1+a2⋅Test2+⋯+ak⋅Testk+b\hat{y}_{test} &#x3D; a_1 \cdot Test_1 + a_2 \cdot Test_2 + \dots + a_k \cdot Test_k + b</p>
+</li>
+</ul>
+<p>👉 最终结果就是 <strong>测试集上各基模型预测结果的加权组合</strong>。</p>
+<p>交叉验证（Cross Validation，简称 CV）是一种常用的模型评估方法，用来检验机器学习模型在<strong>未见过的数据上的泛化能力</strong>。它的核心思想是：把已有的数据集划分成多个部分，轮流用其中一部分做验证集，剩余部分做训练集，最终综合评估结果。</p>
+<hr>
+<h4 id="为什么需要交叉验证？"><a href="#为什么需要交叉验证？" class="headerlink" title="为什么需要交叉验证？"></a>为什么需要交叉验证？</h4><p>如果只用一次<strong>训练集 &#x2F; 测试集划分</strong>来评估模型，结果可能会受到划分方式的偶然性影响（比如某次划分刚好测试集比较难）。交叉验证通过多次划分并取平均，可以更稳定地反映模型的真实性能。</p>
+<hr>
+<h4 id="常见的交叉验证方法"><a href="#常见的交叉验证方法" class="headerlink" title="常见的交叉验证方法"></a>常见的交叉验证方法</h4><ol>
+<li><strong>k 折交叉验证（k-Fold CV）</strong><ul>
+<li>将数据集平均分成 k 份。</li>
+<li>每次用其中 1 份作为验证集，剩下 k-1 份作为训练集。</li>
+<li>重复 k 次，得到 k 个结果，取平均值作为最终性能。</li>
+<li>常见选择：k &#x3D; 5 或 10。</li>
+</ul>
+</li>
+<li><strong>留一交叉验证（LOOCV, Leave-One-Out CV）</strong><ul>
+<li>特殊情况：k 等于样本数。</li>
+<li>每次只留 1 个样本做验证，其余作为训练。</li>
+<li>计算量大，但对小样本数据很有用。</li>
+</ul>
+</li>
+<li><strong>分层交叉验证（Stratified k-Fold CV）</strong><ul>
+<li>用于分类问题。</li>
+<li>保证每折中的类别比例与整体数据集一致，避免某些类别在某折中消失。</li>
+</ul>
+</li>
+<li><strong>重复交叉验证（Repeated k-Fold CV）</strong><ul>
+<li>在 k 折交叉验证的基础上，重复多次（每次随机划分）。</li>
+<li>可以进一步降低划分的偶然性。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h4 id="交叉验证的优点"><a href="#交叉验证的优点" class="headerlink" title="交叉验证的优点"></a>交叉验证的优点</h4><ul>
+<li>更稳定和可靠的性能估计。</li>
+<li>避免单次划分可能造成的高估或低估。</li>
+<li>在样本较少时能更充分利用数据。</li>
+</ul>
+<hr>
+<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>假设有 100 条数据，采用 <strong>5 折交叉验证</strong>：</p>
+<ul>
+<li>第一次：第 1–20 条做验证，21–100 条做训练。</li>
+<li>第二次：第 21–40 条做验证，其他做训练。</li>
+<li>…依此类推，总共 5 次。<br> 最后取 5 次验证结果的平均作为模型最终得分。</li>
+</ul>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" style="color: #ff7d73">数据建模</a>
+        </span>
+        
+    </div>
+    <a href="/2021/12/13/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2021/11/15/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90%E6%9C%AF%E8%AF%AD/">
+        <h2 class="post-title">统计分析术语</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                统计分析
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2021/11/15
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h2 id="统计分析术语"><a href="#统计分析术语" class="headerlink" title="统计分析术语"></a>统计分析术语</h2><ol>
+<li>二分位数</li>
+<li>第一四分位数</li>
+</ol>
+<hr>
+<p><strong>箱型图解读要点</strong></p>
+<ol>
+<li><strong>异常值</strong><ul>
+<li>如果数据存在离群点（超出 [Q1−1.5⋅IQR,Q3+1.5⋅IQR][Q1-1.5·IQR, Q3+1.5·IQR] 的范围），会在箱型图外以圆点或星号标注。</li>
+</ul>
+</li>
+<li><strong>箱体高度（IQR &#x3D; Q3 – Q1）</strong><ul>
+<li><strong>箱子很短</strong>：数据高度集中，分布较均匀。</li>
+<li><strong>箱子很长</strong>：数据分布离散，差异较大。</li>
+</ul>
+</li>
+<li><strong>中位数位置</strong><ul>
+<li><strong>中位数接近箱体底部（Q1）</strong>：说明数据偏大（右偏，长尾在高值方向）。</li>
+<li><strong>中位数接近箱体顶部（Q3）</strong>：说明数据偏小（左偏，长尾在低值方向）。</li>
+<li>中位数是否居中，可以反映数据的 <strong>偏斜程度</strong>。</li>
+</ul>
+</li>
+<li><strong>上下须（Whiskers）长度</strong><ul>
+<li>须比较长：说明四分位数之外的数据差异较大 → <strong>方差、标准差大</strong>。</li>
+<li>须比较短：说明四分位数之外的数据较集中。</li>
+</ul>
+</li>
+<li><strong>箱型图的边缘并不是极值</strong><ul>
+<li>箱体的边缘是 <strong>Q1、Q3</strong>，而不是最小值、最大值。</li>
+<li>须的终点才接近“最大值&#x2F;最小值”，但仍可能不是极值（因为须长度有限制）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>📌 <strong>一句话记忆</strong>：</p>
+<ul>
+<li><strong>箱子 &#x3D; 中心 50% 数据</strong>，</li>
+<li><strong>线（须） &#x3D; 更广的分布范围</strong>，</li>
+<li><strong>点 &#x3D; 异常值</strong>，</li>
+<li><strong>中位数位置 &#x3D; 偏斜方向</strong>。</li>
+</ul>
+<ol>
+<li>假设检验</li>
+<li>显著性水平：当原假设为真时，拒绝原假设的概率</li>
+<li>功效：当原假设为假时，能检测出这种错误并得出正确结论的概率</li>
+<li>置信区间：用来估计总体参数可能范围的一个区间，反映了我们对总体参数估计的信任度</li>
+<li>p值：出现极端情况的概率，当原假设为真时，出现比当前抽样分布更加极端的情况的概率</li>
+<li>p与$\alpha$的关系：p小于a，则小概率事件发生，则拒绝H0</li>
+<li>一类错误：当零假设为真时，拒绝</li>
+<li>二类错误：当零假设为假时，接受</li>
+<li>原假设与备择假设</li>
+<li>中心极限定理</li>
+<li>大数定理：随着试验次数的增加，样本平均值趋近总体的期望值</li>
+<li>卡方检验：分析变量之间是否独立</li>
+<li>方差分析：比较三个或更多的均值是否差异</li>
+<li>z检验适用于大样本，总体方差已知</li>
+<li>t检验适用于小样本，总体方差未知</li>
+<li>最大似然估计</li>
+<li>最小二乘估计</li>
+<li>交叉验证</li>
+</ol>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="color: #00bcd4">统计分析</a>
+        </span>
+        
+    </div>
+    <a href="/2021/11/15/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90%E6%9C%AF%E8%AF%AD/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2021/09/09/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%952/">
+        <h2 class="post-title">Leetcode sql题目记录2</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                数据库
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2021/9/9
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h2 id="Leetcode-sql题目记录2"><a href="#Leetcode-sql题目记录2" class="headerlink" title="Leetcode  sql题目记录2"></a>Leetcode  sql题目记录2</h2><p>本博客仅记录**高频 SQL 50 题（进阶版）**中的中等难度题目，后续不定期更新</p>
+<h3 id="1398-购买了产品A和产品B却没有购买产品C的顾客"><a href="#1398-购买了产品A和产品B却没有购买产品C的顾客" class="headerlink" title="1398.购买了产品A和产品B却没有购买产品C的顾客"></a>1398.购买了产品A和产品B却没有购买产品C的顾客</h3><p> <code>Customers</code> 表：</p>
+<pre><code>+---------------------+---------+
+| Column Name         | Type    |
++---------------------+---------+
+| customer_id         | int     |
+| customer_name       | varchar |
++---------------------+---------+
+customer_id 是这张表中具有唯一值的列。
+customer_name 是顾客的名称。
+</code></pre>
+<p><code>Orders</code> 表：</p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| order_id      | int     |
+| customer_id   | int     |
+| product_name  | varchar |
++---------------+---------+
+order_id 是这张表中具有唯一值的列。
+customer_id 是购买了名为 &quot;product_name&quot; 产品顾客的id。
+</code></pre>
+<p>请你编写解决方案，报告购买了产品 <strong>“A”</strong>，<strong>“B”</strong> 但没有购买产品 <strong>“C”</strong> 的客户的 customer_id 和 customer_name，因为我们想推荐他们购买这样的产品。</p>
+<p>返回按 <code>customer_id</code> <strong>排序</strong> 的结果表。</p>
+<p>返回结果格式如下所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Customers table:
++-------------+---------------+
+| customer_id | customer_name |
++-------------+---------------+
+| 1           | Daniel        |
+| 2           | Diana         |
+| 3           | Elizabeth     |
+| 4           | Jhon          |
++-------------+---------------+
+
+Orders table:
++------------+--------------+---------------+
+| order_id   | customer_id  | product_name  |
++------------+--------------+---------------+
+| 10         |     1        |     A         |
+| 20         |     1        |     B         |
+| 30         |     1        |     D         |
+| 40         |     1        |     C         |
+| 50         |     2        |     A         |
+| 60         |     3        |     A         |
+| 70         |     3        |     B         |
+| 80         |     3        |     D         |
+| 90         |     4        |     C         |
++------------+--------------+---------------+
+输出：
++-------------+---------------+
+| customer_id | customer_name |
++-------------+---------------+
+| 3           | Elizabeth     |
++-------------+---------------+
+解释：
+只有 customer_id 为 3 的顾客购买了产品 A 和产品 B ，却没有购买产品 C 。
+</code></pre>
+<p><strong>解答：</strong></p>
+<p><strong>（1）最基础解法，逐一子查询</strong></p>
+<pre><code class="language-sql">SELECT c.customer_id, c.customer_name
+FROM Customers c
+WHERE EXISTS (
+    SELECT 1 FROM Orders o WHERE o.customer_id = c.customer_id AND o.product_name = &#39;A&#39;
+)
+AND EXISTS (
+    SELECT 1 FROM Orders o WHERE o.customer_id = c.customer_id AND o.product_name = &#39;B&#39;
+)
+AND NOT EXISTS (
+    SELECT 1 FROM Orders o WHERE o.customer_id = c.customer_id AND o.product_name = &#39;C&#39;
+);
+</code></pre>
+<p>注意：在判断某列不在某个子查询的结果列表里时，如果子查询里有null值，则not in会返回空。因此需要用not exists。</p>
+<p>当 <code>NOT IN</code> 拆成多个比较后，如果其中有一个条件返回 <code>UNKNOWN</code>，整个 AND 结果就不是 <code>TRUE</code>，而是 <strong>UNKNOWN</strong>，最终这条记录就被过滤掉。</p>
+<p>举例：</p>
+<ul>
+<li><code>col1 = 10</code><br> 检查 <code>10 &lt;&gt; 5</code> → TRUE<br> 检查 <code>10 &lt;&gt; NULL</code> → UNKNOWN<br> <code>TRUE AND UNKNOWN</code> → UNKNOWN → 不返回</li>
+</ul>
+<p>所以只要子查询里有 <code>NULL</code>，所有外层行都会因为遇到 <code>UNKNOWN</code> 被排除掉，结果就是空集</p>
+<p><strong>（2）一次扫 Orders 做条件聚合，再跟 Customers 关联</strong></p>
+<pre><code class="language-sql">SELECT c.customer_id, c.customer_name
+FROM Customers c
+JOIN Orders o ON o.customer_id = c.customer_id
+GROUP BY c.customer_id, c.customer_name
+HAVING SUM(o.product_name = &#39;A&#39;) &gt; 0
+   AND SUM(o.product_name = &#39;B&#39;) &gt; 0
+   AND SUM(o.product_name = &#39;C&#39;) = 0
+ORDER BY c.customer_id;
+</code></pre>
+<hr>
+<h3 id="1112-每位学生的最高成绩"><a href="#1112-每位学生的最高成绩" class="headerlink" title="1112.每位学生的最高成绩"></a>1112.每位学生的最高成绩</h3><p>表：<code>Enrollments</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| student_id    | int     |
+| course_id     | int     |
+| grade         | int     |
++---------------+---------+
+(student_id, course_id) 是该表的主键（具有唯一值的列的组合）。
+grade 不会为 NULL。
+</code></pre>
+<p>编写解决方案，找出每位学生获得的最高成绩和它所对应的科目，若科目成绩并列，取 <code>course_id</code> 最小的一门。查询结果需按 <code>student_id</code> 增序进行排序。</p>
+<p>查询结果格式如下所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Enrollments 表：
++------------+-------------------+
+| student_id | course_id | grade |
++------------+-----------+-------+
+| 2          | 2         | 95    |
+| 2          | 3         | 95    |
+| 1          | 1         | 90    |
+| 1          | 2         | 99    |
+| 3          | 1         | 80    |
+| 3          | 2         | 75    |
+| 3          | 3         | 82    |
++------------+-----------+-------+
+输出：
++------------+-------------------+
+| student_id | course_id | grade |
++------------+-----------+-------+
+| 1          | 2         | 99    |
+| 2          | 2         | 95    |
+| 3          | 3         | 82    |
++------------+-----------+-------+
+</code></pre>
+<p><strong>解答</strong>：</p>
+<pre><code class="language-sql">select student_id, min(course_id)as course_id, grade from(
+    select *, max(grade) over(partition by student_id) as max_score from Enrollments
+)t where grade = max_score group by student_id, grade order by student_id;
+</code></pre>
+<hr>
+<h3 id="1440-计算布尔表达式的值"><a href="#1440-计算布尔表达式的值" class="headerlink" title="1440.计算布尔表达式的值"></a>1440.计算布尔表达式的值</h3><p>表 <code>Variables</code>:</p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| name          | varchar |
+| value         | int     |
++---------------+---------+
+在 SQL 中，name 是该表主键.
+该表包含了存储的变量及其对应的值.
+</code></pre>
+<p>表 <code>Expressions</code>:</p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| left_operand  | varchar |
+| operator      | enum    |
+| right_operand | varchar |
++---------------+---------+
+在 SQL 中，(left_operand, operator, right_operand) 是该表主键.
+该表包含了需要计算的布尔表达式.
+operator 是枚举类型, 取值于(&#39;&lt;&#39;, &#39;&gt;&#39;, &#39;=&#39;)
+left_operand 和 right_operand 的值保证存在于 Variables 表单中.
+</code></pre>
+<p>计算表 <code>Expressions</code> 中的布尔表达式。</p>
+<p>返回的结果表 <strong>无顺序要求</strong> 。</p>
+<p>结果格式如下例所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Variables 表:
++------+-------+
+| name | value |
++------+-------+
+| x    | 66    |
+| y    | 77    |
++------+-------+
+
+Expressions 表:
++--------------+----------+---------------+
+| left_operand | operator | right_operand |
++--------------+----------+---------------+
+| x            | &gt;        | y             |
+| x            | &lt;        | y             |
+| x            | =        | y             |
+| y            | &gt;        | x             |
+| y            | &lt;        | x             |
+| x            | =        | x             |
++--------------+----------+---------------+
+
+输出:
++--------------+----------+---------------+-------+
+| left_operand | operator | right_operand | value |
++--------------+----------+---------------+-------+
+| x            | &gt;        | y             | false |
+| x            | &lt;        | y             | true  |
+| x            | =        | y             | false |
+| y            | &gt;        | x             | true  |
+| y            | &lt;        | x             | false |
+| x            | =        | x             | true  |
++--------------+----------+---------------+-------+
+解释：
+如上所示, 你需要通过使用 Variables 表来找到 Expressions 表中的每一个布尔表达式的值.
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">SELECT e.left_operand,
+       e.operator,
+       e.right_operand,
+       CASE
+           WHEN e.operator = &#39;&gt;&#39; AND v1.value &gt; v2.value THEN &#39;true&#39;
+           WHEN e.operator = &#39;&lt;&#39; AND v1.value &lt; v2.value THEN &#39;true&#39;
+           WHEN e.operator = &#39;=&#39; AND v1.value = v2.value THEN &#39;true&#39;
+           ELSE &#39;false&#39;
+       END AS value
+FROM Expressions e
+JOIN Variables v1 ON e.left_operand = v1.name
+JOIN Variables v2 ON e.right_operand = v2.name;
+</code></pre>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
+<li><code>JOIN Variables v1</code> → 获取左操作数的值。</li>
+<li><code>JOIN Variables v2</code> → 获取右操作数的值。</li>
+<li><code>CASE</code> 里根据不同运算符进行比较，返回 <code>true</code> 或 <code>false</code>。</li>
+</ul>
+<p>这样写就能正确对比 <strong>数值</strong>，而不是对比变量名字符串。</p>
+<hr>
+<h3 id="1212-查询球队积分"><a href="#1212-查询球队积分" class="headerlink" title="1212.查询球队积分"></a>1212.查询球队积分</h3><p>表: <code>Teams</code></p>
+<pre><code>+---------------+----------+
+| Column Name   | Type     |
++---------------+----------+
+| team_id       | int      |
+| team_name     | varchar  |
++---------------+----------+
+team_id 是该表具有唯一值的列。
+表中的每一行都代表一支独立足球队。
+</code></pre>
+<p>表: <code>Matches</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| match_id      | int     |
+| host_team     | int     |
+| guest_team    | int     | 
+| host_goals    | int     |
+| guest_goals   | int     |
++---------------+---------+
+match_id 是该表具有唯一值的列。
+表中的每一行都代表一场已结束的比赛。
+比赛的主客队分别由它们自己的 id 表示，他们的进球由 host_goals 和 guest_goals 分别表示。
+</code></pre>
+<p>你希望在所有比赛之后计算所有球队的比分。积分奖励方式如下:</p>
+<ul>
+<li>如果球队赢了比赛(即比对手进更多的球)，就得 <strong>3</strong> 分。</li>
+<li>如果双方打成平手(即，与对方得分相同)，则得 <strong>1</strong> 分。</li>
+<li>如果球队输掉了比赛(例如，比对手少进球)，就 <strong>不得分</strong> 。</li>
+</ul>
+<p>编写解决方案，以找出每个队的 <code>team_id</code>，<code>team_name</code> 和 <code>num_points</code>。</p>
+<p>返回的结果根据 <code>num_points</code> <strong>降序排序</strong>，如果有两队积分相同，那么这两队按 <code>team_id</code> <strong>升序排序</strong>。</p>
+<p>返回结果格式如下。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Teams table:
++-----------+--------------+
+| team_id   | team_name    |
++-----------+--------------+
+| 10        | Leetcode FC  |
+| 20        | NewYork FC   |
+| 30        | Atlanta FC   |
+| 40        | Chicago FC   |
+| 50        | Toronto FC   |
++-----------+--------------+
+Matches table:
++------------+--------------+---------------+-------------+--------------+
+| match_id   | host_team    | guest_team    | host_goals  | guest_goals  |
++------------+--------------+---------------+-------------+--------------+
+| 1          | 10           | 20            | 3           | 0            |
+| 2          | 30           | 10            | 2           | 2            |
+| 3          | 10           | 50            | 5           | 1            |
+| 4          | 20           | 30            | 1           | 0            |
+| 5          | 50           | 30            | 1           | 0            |
++------------+--------------+---------------+-------------+--------------+
+输出：
++------------+--------------+---------------+
+| team_id    | team_name    | num_points    |
++------------+--------------+---------------+
+| 10         | Leetcode FC  | 7             |
+| 20         | NewYork FC   | 3             |
+| 50         | Toronto FC   | 3             |
+| 30         | Atlanta FC   | 1             |
+| 40         | Chicago FC   | 0             |
++------------+--------------+---------------+
+</code></pre>
+<p>解答：</p>
+<pre><code class="language-sql">
+SELECT t.team_id,
+       t.team_name,
+       IFNULL(SUM(score), 0) AS num_points
+FROM Teams t
+LEFT JOIN (
+    SELECT host_team AS team_id,
+           CASE 
+               WHEN host_goals &gt; guest_goals THEN 3
+               WHEN host_goals = guest_goals THEN 1
+               ELSE 0 
+           END AS score
+    FROM Matches
+    UNION ALL
+    SELECT guest_team AS team_id,
+           CASE 
+               WHEN guest_goals &gt; host_goals THEN 3
+               WHEN guest_goals = host_goals THEN 1
+               ELSE 0 
+           END AS score
+    FROM Matches
+) m ON t.team_id = m.team_id
+GROUP BY t.team_id, t.team_name
+ORDER BY num_points DESC, t.team_id;
+</code></pre>
+<ul>
+<li><p>没有结果（null）则返回0——&gt;IFNULL(col, 0)</p>
+</li>
+<li><h3 id="思路解析"><a href="#思路解析" class="headerlink" title="思路解析"></a>思路解析</h3><ol>
+<li><code>UNION ALL</code><ul>
+<li>第一段取主队（<code>host_team</code>），根据比分计算积分。</li>
+<li>第二段取客队（<code>guest_team</code>），同样计算积分。</li>
+<li>这样每场比赛会贡献两行数据（主队、客队）。</li>
+</ul>
+</li>
+<li>外层再 <code>JOIN Teams</code> → 确保所有球队都显示，即使一场没打过。</li>
+<li><code>GROUP BY</code> 聚合积分，<code>ORDER BY num_points DESC, team_id</code> 保证排序符合要求。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="1445-苹果和桔子"><a href="#1445-苹果和桔子" class="headerlink" title="1445. 苹果和桔子"></a>1445. 苹果和桔子</h3><p>表: <code>Sales</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| sale_date     | date    |
+| fruit         | enum    | 
+| sold_num      | int     | 
++---------------+---------+
+(sale_date, fruit) 是该表主键(具有唯一值的列的组合)。
+该表包含了每一天中&quot;苹果&quot; 和 &quot;桔子&quot;的销售情况。
+</code></pre>
+<p>编写解决方案报告每一天 <strong>苹果</strong> 和 <strong>桔子</strong> 销售的数目的差异.</p>
+<p>返回的结果表, 按照格式为 (‘YYYY-MM-DD’) 的 <code>sale_date</code> 排序.</p>
+<p>返回结果表如下例所示:</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Sales 表:
++------------+------------+-------------+
+| sale_date  | fruit      | sold_num    |
++------------+------------+-------------+
+| 2020-05-01 | apples     | 10          |
+| 2020-05-01 | oranges    | 8           |
+| 2020-05-02 | apples     | 15          |
+| 2020-05-02 | oranges    | 15          |
+| 2020-05-03 | apples     | 20          |
+| 2020-05-03 | oranges    | 0           |
+| 2020-05-04 | apples     | 15          |
+| 2020-05-04 | oranges    | 16          |
++------------+------------+-------------+
+输出：
++------------+--------------+
+| sale_date  | diff         |
++------------+--------------+
+| 2020-05-01 | 2            |
+| 2020-05-02 | 0            |
+| 2020-05-03 | 20           |
+| 2020-05-04 | -1           |
++------------+--------------+
+解释：
+在 2020-05-01, 卖了 10 个苹果 和 8 个桔子 (差异为 10 - 8 = 2).
+在 2020-05-02, 卖了 15 个苹果 和 15 个桔子 (差异为 15 - 15 = 0).
+在 2020-05-03, 卖了 20 个苹果 和 0 个桔子 (差异为 20 - 0 = 20).
+在 2020-05-04, 卖了 15 个苹果 和 16 个桔子 (差异为 15 - 16 = -1).
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">select a.sale_date, a.sold_num - b.sold_num as diff
+from Sales a left join Sales b
+on a.sale_date = b.sale_date 
+where a.fruit = &#39;apples&#39; and b.fruit = &#39;oranges&#39;;
+</code></pre>
+<p><strong>自连接数据表</strong><br> 把 <code>Sales</code> 表取两份：一份叫 <code>a</code>，一份叫 <code>b</code>，然后通过 <code>a.sale_date = b.sale_date</code> 把同一天的苹果和橘子配对到一起。</p>
+<p><strong>限定水果种类</strong><br> 在 <code>where</code> 子句里规定：<code>a.fruit = &#39;apples&#39;</code>，<code>b.fruit = &#39;oranges&#39;</code>，这样就保证 <code>a</code> 表只取苹果的销售数据，<code>b</code> 表只取橘子的销售数据。</p>
+<p><strong>计算销售差值</strong><br> 在 <code>select</code> 里取出日期 (<code>a.sale_date</code>)、苹果销量 (<code>a.sold_num</code>)、橘子销量 (<code>b.sold_num</code>)，并且计算它们的差值 <code>a.sold_num - b.sold_num</code>，命名为 <code>diff</code>。</p>
+<hr>
+<h3 id="1699-两人之间的通话次数"><a href="#1699-两人之间的通话次数" class="headerlink" title="1699.两人之间的通话次数"></a>1699.两人之间的通话次数</h3><p>表： <code>Calls</code></p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| from_id     | int     |
+| to_id       | int     |
+| duration    | int     |
++-------------+---------+
+该表没有主键(具有唯一值的列)，它可能包含重复项。
+该表包含 from_id 与 to_id 间的一次电话的时长。
+from_id != to_id
+</code></pre>
+<p>编写解决方案，统计每一对用户 <code>(person1, person2)</code> 之间的通话次数和通话总时长，其中 <code>person1 &lt; person2</code> 。</p>
+<p>以 <strong>任意顺序</strong> 返回结果表。</p>
+<p>返回结果格式如下示例所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Calls 表：
++---------+-------+----------+
+| from_id | to_id | duration |
++---------+-------+----------+
+| 1       | 2     | 59       |
+| 2       | 1     | 11       |
+| 1       | 3     | 20       |
+| 3       | 4     | 100      |
+| 3       | 4     | 200      |
+| 3       | 4     | 200      |
+| 4       | 3     | 499      |
++---------+-------+----------+
+输出：
++---------+---------+------------+----------------+
+| person1 | person2 | call_count | total_duration |
++---------+---------+------------+----------------+
+| 1       | 2       | 2          | 70             |
+| 1       | 3       | 1          | 20             |
+| 3       | 4       | 4          | 999            |
++---------+---------+------------+----------------+
+解释：
+用户 1 和 2 打过 2 次电话，总时长为 70 (59 + 11)。
+用户 1 和 3 打过 1 次电话，总时长为 20。
+用户 3 和 4 打过 4 次电话，总时长为 999 (100 + 200 + 200 + 499)。
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">select a as person1, b as person2, sum(total_count) as call_count, sum(total) as total_duration from(
+select from_id as a, to_id as b, count(*) as total_count, sum(duration) as total from Calls group by
+from_id, to_id 
+union all
+select to_id as a, from_id as b, count(*) as total_count, sum(duration) as total from Calls group by
+to_id, from_id
+)t where a &lt; b group by a, b;
+</code></pre>
+<p><strong>正反向通话拆开统计</strong><br> 先用 <code>from_id → to_id</code> 分组统计每一对通话的次数和总时长，再用 <code>to_id → from_id</code> 反向统计。<br> 这样做的目的是把双方互相拨打的情况都纳入考虑。</p>
+<p><strong><code>union all</code> 合并结果</strong><br> 把正向和反向的结果拼在一起，形成一张“对称”的结果集。<br> 此时，每一对用户 (person1, person2) 会出现两次：一条是正向统计，一条是反向统计。</p>
+<p><strong>统一顺序并再次聚合</strong><br> 在外层查询里，用 <code>where a &lt; b</code> 保证只保留 <code>(小id, 大id)</code> 的组合，消除顺序带来的重复。<br> 然后再按 <code>(a, b)</code> 分组，用 <code>sum(total_count)</code> 和 <code>sum(total)</code> 汇总双方的通话次数和总时长。</p>
+<hr>
+<h3 id="1501-可以放心投资的国家"><a href="#1501-可以放心投资的国家" class="headerlink" title="1501.可以放心投资的国家"></a>1501.可以放心投资的国家</h3><p>表 <code>Person</code>:</p>
+<pre><code>+----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| id             | int     |
+| name           | varchar |
+| phone_number   | varchar |
++----------------+---------+
+id 是该表具有唯一值的列.
+该表每一行包含一个人的名字和电话号码.
+电话号码的格式是:&#39;xxx-yyyyyyy&#39;, 其中 xxx 是国家码(3 个字符), yyyyyyy 是电话号码(7 个字符), x 和 y 都表示数字. 同时, 国家码和电话号码都可以包含前导 0.
+</code></pre>
+<p>表 <code>Country</code>:</p>
+<pre><code>+----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| name           | varchar |
+| country_code   | varchar |
++----------------+---------+
+country_code 是该表具有唯一值的列.
+该表每一行包含国家名和国家码. country_code 的格式是&#39;xxx&#39;, x 是数字.
+</code></pre>
+<p>表 <code>Calls</code>:</p>
+<pre><code>+-------------+------+
+| Column Name | Type |
++-------------+------+
+| caller_id   | int  |
+| callee_id   | int  |
+| duration    | int  |
++-------------+------+
+该表无主键, 可能包含重复行.
+每一行包含呼叫方 id, 被呼叫方 id 和以分钟为单位的通话时长. caller_id != callee_id
+</code></pre>
+<p>一家电信公司想要投资新的国家。该公司想要投资的国家是: 该国的平均通话时长要严格地大于全球平均通话时长。</p>
+<p>写一个解决方案, 找到所有该公司可以投资的国家。</p>
+<p>返回的结果表 <strong>无顺序要求</strong>。</p>
+<p>结果格式如下例所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Person 表：
++----+----------+--------------+
+| id | name     | phone_number |
++----+----------+--------------+
+| 3  | Jonathan | 051-1234567  |
+| 12 | Elvis    | 051-7654321  |
+| 1  | Moncef   | 212-1234567  |
+| 2  | Maroua   | 212-6523651  |
+| 7  | Meir     | 972-1234567  |
+| 9  | Rachel   | 972-0011100  |
++----+----------+--------------+
+Country 表:
++----------+--------------+
+| name     | country_code |
++----------+--------------+
+| Peru     | 051          |
+| Israel   | 972          |
+| Morocco  | 212          |
+| Germany  | 049          |
+| Ethiopia | 251          |
++----------+--------------+
+Calls 表:
++-----------+-----------+----------+
+| caller_id | callee_id | duration |
++-----------+-----------+----------+
+| 1         | 9         | 33       |
+| 2         | 9         | 4        |
+| 1         | 2         | 59       |
+| 3         | 12        | 102      |
+| 3         | 12        | 330      |
+| 12        | 3         | 5        |
+| 7         | 9         | 13       |
+| 7         | 1         | 3        |
+| 9         | 7         | 1        |
+| 1         | 7         | 7        |
++-----------+-----------+----------+
+输出：
++----------+
+| country  |
++----------+
+| Peru     |
++----------+
+解释：
+国家 Peru 的平均通话时长是 (102 + 102 + 330 + 330 + 5 + 5) / 6 = 145.666667
+国家 Israel 的平均通话时长是 (33 + 4 + 13 + 13 + 3 + 1 + 1 + 7) / 8 = 9.37500
+国家 Morocco 的平均通话时长是 (33 + 4 + 59 + 59 + 3 + 7) / 6 = 27.5000 
+全球平均通话时长 = (2 * (33 + 4 + 59 + 102 + 330 + 5 + 13 + 3 + 1 + 7)) / 20 = 55.70000
+所以, Peru 是唯一的平均通话时长大于全球平均通话时长的国家, 也是唯一的推荐投资的国家.
+</code></pre>
+<p><strong>解答：</strong></p>
+<p>一个表（Calls）中出现两列（caller_id 、callee_id）都是同属一个表（Person）里的属性，用join+union即可全部归纳</p>
+<pre><code class="language-sql">with base as(
+    select c1.caller_id as id, c1.duration as phonetime, p1.phone_number as number from Calls c1 join Person p1 on c1.caller_id = p1.id 
+    union all
+    select c2.callee_id as id, c2.duration as phonetime, p2.phone_number as number from Calls c2 join Person p2 on c2.callee_id = p2.id 
+),
+seq as(
+    select a.id, a.phonetime, b.name as country_name from base a join Country b on substring(a.number, 1, 3) = b.country_code 
+),
+country_avg as (
+    select country_name, avg(phonetime) as avg_time from seq group by country_name
+),
+global_avg as (
+    select avg(phonetime) as avg_global from seq 
+)
+select country_name as country from country_avg where avg_time &gt; (
+    select avg_global from global_avg
+</code></pre>
+<ol>
+<li><strong>提取国家代码</strong>：从<code>Person</code>表中提取每个用户的国家代码（电话号码的前三个字符）。</li>
+<li><strong>计算每个通话的国家</strong>：对于<code>Calls</code>表中的每个通话，无论是呼叫者还是被呼叫者，都需要确定其国家代码，从而将通话时长分配给相应的国家。</li>
+<li><strong>计算每个国家的平均通话时长</strong>：汇总每个国家的所有通话时长，计算其平均值。</li>
+<li><strong>计算全球平均通话时长</strong>：汇总所有通话的通话时长，计算全球平均值。</li>
+<li><strong>比较并筛选国家</strong>：筛选出那些平均通话时长严格大于全球平均通话时长的国家。</li>
+</ol>
+<hr>
+<h3 id="1264-页面描述"><a href="#1264-页面描述" class="headerlink" title="1264.页面描述"></a>1264.页面描述</h3><p>朋友关系列表： <code>Friendship</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| user1_id      | int     |
+| user2_id      | int     |
++---------------+---------+
+(user1_id, user2_id) 是这张表具有唯一值的列的组合。
+这张表的每一行代表着 user1_id 和 user2_id 之间存在着朋友关系。
+</code></pre>
+<p>喜欢列表： <code>Likes</code></p>
+<pre><code>+-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| user_id     | int     |
+| page_id     | int     |
++-------------+---------+
+(user_id, page_id) 是这张表具有唯一值的列的组合。
+这张表的每一行代表着 user_id 喜欢 page_id。
+</code></pre>
+<p>编写解决方案，向<code>user_id</code> &#x3D; 1 的用户，推荐其朋友们喜欢的页面。不要推荐该用户已经喜欢的页面。</p>
+<p>以 <strong>任意顺序</strong> 返回结果，其中不应当包含重复项。</p>
+<p>返回结果的格式如下例所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Friendship table:
++----------+----------+
+| user1_id | user2_id |
++----------+----------+
+| 1        | 2        |
+| 1        | 3        |
+| 1        | 4        |
+| 2        | 3        |
+| 2        | 4        |
+| 2        | 5        |
+| 6        | 1        |
++----------+----------+
+ 
+Likes table:
++---------+---------+
+| user_id | page_id |
++---------+---------+
+| 1       | 88      |
+| 2       | 23      |
+| 3       | 24      |
+| 4       | 56      |
+| 5       | 11      |
+| 6       | 33      |
+| 2       | 77      |
+| 3       | 77      |
+| 6       | 88      |
++---------+---------+
+
+输出：
++------------------+
+| recommended_page |
++------------------+
+| 23               |
+| 24               |
+| 56               |
+| 33               |
+| 77               |
++------------------+
+解释：
+用户1 同 用户2, 3, 4, 6 是朋友关系。
+推荐页面为： 页面23 来自于 用户2, 页面24 来自于 用户3, 页面56 来自于 用户3 以及 页面33 来自于 用户6。
+页面77 同时被 用户2 和 用户3 推荐。
+页面88 没有被推荐，因为 用户1 已经喜欢了它。
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">with base as(
+    select case when user1_id = 1 then user2_id 
+    when user2_id = 1 then user1_id else null end as friend from Friendship
+),
+seq as(
+    select distinct a.page_id from Likes a join base b on a.user_id = b.friend where b.friend is not null
+)
+select page_id as recommended_page from seq a where not exists (
+    select b.page_id from Likes b where b.user_id = 1 and a.page_id = b.page_id
+);
+</code></pre>
+<p>如果等值子查询会返回null，则需要使用not exists+相关子查询</p>
+<hr>
+<h3 id="608-树节点"><a href="#608-树节点" class="headerlink" title="608.树节点"></a>608.树节点</h3><p>表：<code>Tree</code></p>
+<pre><code>+-------------+------+
+| Column Name | Type |
++-------------+------+
+| id          | int  |
+| p_id        | int  |
++-------------+------+
+id 是该表中具有唯一值的列。
+该表的每行包含树中节点的 id 及其父节点的 id 信息。
+给定的结构总是一个有效的树。
+</code></pre>
+<p>树中的每个节点可以是以下三种类型之一：</p>
+<ul>
+<li><strong>“Leaf”</strong>：节点是叶子节点。</li>
+<li><strong>“Root”</strong>：节点是树的根节点。</li>
+<li><strong>“lnner”</strong>：节点既不是叶子节点也不是根节点。</li>
+</ul>
+<p>编写一个解决方案来报告树中每个节点的类型。</p>
+<p>以 <strong>任意顺序</strong> 返回结果表。</p>
+<p>结果格式如下所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Tree table:
++----+------+
+| id | p_id |
++----+------+
+| 1  | null |
+| 2  | 1    |
+| 3  | 1    |
+| 4  | 2    |
+| 5  | 2    |
++----+------+
+输出：
++----+-------+
+| id | type  |
++----+-------+
+| 1  | Root  |
+| 2  | Inner |
+| 3  | Leaf  |
+| 4  | Leaf  |
+| 5  | Leaf  |
++----+-------+
+解释：
+节点 1 是根节点，因为它的父节点为空，并且它有子节点 2 和 3。
+节点 2 是一个内部节点，因为它有父节点 1 和子节点 4 和 5。
+节点 3、4 和 5 是叶子节点，因为它们有父节点而没有子节点。
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：
+Tree table:
++----+------+
+| id | p_id |
++----+------+
+| 1  | null |
++----+------+
+输出：
++----+-------+
+| id | type  |
++----+-------+
+| 1  | Root  |
++----+-------+
+解释：如果树中只有一个节点，则只需要输出其根属性。
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">
+select id, case when p_id is null then &#39;Root&#39; 
+when id in (select p_id from Tree where p_id is not null) then &#39;Inner&#39;
+else &#39;Leaf&#39; end as type from Tree;
+</code></pre>
+<hr>
+<h3 id="534-游戏玩法分析"><a href="#534-游戏玩法分析" class="headerlink" title="534.游戏玩法分析 |||"></a>534.游戏玩法分析 |||</h3><p>表：<code>Activity</code></p>
+<pre><code>+--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| player_id    | int     |
+| device_id    | int     |
+| event_date   | date    |
+| games_played | int     |
++--------------+---------+
+（player_id，event_date）是此表的主键（具有唯一值的列）。
+这张表显示了某些游戏的玩家的活动情况。
+每一行是一个玩家的记录，他在某一天使用某个设备注销之前登录并玩了很多游戏（可能是 0 ）。
+</code></pre>
+<p>编写一个解决方案，同时报告每组玩家和日期，以及玩家到 <strong>目前为止</strong> 玩了多少游戏。也就是说，玩家在该日期之前所玩的游戏总数。详细情况请查看示例。</p>
+<p>以 <strong>任意顺序</strong> 返回结果表。</p>
+<p>结果格式如下所示。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：
+Activity table:
++-----------+-----------+------------+--------------+
+| player_id | device_id | event_date | games_played |
++-----------+-----------+------------+--------------+
+| 1         | 2         | 2016-03-01 | 5            |
+| 1         | 2         | 2016-05-02 | 6            |
+| 1         | 3         | 2017-06-25 | 1            |
+| 3         | 1         | 2016-03-02 | 0            |
+| 3         | 4         | 2018-07-03 | 5            |
++-----------+-----------+------------+--------------+
+输出：
++-----------+------------+---------------------+
+| player_id | event_date | games_played_so_far |
++-----------+------------+---------------------+
+| 1         | 2016-03-01 | 5                   |
+| 1         | 2016-05-02 | 11                  |
+| 1         | 2017-06-25 | 12                  |
+| 3         | 2016-03-02 | 0                   |
+| 3         | 2018-07-03 | 5                   |
++-----------+------------+---------------------+
+解释：
+对于 ID 为 1 的玩家，2016-05-02 共玩了 5+6=11 个游戏，2017-06-25 共玩了 5+6+1=12 个游戏。
+对于 ID 为 3 的玩家，2018-07-03 共玩了 0+5=5 个游戏。
+请注意，对于每个玩家，我们只关心玩家的登录日期。
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">select player_id, event_date, sum(games_played)over (partition by player_id order by event_date)as games_played_so_far from Activity;
+</code></pre>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/Leetcode/" style="color: #ffa2c4">Leetcode</a>
+        </span>
+        
+    </div>
+    <a href="/2021/09/09/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%952/" class="go-post">阅读全文</a>
+</div>
+
 
         <div class="page-current">
     
@@ -291,6 +3373,17 @@
         
     </div>
     <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
     
 </body>
 </html>

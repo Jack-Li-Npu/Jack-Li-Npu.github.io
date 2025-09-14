@@ -3,7 +3,7 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="utf-8" />
-    <title>Hello World | KINGBOB&#39;S BLOG</title>
+    <title>统计分析术语 | KINGBOB&#39;S BLOG</title>
     <meta name="author" content="KING BOB" />
     <meta name="description" content="LET'S MAKE IT HAPPEN" />
     <meta name="keywords" content="" />
@@ -156,33 +156,105 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>Hello World</h1>
+        <h1>统计分析术语</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2025/9/14
+            2021/11/15
         </span>
         
+        <span class="category">
+            <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                统计分析
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="color: #00bcd4">
+                    统计分析
+                </a>
+            </span>
+            
+        </span>
         
     </div>
     
     <div class="content" v-pre>
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="language-bash">$ hexo new &quot;My New Post&quot;
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="language-bash">$ hexo server
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="language-bash">$ hexo generate
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="language-bash">$ hexo deploy
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h2 id="统计分析术语"><a href="#统计分析术语" class="headerlink" title="统计分析术语"></a>统计分析术语</h2><ol>
+<li>二分位数</li>
+<li>第一四分位数</li>
+</ol>
+<hr>
+<p><strong>箱型图解读要点</strong></p>
+<ol>
+<li><strong>异常值</strong><ul>
+<li>如果数据存在离群点（超出 [Q1−1.5⋅IQR,Q3+1.5⋅IQR][Q1-1.5·IQR, Q3+1.5·IQR] 的范围），会在箱型图外以圆点或星号标注。</li>
+</ul>
+</li>
+<li><strong>箱体高度（IQR &#x3D; Q3 – Q1）</strong><ul>
+<li><strong>箱子很短</strong>：数据高度集中，分布较均匀。</li>
+<li><strong>箱子很长</strong>：数据分布离散，差异较大。</li>
+</ul>
+</li>
+<li><strong>中位数位置</strong><ul>
+<li><strong>中位数接近箱体底部（Q1）</strong>：说明数据偏大（右偏，长尾在高值方向）。</li>
+<li><strong>中位数接近箱体顶部（Q3）</strong>：说明数据偏小（左偏，长尾在低值方向）。</li>
+<li>中位数是否居中，可以反映数据的 <strong>偏斜程度</strong>。</li>
+</ul>
+</li>
+<li><strong>上下须（Whiskers）长度</strong><ul>
+<li>须比较长：说明四分位数之外的数据差异较大 → <strong>方差、标准差大</strong>。</li>
+<li>须比较短：说明四分位数之外的数据较集中。</li>
+</ul>
+</li>
+<li><strong>箱型图的边缘并不是极值</strong><ul>
+<li>箱体的边缘是 <strong>Q1、Q3</strong>，而不是最小值、最大值。</li>
+<li>须的终点才接近“最大值&#x2F;最小值”，但仍可能不是极值（因为须长度有限制）。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<p>📌 <strong>一句话记忆</strong>：</p>
+<ul>
+<li><strong>箱子 &#x3D; 中心 50% 数据</strong>，</li>
+<li><strong>线（须） &#x3D; 更广的分布范围</strong>，</li>
+<li><strong>点 &#x3D; 异常值</strong>，</li>
+<li><strong>中位数位置 &#x3D; 偏斜方向</strong>。</li>
+</ul>
+<ol>
+<li>假设检验</li>
+<li>显著性水平：当原假设为真时，拒绝原假设的概率</li>
+<li>功效：当原假设为假时，能检测出这种错误并得出正确结论的概率</li>
+<li>置信区间：用来估计总体参数可能范围的一个区间，反映了我们对总体参数估计的信任度</li>
+<li>p值：出现极端情况的概率，当原假设为真时，出现比当前抽样分布更加极端的情况的概率</li>
+<li>p与$\alpha$的关系：p小于a，则小概率事件发生，则拒绝H0</li>
+<li>一类错误：当零假设为真时，拒绝</li>
+<li>二类错误：当零假设为假时，接受</li>
+<li>原假设与备择假设</li>
+<li>中心极限定理</li>
+<li>大数定理：随着试验次数的增加，样本平均值趋近总体的期望值</li>
+<li>卡方检验：分析变量之间是否独立</li>
+<li>方差分析：比较三个或更多的均值是否差异</li>
+<li>z检验适用于大样本，总体方差已知</li>
+<li>t检验适用于小样本，总体方差未知</li>
+<li>最大似然估计</li>
+<li>最小二乘估计</li>
+<li>交叉验证</li>
+</ol>
 
     </div>
     

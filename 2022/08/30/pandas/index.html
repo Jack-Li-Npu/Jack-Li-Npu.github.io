@@ -3,7 +3,7 @@
 <html lang="zh-Hans">
 <head>
     <meta charset="utf-8" />
-    <title>Hello World | KINGBOB&#39;S BLOG</title>
+    <title>pandas | KINGBOB&#39;S BLOG</title>
     <meta name="author" content="KING BOB" />
     <meta name="description" content="LET'S MAKE IT HAPPEN" />
     <meta name="keywords" content="" />
@@ -156,33 +156,137 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>Hello World</h1>
+        <h1>pandas</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2025/9/14
+            2022/8/30
         </span>
         
+        <span class="category">
+            <a href="/categories/python/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                python
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/pandas/" style="color: #00a596">
+                    pandas
+                </a>
+            </span>
+            
+        </span>
         
     </div>
     
     <div class="content" v-pre>
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="language-bash">$ hexo new &quot;My New Post&quot;
+        <h1 id="pandas"><a href="#pandas" class="headerlink" title="pandas"></a>pandas</h1><h2 id="pandas读取csv文件"><a href="#pandas读取csv文件" class="headerlink" title="pandas读取csv文件"></a>pandas读取csv文件</h2><pre><code class="language-python">import pandas as pd
+
+df = pd.read_csv(&#39;file_path&#39;)
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="language-bash">$ hexo server
+<h2 id="pandas读取excel文件"><a href="#pandas读取excel文件" class="headerlink" title="pandas读取excel文件"></a>pandas读取excel文件</h2><pre><code class="language-python">import pandas as pd
+
+df = pd.read_excel(&#39;file_path&#39;)
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="language-bash">$ hexo generate
+<p>pandas一些常用式子</p>
+<ol>
+<li>条件筛选</li>
+</ol>
+<pre><code class="language-python">df[df[&#39;columns_name&#39;] &gt; value]
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="language-bash">$ hexo deploy
+<ol start="2">
+<li>多条件筛选</li>
+</ol>
+<pre><code class="language-python">df[(df[&#39;col1&#39;] &gt; val1) &amp; (df[&#39;col2&#39;] == val2)]
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<ol start="3">
+<li>排序</li>
+</ol>
+<pre><code class="language-python">df.sort_values(&#39;column_name&#39;)
+</code></pre>
+<ol start="4">
+<li>分组聚合</li>
+</ol>
+<pre><code class="language-python">df.groupby(&#39;column_name&#39;).agg(&#123;&#39;other_col&#39;: &#39;sum&#39;&#125;)
+</code></pre>
+<ol start="5">
+<li>连接合并</li>
+</ol>
+<pre><code class="language-python">pd.merge(df1, df2, on=&#39;key&#39;)
+</code></pre>
+<ol start="6">
+<li>计数</li>
+</ol>
+<pre><code class="language-python">df[&#39;column_name&#39;].value_counts()
+</code></pre>
+<ol start="7">
+<li>将某列拆成多列</li>
+</ol>
+<pre><code class="language-python">test_df[[&#39;month&#39;, &#39;sector_norm&#39;]] = test_df[&#39;id&#39;].str.split(&#39;_&#39;, expand=True)
+</code></pre>
+<ol start="9">
+<li>找出缺失列</li>
+</ol>
+<pre><code class="language-python">missing_cols = X_test.columns[X_test.isnull().any()]
+</code></pre>
+<ol start="10">
+<li>转换日期至标准格式</li>
+</ol>
+<pre><code class="language-python"># 假设month_norm 原本是2022 Jan
+# Y代表四位年份，b代表月份缩写，m代表两位月份
+X_train[&#39;month_index&#39;] = pd.to_datetime(X_train[&#39;month_norm&#39;], format=&quot;%Y %b&quot;)
+</code></pre>
+<ol start="11">
+<li>寻找离散型与连续型列</li>
+</ol>
+<pre><code class="language-python"># 离散型
+cat_cols = city_search_index.select_dtypes(include=[&#39;object&#39;]).columns
+# 连续型
+num_cols = city_search_index.select_dtypes(include=[&#39;int64&#39;, &#39;float64&#39;]).columns
+</code></pre>
+<ol start="12">
+<li>连续子图展示</li>
+</ol>
+<pre><code class="language-python">sns.set()
+import math
+
+ncols = 1
+nrows = math.ceil(len(missing_cols2) / ncols)
+fig, axes = plt.subplots(nrows, ncols, figsize=(3 * ncols, 3* nrows))
+axes = axes.flatten()
+for i, col in enumerate(missing_cols2):
+    sns.histplot(new_house_transactions[col], kde=True, ax=axes[i])
+
+plt.tight_layout()
+plt.show()
+</code></pre>
+<ol start="13">
+<li>去除行</li>
+</ol>
+<pre><code class="language-python">city_indexes = city_indexes.drop_duplicates(subset=[&#39;year&#39;])
+# subset：用于指定根据哪几列去重。如果不指定，默认对所有列进行去重。
+# keep：
+# &#39;first&#39;（默认）：保留第一次出现的重复行，删除后续的重复行。
+# &#39;last&#39;：保留最后一次出现的重复行，删除之前的。
+# False：删除所有重复的行（只保留唯一的行，没有重复的）。
+# inplace：
+# False（默认）：返回一个去重后的新DataFrame，不修改原始数据。
+# True：在原始DataFrame上直接修改，不返回新对象。
+</code></pre>
 
     </div>
     
