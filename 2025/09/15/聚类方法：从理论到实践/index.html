@@ -1,0 +1,622 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>聚类方法：从理论到实践 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>聚类方法：从理论到实践</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/15
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00a596">
+                    机器学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+
+<h1 id="聚类方法：从理论到实践"><a href="#聚类方法：从理论到实践" class="headerlink" title="聚类方法：从理论到实践"></a>聚类方法：从理论到实践</h1><h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h3><p>在机器学习和数据挖掘中，衡量样本（或特征）之间的<strong>相似度 (Similarity)</strong> 和 <strong>距离 (Distance)</strong> 是许多算法（如K近邻、聚类、降维）的基础。相似度越大，样本越相似；距离越大，样本差异越大。</p>
+<h4 id="（1）相似度与距离"><a href="#（1）相似度与距离" class="headerlink" title="（1）相似度与距离"></a>（1）相似度与距离</h4><p>假设我们有 $n$ 个样本，每个样本有 $p$ 个属性（特征）。数据矩阵 $X$ 可以表示为：<br>$$<br>X &#x3D; \begin{bmatrix}<br>x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1p} \<br>x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2p} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>x_{n1} &amp; x_{n2} &amp; \cdots &amp; x_{np}<br>\end{bmatrix}<br>$$<br>其中，$x_{ij}$ 表示<strong>第 $i$ 个样本的第 $j$ 个属性</strong>的值。 在机器学习中通常用行表示样本。为了与后续概念统一，我们这里采用<strong>样本-属性</strong>的视角。</p>
+<p>两个 $p$ 维样本点 $\mathbf{x}<em>i$ 和 $\mathbf{x}<em>j$ 可以表示为：<br>$$<br>\mathbf{x}<em>i &#x3D; (x</em>{i1}, x</em>{i2}, …, x</em>{ip})^T, \quad \mathbf{x}<em>j &#x3D; (x</em>{j1}, x_{j2}, …, x_{jp})^T<br>$$</p>
+<h5 id="闵可夫斯基距离"><a href="#闵可夫斯基距离" class="headerlink" title="闵可夫斯基距离"></a><strong>闵可夫斯基距离</strong></h5><p>闵可夫斯基距离是下述一系列距离度量的通用形式。</p>
+<p>$$d_{ij} &#x3D; \left( \sum_{k&#x3D;1}^{p} |x_{ik} - x_{jk}|^h \right)^{\frac{1}{h}}$$</p>
+<p>其中，$h$ 是一个参数。</p>
+<ul>
+<li><p><strong>曼哈顿距离</strong><br>当 $h&#x3D;1$ 时，得到曼哈顿距离，也称为“城市街区距离”。<br>$$d_{ij} &#x3D; \sum_{k&#x3D;1}^{p} |x_{ik} - x_{jk}|$$<br><strong>例子</strong>：想象在城市网格状道路中从A点到B点，只能沿着街道走。它的值是各维度差值绝对值的总和。它对数据中的异常值不如欧氏距离敏感。<br><strong>例子</strong>：点 $\mathbf{x}_i &#x3D; (1, 2)$，点 $\mathbf{x}<em>j &#x3D; (4, 6)$。<br>$d</em>{ij} &#x3D; |1-4| + |2-6| &#x3D; 3 + 4 &#x3D; 7$。</p>
+</li>
+<li><p>**欧氏距离 **<br>当 $h&#x3D;2$ 时，得到最常用的欧氏距离，即直线距离。<br>$$d_{ij} &#x3D; \left( \sum_{k&#x3D;1}^{p} (x_{ik} - x_{jk})^2 \right)^{\frac{1}{2}}$$<br><strong>例子</strong>：这是最直观的距离度量方式。它对数据中的异常值比较敏感。<br><strong>例子</strong>：点 $\mathbf{x}_i &#x3D; (1, 2)$，点 $\mathbf{x}<em>j &#x3D; (4, 6)$。<br>$d</em>{ij} &#x3D; \sqrt{(1-4)^2 + (2-6)^2} &#x3D; \sqrt{9 + 16} &#x3D; \sqrt{25} &#x3D; 5$。</p>
+</li>
+<li><p><strong>切比雪夫距离</strong><br>当 $h \to \infty$ 时，得到切比雪夫距离，它是所有维度上差值绝对值的最大值。<br>$$d_{ij} &#x3D; \max_k |x_{ik} - x_{jk}|$$<br><strong>例子</strong>：常用于国际象棋中，国王从一个格子移动到另一个格子所需的最少步数就是切比雪夫距离。<br><strong>例子</strong>：点 $\mathbf{x}_i &#x3D; (1, 2)$，点 $\mathbf{x}<em>j &#x3D; (4, 6)$。<br>$d</em>{ij} &#x3D; \max(|1-4|, |2-6|) &#x3D; \max(3, 4) &#x3D; 4$。</p>
+</li>
+</ul>
+<h5 id="马氏距离"><a href="#马氏距离" class="headerlink" title="**马氏距离 **"></a>**马氏距离 **</h5><p>马氏距离考虑了数据特征之间的相关性，并且与数据的尺度无关（scale-invariant）。<br>$$d_{ij} &#x3D; \sqrt{(\mathbf{x}_i - \mathbf{x}_j)^T \mathbf{S}^{-1} (\mathbf{x}_i - \mathbf{x}_j)}$$<br>其中，$\mathbf{S}$ 是数据集的<strong>协方差矩阵</strong>（定义见后文）。<br><strong>介绍</strong>：欧氏距离假设数据的各个维度不相关且尺度相同。当这个假设不成立时（例如，一个维度的单位是米，另一个是吨），欧氏距离就不合理。马氏距离通过引入协方差矩阵的逆 $\mathbf{S}^{-1}$ 来“修正”这个问题，它相当于在计算距离前，先对数据做了一个线性变换，使其变为各维度不相关且方差为1的标准形式，然后再计算欧氏距离。</p>
+<h5 id="相关系数"><a href="#相关系数" class="headerlink" title="相关系数"></a><strong>相关系数</strong></h5><p>相关系数衡量的是两个<strong>向量</strong>（比如两个样本或两个特征）之间的<strong>线性相关程度</strong>，属于相似度度量。值域为 $[-1, 1]$。</p>
+<ul>
+<li><strong>样本相关系数 (Pearson Correlation Coefficient)</strong>：<br>对于两个 $p$ 维样本向量 $\mathbf{x}<em>i$ 和 $\mathbf{x}<em>j$，其相关系数计算为：<br>$$\rho</em>{ij} &#x3D; \frac{\sum</em>{k&#x3D;1}^{p} (x_{ik} - \bar{x}<em>i)(x</em>{jk} - \bar{x}<em>j)}{\sqrt{\sum</em>{k&#x3D;1}^{p} (x_{ik} - \bar{x}<em>i)^2} \sqrt{\sum</em>{k&#x3D;1}^{p} (x_{jk} - \bar{x}<em>j)^2}}$$<br>其中 $\bar{x}<em>i &#x3D; \frac{1}{p}\sum</em>{k&#x3D;1}^p x</em>{ik}$ 是样本 $i$ 所有属性值的均值。<br><strong>介绍</strong>：$\rho_{ij} &#x3D; 1$ 表示完全正相关，$\rho_{ij} &#x3D; -1$ 表示完全负相关，$\rho_{ij} &#x3D; 0$ 表示无线性相关。</li>
+</ul>
+<h4 id="（2）类或簇"><a href="#（2）类或簇" class="headerlink" title="（2）类或簇"></a>（2）类或簇</h4><p>在聚类分析中，一组相似的样本被归为一个“簇”或“类”。我们需要一些指标来描述一个类的特性。</p>
+<p>假设一个类 $G$ 包含 $n$ 个 $p$ 维样本：$\mathbf{x}_1, \mathbf{x}_2, …, \mathbf{x}_n \in G$。</p>
+<ul>
+<li><p><strong>类中心 (Centroid)</strong><br>类中心是类中所有样本的均值向量，代表了类的平均位置。<br>$$\bar{\mathbf{x}}<em>G &#x3D; \frac{1}{n_G} \sum</em>{i&#x3D;1}^{n_G} \mathbf{x}_i$$</p>
+</li>
+<li><p><strong>类直径 (Diameter) $D_G$</strong><br>类直径衡量类内所有样本间的差异程度，即类的“大小”。<br>$$D_G &#x3D; \sum_{\mathbf{x}<em>i \in G} \sum</em>{\mathbf{x}_j \in G} ||\mathbf{x}_i - \mathbf{x}_j||^2$$<br>一个更常用的、与类直径相关的概念是<strong>类内方差</strong>。</p>
+</li>
+<li><p><strong>类的散布矩阵 $\mathbf{S}_G$ &amp; 协方差矩阵  $\mathbf{\Sigma}_G$</strong><br>这两个矩阵都描述了类内样本围绕类中心的分散情况，以及属性之间的关系。</p>
+<ul>
+<li><p><strong>散布矩阵</strong>：<br>$$\mathbf{S}<em>G &#x3D; \sum</em>{i&#x3D;1}^{n_G} (\mathbf{x}_i - \bar{\mathbf{x}}_G)(\mathbf{x}<em>i - \bar{\mathbf{x}}<em>G)^T$$<br>这是一个 $p \times p$ 的矩阵。其对角线元素 $s</em>{kk}$ 是第 $k$ 个属性的<strong>方差</strong>的 $(n_G-1)$ 倍，非对角线元素 $s</em>{kl}$ 是属性 $k$ 和 $l$ 的<strong>协方差</strong>的 $(n_G-1)$ 倍。</p>
+</li>
+<li><p><strong>协方差矩阵</strong>：<br>协方差矩阵是标准化后的散布矩阵。<br>$$\mathbf{\Sigma}_G &#x3D; \frac{1}{n_G - 1} \mathbf{S}<em>G &#x3D; \frac{1}{n_G - 1} \sum</em>{i&#x3D;1}^{n_G} (\mathbf{x}_i - \bar{\mathbf{x}}_G)(\mathbf{x}_i - \bar{\mathbf{x}}<em>G)^T$$<br><strong>介绍</strong>：协方差矩阵 $\mathbf{\Sigma}<em>G$ 的对角线元素 $\sigma</em>{kk}$ 是第 $k$ 个属性的<strong>方差</strong>，衡量该属性值的分散程度。非对角线元素 $\sigma</em>{kl}$ 是属性 $k$ 和 $l$ 的<strong>协方差</strong>，衡量两个属性之间的线性相关性。马氏距离中使用的正是整个数据集的协方差矩阵 $\mathbf{S}$（或 $\mathbf{\Sigma}$）。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-层次聚类"><a href="#2-层次聚类" class="headerlink" title="2. 层次聚类"></a>2. 层次聚类</h3><p>层次聚类旨在构建一个层次的嵌套聚类树，包括**聚合（自底向上）<strong>和</strong>分裂（自底向下）**两种策略。其中最常用的是聚合聚类。</p>
+<h4 id="聚合聚类"><a href="#聚合聚类" class="headerlink" title="聚合聚类"></a>聚合聚类</h4><p><strong>基本流程</strong>：开始时将每个样本各自分到一个簇，然后按照某种准则逐步合并最相似的簇，直到所有样本归于一个簇或达到某个停止条件。</p>
+<p>该方法的核心是三个要素：</p>
+<ol>
+<li><strong>距离或相似度</strong>：用于衡量样本间的差异。常用欧氏距离、曼哈顿距离、余弦相似度等。</li>
+<li><strong>合并规则</strong>：用于衡量<strong>簇与簇之间</strong>的距离，决定哪两个簇将被合并。常见规则有：<ul>
+<li><strong>单链接 ：两簇中</strong>最近**样本间的距离。<br>$d(C_i, C_j) &#x3D; \min_{\mathbf{x} \in C_i, \mathbf{y} \in C_j} ||\mathbf{x} - \mathbf{y}||$</li>
+<li><strong>全链接：两簇中</strong>最远**样本间的距离。<br>$d(C_i, C_j) &#x3D; \max_{\mathbf{x} \in C_i, \mathbf{y} \in C_j} ||\mathbf{x} - \mathbf{y}||$</li>
+<li><strong>均链接：两簇中所有样本对间距离的</strong>平均值**。<br>$d(C_i, C_j) &#x3D; \frac{1}{|C_i||C_j|} \sum_{\mathbf{x} \in C_i} \sum_{\mathbf{y} \in C_j} ||\mathbf{x} - \mathbf{y}||$</li>
+<li><strong>质心链接 ：两簇</strong>质心**间的距离。<br>$d(C_i, C_j) &#x3D; ||\bar{\mathbf{x}}<em>{C_i} - \bar{\mathbf{x}}</em>{C_j}||$</li>
+</ul>
+</li>
+<li>**停止条件 ：通常是指定最终需要的簇数目 $K$，或指定一个距离阈值，当最近的两个簇距离超过该阈值时停止合并。</li>
+</ol>
+<hr>
+<h3 id="3-K均值聚类"><a href="#3-K均值聚类" class="headerlink" title="3. K均值聚类"></a>3. K均值聚类</h3><p>K均值是一种非常经典、高效的<strong>划分式（Partitional）</strong> 聚类算法。其核心思想是：<strong>以样本与簇质心间的距离为依据，通过迭代优化，使簇内样本尽可能相似（距离小），簇间样本尽可能不相似。</strong></p>
+<h4 id="（1）理论算法"><a href="#（1）理论算法" class="headerlink" title="（1）理论算法"></a>（1）理论算法</h4><p>从理论上看，K均值算法旨在最小化<strong>簇内平方和 (Within-Cluster Sum of Squares, WCSS)</strong>，也称为<strong>失真</strong>。<br>$$J &#x3D; \sum_{i&#x3D;1}^{K} \sum_{\mathbf{x} \in C_i} ||\mathbf{x} - \boldsymbol{\mu}_i||^2$$<br>其中：</p>
+<ul>
+<li>$K$ 是预先指定的簇的个数。</li>
+<li>$C_i$ 表示第 $i$ 个簇。</li>
+<li>$\boldsymbol{\mu}_i$ 是第 $i$ 个簇的质心（中心点）。</li>
+<li>$||\mathbf{x} - \boldsymbol{\mu}_i||^2$ 是样本 $\mathbf{x}$ 到其所属簇质心的欧氏距离的平方。</li>
+</ul>
+<p><strong>目标</strong>：找到簇划分 $C &#x3D; {C_1, C_2, …, C_K}$ 和质心 ${\boldsymbol{\mu}_1, \boldsymbol{\mu}_2, …, \boldsymbol{\mu}_K}$，使得目标函数 $J$ 最小化。</p>
+<h4 id="（2）实际步骤"><a href="#（2）实际步骤" class="headerlink" title="（2）实际步骤"></a>（2）实际步骤</h4><p>由于最小化 $J$ 是一个NP难问题，K均值采用一种<strong>贪心迭代</strong>策略来寻找近似最优解。其步骤如下：</p>
+<ol>
+<li><p>**初始化：</p>
+<ul>
+<li>随机选择 $K$ 个样本点作为<strong>初始簇质心</strong> ${\boldsymbol{\mu}_1^{(0)}, \boldsymbol{\mu}_2^{(0)}, …, \boldsymbol{\mu}_K^{(0)}}$。（上标 $(0)$ 表示第0次迭代）。</li>
+<li>这是关键一步，不同的初始值可能导致不同的聚类结果。</li>
+</ul>
+</li>
+<li><p>**分配步骤：</p>
+<ul>
+<li>对于数据集中的<strong>每一个样本 $\mathbf{x}_n$</strong>：<ul>
+<li>计算它到当前 $K$ 个质心中<strong>每一个</strong>的距离（通常为欧氏距离）。</li>
+<li>将其<strong>分配给距离最近的质心所对应的簇</strong>。</li>
+</ul>
+</li>
+<li>数学表述：$C_i^{(t)} &#x3D; { \mathbf{x}_n : ||\mathbf{x}_n - \boldsymbol{\mu}_i^{(t)}||^2 \le ||\mathbf{x}_n - \boldsymbol{\mu}_j^{(t)}||^2 ; \forall j, 1 \le j \le K }$</li>
+<li>（上标 $(t)$ 表示第 $t$ 次迭代）</li>
+</ul>
+</li>
+<li><p>**更新步骤 ：</p>
+<ul>
+<li>对于<strong>每一个簇 $C_i^{(t)}$</strong>：<ul>
+<li>重新计算该簇的质心。新的质心是该簇所有样本的<strong>均值向量</strong>。</li>
+</ul>
+</li>
+<li>数学表述：$\boldsymbol{\mu}<em>i^{(t+1)} &#x3D; \frac{1}{|C_i^{(t)}|} \sum</em>{\mathbf{x} \in C_i^{(t)}} \mathbf{x}$</li>
+</ul>
+</li>
+<li><p>**重复步骤：</p>
+<ul>
+<li>重复执行<strong>步骤2（分配）</strong> 和<strong>步骤3（更新）</strong>。</li>
+<li><strong>停止条件</strong>：当质心的位置不再发生变化（即 $\boldsymbol{\mu}_i^{(t+1)} &#x3D; \boldsymbol{\mu}_i^{(t)}$ 对所有 $i$ 成立），或者变化很小，或者达到最大迭代次数时，算法停止。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>举例说明</strong>：<br>假设有样本点 <code>[1, 2], [1, 4], [2, 1], [3, 5], [4, 2], [5, 4]</code>，设定 $K&#x3D;2$。</p>
+<ol>
+<li><strong>初始化</strong>：随机选 <code>[1, 2]</code> 和 <code>[3, 5]</code> 作为初始质心。</li>
+<li><strong>分配</strong>：计算所有点到这两个质心的距离，将其分到更近的簇。<ul>
+<li>点 <code>[1,4]</code> 到 <code>[1,2]</code> 的距离是 <code>2</code>，到 <code>[3,5]</code> 的距离是 <code>√(4+1)≈2.2</code>，因此被分到第一个簇。</li>
+<li>同理，<code>[2,1]</code> 分到第一个簇，<code>[5,4]</code> 分到第二个簇，<code>[4,2]</code> 需要计算。</li>
+</ul>
+</li>
+<li><strong>更新</strong>：重新计算两个簇的均值。<ul>
+<li>簇1：<code>[1,2], [1,4], [2,1]</code> -&gt; 新质心 <code>[(1+1+2)/3, (2+4+1)/3] = [1.33, 2.33]</code></li>
+<li>簇2：<code>[3,5], [5,4], [4,2]</code> -&gt; 新质心 <code>[(3+5+4)/3, (5+4+2)/3] = [4, 3.67]</code></li>
+</ul>
+</li>
+<li><strong>重复</strong>：用新的质心 <code>[1.33, 2.33]</code> 和 <code>[4, 3.67]</code> 再次执行分配和更新步骤。直到质心稳定不变。</li>
+</ol>
+</blockquote>
+<h4 id="（3）算法特性"><a href="#（3）算法特性" class="headerlink" title="（3）算法特性"></a>（3）算法特性</h4><ul>
+<li><p><strong>收敛性</strong>：<br>K均值算法<strong>必定收敛</strong>。因为在每次迭代中：</p>
+<ol>
+<li>分配步骤通过将样本分配给最近质心来<strong>减小</strong> $J$。</li>
+<li>更新步骤通过计算均值来找到当前簇划分下最小化 $J$ 的最优质心，同样<strong>减小</strong> $J$。<br>由于目标函数 $J$ 有下界（且迭代过程使其不断减小），因此算法最终会收敛到一个局部最优解。<strong>注意：它不能保证收敛到全局最优解。</strong></li>
+</ol>
+</li>
+<li><p><strong>初始类的选择</strong>：<br>由于对初始质心敏感，不同的初始化可能导致不同的局部最优解。常用改进方法是<strong>K-means++</strong> 初始化策略，其核心思想是：让初始质心彼此尽可能远离。基本步骤是：</p>
+<ol>
+<li>随机选择第一个质心。</li>
+<li>对于每一个样本，计算其与已选质心的最短距离 $D(\mathbf{x})$。</li>
+<li>以概率 $\frac{D(\mathbf{x})^2}{\sum_{\mathbf{x}} D(\mathbf{x})^2}$ 选择一个距离已选质心较远的点作为新质心。</li>
+<li>重复步骤2、3，直到选出 $K$ 个质心。<br><em>“先用层次聚类得到k类”也是一种有效的策略，但计算成本较高。</em></li>
+</ol>
+</li>
+<li><p><strong>类别数k的选择</strong>：<br>$K$ 是一个超参数，需要预先指定。选择最佳 $K$ 值没有绝对正确的方法，常用方法是<strong>手肘法 (Elbow Method)</strong>。<br><strong>原理</strong>：随着 $K$ 值的增大，簇内样本更紧密，平均直径（或WCSS $J$）会不断减小。当 $K$ 增大到接近真实簇数时，WCSS的下降幅度会突然变缓，形成一个“手肘”一样的拐点。<br><strong>具体做法</strong>：</p>
+<ol>
+<li>分别计算 $K&#x3D;1, 2, 3, …$ 时聚类完成后的WCSS $J$。</li>
+<li>绘制 $K$ 与 $J$ 的关系曲线图。</li>
+<li>寻找曲线中的“拐点”（即下降速度由快变慢的点），对应的 $K$ 值通常是一个好的选择。</li>
+</ol>
+<p><strong>二分查找思想</strong>：并非字面上的二分查找算法，而是指一种策略：从一个较小的 $K_{min}$ 和一个较大的 $K_{max}$ 开始，通过观察不同 $K$ 值下 $J$ 的变化趋势，逐步缩小最佳 $K$ 值的候选范围，从而更高效地找到“手肘点”。</p>
+</li>
+</ul>
+<h3 id="4-K均值聚类用于手写字体分类"><a href="#4-K均值聚类用于手写字体分类" class="headerlink" title="4. K均值聚类用于手写字体分类"></a>4. K均值聚类用于手写字体分类</h3><h4 id="（1）数据导入"><a href="#（1）数据导入" class="headerlink" title="（1）数据导入"></a>（1）数据导入</h4><pre><code class="language-python">import numpy as np
+
+from sklearn.datasets import load_digits
+
+data, labels = load_digits(return_X_y=True)
+(n_samples, n_features), n_digits = data.shape, np.unique(labels).size
+
+print(f&quot;数字数: &#123;n_digits&#125;; # 样本量: &#123;n_samples&#125;; # 特征数 &#123;n_features&#125;&quot;)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509151033021.png" alt="image-20250915103305988"></p>
+<h4 id="（2）定义评估函数"><a href="#（2）定义评估函数" class="headerlink" title="（2）定义评估函数"></a>（2）定义评估函数</h4><pre><code class="language-python"># 导入所需模块
+from time import time  
+from sklearn import metrics  
+from sklearn.pipeline import make_pipeline  # 用于创建数据处理管道
+from sklearn.preprocessing import StandardScaler  
+
+
+def bench_k_means(kmeans, name, data, labels):
+    # 记录开始时间，用于计算整个pipeline的拟合时间
+    t0 = time()
+    
+    # 创建一个数据处理管道：先标准化数据，然后进行K均值聚类
+    # make_pipeline(StandardScaler(), kmeans) 创建了一个两步流程：
+    # 1. StandardScaler(): 对数据进行标准化（减去均值，除以标准差）
+    # 2. kmeans: 执行K均值聚类算法
+    # .fit(data) 方法依次执行这两个步骤
+    estimator = make_pipeline(StandardScaler(), kmeans).fit(data)
+    
+    # 计算整个拟合过程所花费的时间
+    fit_time = time() - t0
+    
+    # 初始化结果列表，包含算法名称、拟合时间和惯性值(inertia)
+    # estimator[-1] 获取管道中的最后一个估计器（即KMeans实例）
+    # inertia_ 是K均值的目标函数，表示簇内平方和，值越小表示聚类效果越好
+    results = [name, fit_time, estimator[-1].inertia_]
+
+    # 定义需要真实标签和预测标签的聚类评估指标
+    # 这些指标用于衡量聚类结果与真实标签的一致性
+    clustering_metrics = [
+        metrics.homogeneity_score,  # 同质性：每个簇只包含一个类的成员
+        metrics.completeness_score,  # 完整性：给定类的所有成员都被分配到同一个簇
+        metrics.v_measure_score,     # V度量：同质性和完整性的调和平均
+        metrics.adjusted_rand_score, # 调整兰德指数：衡量两个数据分配之间的相似度
+        metrics.adjusted_mutual_info_score,  # 调整互信息：考虑机会因素的互信息
+    ]
+    
+    # 每个指标函数m接受真实标签labels和预测标签estimator[-1].labels_
+    results += [m(labels, estimator[-1].labels_) for m in clustering_metrics]
+
+    # 轮廓系数需要完整的数据集（特征数据+预测标签）
+    results += [
+        metrics.silhouette_score(
+            data, 
+            estimator[-1].labels_,  # 聚类预测标签
+            metric=&quot;euclidean&quot;,  # 使用欧氏距离计算
+            sample_size=300,  
+        )
+    ]
+
+    formatter_result = (
+        &quot;&#123;:9s&#125;\t&#123;:.3f&#125;s\t&#123;:.0f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;&quot;
+    )
+  
+    print(formatter_result.format(*results))
+</code></pre>
+<p>定义了一个基准测试函数 <code>bench_k_means</code>，用于全面评估K均值聚类算法的性能，主要评估以下几个方面：</p>
+<ol>
+<li><strong>效率评估</strong>：计算算法的运行时间 (<code>fit_time</code>)</li>
+<li><strong>内部评估</strong>：计算簇内平方和 (<code>inertia_</code>) 和轮廓系数 (<code>silhouette_score</code>)</li>
+<li><strong>外部评估</strong>：使用真实标签计算多个评估指标，衡量聚类结果与真实类别的一致性</li>
+</ol>
+<h4 id="（3）运行对比算法"><a href="#（3）运行对比算法" class="headerlink" title="（3）运行对比算法"></a>（3）运行对比算法</h4><pre><code class="language-python">from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+
+print(82 * &quot;_&quot;)
+print(&quot;init\t\ttime\tinertia\thomo\tcompl\tv-meas\tARI\tAMI\tsilhouette&quot;)
+
+kmeans = KMeans(init=&quot;k-means++&quot;, n_clusters=n_digits, n_init=4, random_state=0)
+bench_k_means(kmeans=kmeans, name=&quot;k-means++&quot;, data=data, labels=labels)
+
+kmeans = KMeans(init=&quot;random&quot;, n_clusters=n_digits, n_init=4, random_state=0)
+bench_k_means(kmeans=kmeans, name=&quot;random&quot;, data=data, labels=labels)
+
+pca = PCA(n_components=n_digits).fit(data)
+kmeans = KMeans(init=pca.components_, n_clusters=n_digits, n_init=1)
+bench_k_means(kmeans=kmeans, name=&quot;PCA-based&quot;, data=data, labels=labels)
+
+print(82 * &quot;_&quot;)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509151032541.png" alt="image-20250915103248479"></p>
+<p><strong>1. k-means++ 初始化 (<code>init=&#39;k-means++&#39;</code>)</strong></p>
+<ul>
+<li><strong>原理</strong>: 一种智能的初始化方法，通过让初始聚类中心彼此远离来选择初始质心。第一个质心随机选择，后续质心以与已选质心距离平方成正比的概率被选中。</li>
+<li><strong>特性</strong>: <strong>随机性</strong> - 每次运行结果可能不同。</li>
+<li><strong>实验设置</strong>: 运行4次 (<code>n_init=4</code>) 以考虑其随机性，然后选择最佳结果。</li>
+</ul>
+<p><strong>2. 随机初始化 (<code>init=&#39;random&#39;</code>)</strong></p>
+<ul>
+<li><strong>原理</strong>: 完全随机选择数据点作为初始质心。</li>
+<li><strong>特性</strong>: <strong>随机性</strong> - 每次运行结果可能大不相同。</li>
+<li><strong>实验设置</strong>: 运行4次 (<code>n_init=4</code>) 以考虑其随机性，然后选择最佳结果。</li>
+</ul>
+<p><strong>3. 基于PCA的初始化 (确定性方法)</strong></p>
+<ul>
+<li><strong>原理</strong>: 使用主成分分析(PCA)的前n个主成分方向来初始化质心。具体来说，沿着前n个主成分方向，在数据范围内均匀分布质心。</li>
+<li><strong>特性</strong>: <strong>确定性</strong> - 每次运行结果相同。</li>
+<li><strong>实验设置</strong>: 只需要运行1次 (<code>n_init=1</code>)。</li>
+</ul>
+<h4 id="（4）可视化对比结果"><a href="#（4）可视化对比结果" class="headerlink" title="（4）可视化对比结果"></a>（4）可视化对比结果</h4><pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.datasets import make_blobs
+
+# 使用PCA降维到2维以便可视化
+reduced_data = PCA(n_components=2).fit_transform(data)
+
+# 设置网格步长
+h = 0.02  # 网格点间距
+
+# 计算绘图范围
+x_min, x_max = reduced_data[:, 0].min() - 1, reduced_data[:, 0].max() + 1
+y_min, y_max = reduced_data[:, 1].min() - 1, reduced_data[:, 1].max() + 1
+
+# 创建网格点
+xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+
+# 创建包含2个子图的图形
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+# 初始化方法列表
+init_methods = [&#39;k-means++&#39;, &#39;random&#39;]
+axes = [ax1, ax2]
+
+# 对每种初始化方法进行循环
+for i, init_method in enumerate(init_methods):
+    # 执行K均值聚类
+    kmeans = KMeans(init=init_method, n_clusters=n_digits, n_init=4, random_state=42)
+    kmeans.fit(reduced_data)
+    
+    # 预测网格点的聚类标签
+    Z = kmeans.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+    
+    # 在当前子图上绘制决策边界
+    axes[i].imshow(
+        Z,
+        interpolation=&quot;nearest&quot;,
+        extent=(xx.min(), xx.max(), yy.min(), yy.max()),
+        cmap=plt.cm.Paired,
+        aspect=&quot;auto&quot;,
+        origin=&quot;lower&quot;,
+    )
+    
+    # 绘制数据点
+    axes[i].plot(reduced_data[:, 0], reduced_data[:, 1], &#39;k.&#39;, markersize=2)
+    
+    # 绘制聚类中心
+    centroids = kmeans.cluster_centers_
+    axes[i].scatter(
+        centroids[:, 0],
+        centroids[:, 1],
+        marker=&quot;x&quot;,
+        s=169,
+        linewidths=3,
+        color=&quot;w&quot;,
+        zorder=10,
+    )
+    
+    # 设置子图标题和坐标轴
+    axes[i].set_title(f&quot;K-means with &#123;init_method&#125; initialization&quot;)
+    axes[i].set_xlim(x_min, x_max)
+    axes[i].set_ylim(y_min, y_max)
+    axes[i].set_xticks(())
+    axes[i].set_yticks(())
+    
+    # 在标题下方显示惯性值（inertia）
+    axes[i].text(0.5, -0.1, f&quot;Inertia: &#123;kmeans.inertia_:.2f&#125;&quot;, 
+                transform=axes[i].transAxes, ha=&#39;center&#39;, fontsize=12)
+
+# 调整子图间距
+plt.tight_layout()
+plt.show()
+</code></pre>
+<ol>
+<li><strong>数据预处理</strong>：首先使用PCA将高维数据降维到2维，这样可以在二维平面上进行可视化。</li>
+<li><strong>聚类分析</strong>：使用K-means++、random随机init算法对降维后的数据进行聚类。</li>
+<li><strong>决策边界绘制</strong>：<ul>
+<li>创建一个覆盖整个数据范围的密集网格</li>
+<li>对网格中的每个点进行聚类预测，确定它属于哪个簇</li>
+<li>使用<code>imshow()</code>将不同簇的区域用不同颜色显示，形成Voronoi图效果的决策边界</li>
+</ul>
+</li>
+<li><strong>数据点可视化</strong>：在决策背景上，用黑色小点绘制原始数据点的实际位置。</li>
+<li><strong>聚类中心标记</strong>：用醒目的白色”X”标记每个簇的中心点（质心）。</li>
+</ol>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509151046285.png" alt="image-20250915104629207"></p>
+<p>最终输出每个方法的inertia：也就是簇内平方和，这个值越小说明分类越集中，效果更好</p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>

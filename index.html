@@ -181,16 +181,25 @@
         
 
 <div class="post">
-    <a href="/2025/09/14/hello-world/">
-        <h2 class="post-title">Hello World</h2>
+    <a href="/2025/09/15/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/">
+        <h2 class="post-title">聚类方法：从理论到实践</h2>
     </a>
     <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
         
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2025/9/14
+            2025/9/15
         </span>
         
         
@@ -198,29 +207,735 @@
     <div class="description">
         <div class="content" v-pre>
             
-            <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="language-bash">$ hexo new &quot;My New Post&quot;
+            <meta name="referrer" content="no-referrer" />
+
+<h1 id="支持向量机：从理论到实践"><a href="#支持向量机：从理论到实践" class="headerlink" title="支持向量机：从理论到实践"></a>支持向量机：从理论到实践</h1><h2 id="一。理论概述"><a href="#一。理论概述" class="headerlink" title="一。理论概述"></a>一。理论概述</h2><p>支持向量机（Support Vector Machine, SVM）是机器学习中最强大和最广泛使用的算法之一，尤其在小样本、高维数据的分类任务中表现出色。其核心思想基于统计学习理论中的结构风险最小化原则，通过构建最大间隔超平面来实现分类任务。本文将从数学基础到实际应用，全面深入地解析SVM的工作原理和实现细节。</p>
+<h3 id="1-线性可分支持向量机"><a href="#1-线性可分支持向量机" class="headerlink" title="1. 线性可分支持向量机"></a>1. 线性可分支持向量机</h3><h4 id="1-1-基本概念与数学形式"><a href="#1-1-基本概念与数学形式" class="headerlink" title="1.1 基本概念与数学形式"></a>1.1 基本概念与数学形式</h4><p>对于完全线性可分的数据集，存在无数个超平面能够将两类样本完全分开。SVM通过<strong>间隔最大化</strong>原则从中选择唯一的最优超平面，该超平面不仅能够正确分类所有训练样本，而且具有最好的泛化能力。</p>
+<p>超平面的数学表示为：<br>$$w^T x + b &#x3D; 0$$<br>其中$w \in \mathbb{R}^n$是超平面的法向量，决定了超平面的方向；$b \in \mathbb{R}$是位移项，决定了超平面与原点的距离。</p>
+<p>样本点$x_i$到超平面的几何距离为：<br>$$d_i &#x3D; \frac{|w^T x_i + b|}{|w|}$$</p>
+<h4 id="1-2-函数间隔与几何间隔"><a href="#1-2-函数间隔与几何间隔" class="headerlink" title="1.2 函数间隔与几何间隔"></a>1.2 函数间隔与几何间隔</h4><p><strong>函数间隔</strong>的概念引入了类别信息：<br>$$\hat{\gamma}_i &#x3D; y_i(w^T x_i + b)$$<br>其中$y_i \in {-1, 1}$是样本的类别标签。函数间隔的符号表示分类的正确性，绝对值表示分类的确信度。</p>
+<p>整个数据集的函数间隔定义为所有样本中函数间隔的最小值：<br>$$\hat{\gamma} &#x3D; \min_{i&#x3D;1,\dots,N} \hat{\gamma}_i$$</p>
+<p>然而，函数间隔存在一个显著问题：对$w$和$b$进行等比例缩放时，超平面不变但函数间隔会改变。为解决这个问题，我们引入<strong>几何间隔</strong>：</p>
+<p>$$\gamma_i &#x3D; \frac{\hat{\gamma}_i}{|w|} &#x3D; \frac{y_i(w^T x_i + b)}{|w|}$$</p>
+<p>几何间隔表示样本点到超平面的真实欧几里得距离，具有缩放不变性，能够真实反映分类的确信度。</p>
+<h4 id="1-3-间隔最大化与优化问题"><a href="#1-3-间隔最大化与优化问题" class="headerlink" title="1.3 间隔最大化与优化问题"></a>1.3 间隔最大化与优化问题</h4><p>SVM的核心目标是找到最大几何间隔的超平面，这可以表述为以下优化问题：</p>
+<p>$$\max_{w,b} \gamma$$<br>$$\text{s.t. } \frac{y_i(w^T x_i + b)}{|w|} \geq \gamma, \quad i&#x3D;1,\dots,N$$</p>
+<p>通过令$\hat{\gamma} &#x3D; 1$（这可以通过调整$w$和$b$的尺度实现），问题转化为等价的约束优化问题：</p>
+<p>$$\min_{w,b} \frac{1}{2} |w|^2$$<br>$$\text{s.t. } y_i(w^T x_i + b) \geq 1, \quad i&#x3D;1,\dots,N$$</p>
+<p>这是一个典型的<strong>凸二次规划问题</strong>，具有全局最优解。目标函数中的$\frac{1}{2}$是为了后续求导方便而添加的系数，不影响优化结果。</p>
+<h4 id="1-4-拉格朗日对偶理论与求解"><a href="#1-4-拉格朗日对偶理论与求解" class="headerlink" title="1.4 拉格朗日对偶理论与求解"></a>1.4 拉格朗日对偶理论与求解</h4><p>应用拉格朗日乘子法，我们引入拉格朗日乘子$\alpha_i \geq 0$，构造拉格朗日函数：</p>
+<p>$$L(w,b,\alpha) &#x3D; \frac{1}{2} |w|^2 - \sum_{i&#x3D;1}^N \alpha_i [y_i(w^T x_i + b) - 1]$$</p>
+<p>根据KKT条件，原问题的最优解满足：</p>
+<p>$$\nabla_w L &#x3D; w - \sum_{i&#x3D;1}^N \alpha_i y_i x_i &#x3D; 0$$<br>$$\frac{\partial L}{\partial b} &#x3D; -\sum_{i&#x3D;1}^N \alpha_i y_i &#x3D; 0$$<br>$$\alpha_i [y_i(w^T x_i + b) - 1] &#x3D; 0, \quad i&#x3D;1,\dots,N$$</p>
+<p>代入拉格朗日函数，得到对偶问题：</p>
+<p>$$\max_{\alpha} -\frac{1}{2} \sum_{i&#x3D;1}^N \sum_{j&#x3D;1}^N \alpha_i \alpha_j y_i y_j x_i^T x_j + \sum_{i&#x3D;1}^N \alpha_i$$<br>$$\text{s.t. } \alpha_i \geq 0, \quad \sum_{i&#x3D;1}^N \alpha_i y_i &#x3D; 0$$</p>
+<h4 id="1-5-支持向量与决策函数"><a href="#1-5-支持向量与决策函数" class="headerlink" title="1.5 支持向量与决策函数"></a>1.5 支持向量与决策函数</h4><p>从KKT条件中的互补松弛条件$\alpha_i [y_i(w^T x_i + b) - 1] &#x3D; 0$可知：</p>
+<ul>
+<li>当$\alpha_i &#x3D; 0$时，对应样本不是支持向量，对决策边界没有影响</li>
+<li>当$\alpha_i &gt; 0$时，必有$y_i(w^T x_i + b) &#x3D; 1$，对应样本是<strong>支持向量</strong></li>
+</ul>
+<p>支持向量是位于间隔边界上的样本点，它们决定了最终的超平面。这一特性使得SVM的解具有稀疏性，仅依赖于少数支持向量。</p>
+<p>最终的决策函数为：<br>$$f(x) &#x3D; \text{sign} \left( \sum_{i&#x3D;1}^N \alpha_i y_i x_i^T x + b \right)$$</p>
+<p>其中$b$可以通过任意支持向量计算得到：$b &#x3D; y_i - w^T x_i$（对于满足$0 &lt; \alpha_i$的样本）。</p>
+<hr>
+<h3 id="2-近似线性可分数据（软间隔SVM）"><a href="#2-近似线性可分数据（软间隔SVM）" class="headerlink" title="2. 近似线性可分数据（软间隔SVM）"></a>2. 近似线性可分数据（软间隔SVM）</h3><h4 id="2-1-松弛变量与软间隔概念"><a href="#2-1-松弛变量与软间隔概念" class="headerlink" title="2.1 松弛变量与软间隔概念"></a>2.1 松弛变量与软间隔概念</h4><p>在实际应用中，数据很少是完美线性可分的，可能存在噪声或异常点。软间隔SVM通过引入<strong>松弛变量</strong>$\xi_i \geq 0$，允许一些样本被错误分类，从而提高模型的鲁棒性。</p>
+<p>优化问题变为：<br>$$\min_{w,b,\xi} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N \xi_i$$<br>$$\text{s.t. } y_i(w^T x_i + b) \geq 1 - \xi_i, \quad \xi_i \geq 0, \quad i&#x3D;1,\dots,N$$</p>
+<p>其中$C &gt; 0$是正则化参数，控制误分类惩罚与间隔大小之间的平衡：</p>
+<ul>
+<li>$C$值较大时，误分类惩罚重，间隔较小，可能过拟合</li>
+<li>$C$值较小时，误分类惩罚轻，间隔较大，可能欠拟合</li>
+</ul>
+<h4 id="2-2-软间隔的对偶问题与支持向量分类"><a href="#2-2-软间隔的对偶问题与支持向量分类" class="headerlink" title="2.2 软间隔的对偶问题与支持向量分类"></a>2.2 软间隔的对偶问题与支持向量分类</h4><p>软间隔SVM的对偶问题与硬间隔形式相似：</p>
+<p>$$\max_{\alpha} -\frac{1}{2} \sum_{i&#x3D;1}^N \sum_{j&#x3D;1}^N \alpha_i \alpha_j y_i y_j x_i^T x_j + \sum_{i&#x3D;1}^N \alpha_i$$<br>$$\text{s.t. } 0 \leq \alpha_i \leq C, \quad \sum_{i&#x3D;1}^N \alpha_i y_i &#x3D; 0$$</p>
+<p>KKT条件扩展为：<br>$$\alpha_i [y_i(w^T x_i + b) - 1 + \xi_i] &#x3D; 0$$<br>$$(C - \alpha_i) \xi_i &#x3D; 0$$</p>
+<p>支持向量分为三类：</p>
+<ol>
+<li>$\alpha_i &#x3D; 0$：正确分类的非支持向量，对决策边界没有影响</li>
+<li>$0 &lt; \alpha_i &lt; C$：位于间隔边界上的支持向量，满足$y_i(w^T x_i + b) &#x3D; 1$</li>
+<li>$\alpha_i &#x3D; C$：被错误分类的支持向量或落在间隔内的样本，满足$\xi_i &gt; 0$</li>
+</ol>
+<hr>
+<h3 id="3-非线性支持向量机与核方法"><a href="#3-非线性支持向量机与核方法" class="headerlink" title="3. 非线性支持向量机与核方法"></a>3. 非线性支持向量机与核方法</h3><h4 id="3-1-核技巧的数学原理"><a href="#3-1-核技巧的数学原理" class="headerlink" title="3.1 核技巧的数学原理"></a>3.1 核技巧的数学原理</h4><p>当数据在原始特征空间中线性不可分时，可以通过非线性映射$\phi: \mathbb{R}^d \to \mathcal{H}$将数据映射到高维特征空间$\mathcal{H}$，在其中数据变得线性可分。</p>
+<p>在高维空间中的优化问题变为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N \xi_i$$<br>$$\text{s.t. } y_i(w^T \phi(x_i) + b) \geq 1 - \xi_i, \quad \xi_i \geq 0$$</p>
+<p>对偶问题为：<br>$$\max_{\alpha} -\frac{1}{2} \sum_{i&#x3D;1}^N \sum_{j&#x3D;1}^N \alpha_i \alpha_j y_i y_j \phi(x_i)^T \phi(x_j) + \sum_{i&#x3D;1}^N \alpha_i$$</p>
+<p>直接计算$\phi(x_i)^T \phi(x_j)$可能非常困难（甚至不可能），因此引入<strong>核函数</strong>：<br>$$K(x_i, x_j) &#x3D; \phi(x_i)^T \phi(x_j)$$</p>
+<h4 id="3-2-常用核函数及其特性"><a href="#3-2-常用核函数及其特性" class="headerlink" title="3.2 常用核函数及其特性"></a>3.2 常用核函数及其特性</h4><ol>
+<li><p><strong>线性核</strong>：$K(x_i, x_j) &#x3D; x_i^T x_j$</p>
+<ul>
+<li>参数少，速度快，适用于线性可分情况</li>
+<li>简单，可解释性强</li>
+</ul>
+</li>
+<li><p><strong>多项式核</strong>：$K(x_i, x_j) &#x3D; (x_i^T x_j + c)^d$</p>
+<ul>
+<li>参数$d$控制映射后的空间维度</li>
+<li>当$d$较大时计算可能不稳定</li>
+</ul>
+</li>
+<li><p><strong>高斯径向基核（RBF）</strong>：$K(x_i, x_j) &#x3D; \exp(-\gamma |x_i - x_j|^2)$</p>
+<ul>
+<li>应用最广泛的核函数，具有很强的非线性映射能力</li>
+<li>参数$\gamma$控制高斯函数的宽度，影响模型的复杂度</li>
+</ul>
+</li>
+<li><p><strong>Sigmoid核</strong>：$K(x_i, x_j) &#x3D; \tanh(\kappa x_i^T x_j + \theta)$</p>
+<ul>
+<li>来源于神经网络理论，在某些特定问题上表现良好</li>
+<li>不是对所有参数都满足Mercer条件</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-3-核函数的选择与模型选择"><a href="#3-3-核函数的选择与模型选择" class="headerlink" title="3.3 核函数的选择与模型选择"></a>3.3 核函数的选择与模型选择</h4><p>核函数的选择依赖于具体问题和数据特性：</p>
+<ul>
+<li>文本分类：通常使用线性核，因为文本数据往往已经是高维的</li>
+<li>图像识别：常用RBF核或多项式核，可以捕捉像素间的复杂关系</li>
+<li>生物信息学：RBF核表现优异，适用于基因序列等复杂数据</li>
+</ul>
+<p>模型选择涉及参数调优，常用交叉验证来确定最优的$C$和核参数（如RBF核的$\gamma$）。</p>
+<h4 id="3-4-Mercer定理与核函数有效性"><a href="#3-4-Mercer定理与核函数有效性" class="headerlink" title="3.4 Mercer定理与核函数有效性"></a>3.4 Mercer定理与核函数有效性</h4><p>核函数必须满足Mercer条件：对任意函数$g(x)$满足$\int g(x)^2 dx &lt; \infty$，有：<br>$$\iint K(x, y) g(x) g(y) dx dy \geq 0$$</p>
+<p>这保证了核矩阵$K &#x3D; [K(x_i, x_j)]$是半正定的，对应的优化问题是凸的，有全局最优解。</p>
+<hr>
+<h3 id="4-支持向量机的扩展与变体"><a href="#4-支持向量机的扩展与变体" class="headerlink" title="4. 支持向量机的扩展与变体"></a>4. 支持向量机的扩展与变体</h3><h4 id="4-1-支持向量回归（SVR）"><a href="#4-1-支持向量回归（SVR）" class="headerlink" title="4.1 支持向量回归（SVR）"></a>4.1 支持向量回归（SVR）</h4><p>支持向量机也可以用于回归任务，称为支持向量回归。其基本思想是：寻找一个函数$f(x) &#x3D; w^T \phi(x) + b$，使得$f(x)$与$y$的偏差不超过$\epsilon$，同时保持函数尽量平坦。</p>
+<p>优化问题为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N (\xi_i + \xi_i^<em>)$$<br>$$\text{s.t. } \begin{cases}<br>y_i - w^T \phi(x_i) - b \leq \epsilon + \xi_i \<br>w^T \phi(x_i) + b - y_i \leq \epsilon + \xi_i^</em> \<br>\xi_i, \xi_i^* \geq 0<br>\end{cases}$$</p>
+<h4 id="4-2-多类支持向量机"><a href="#4-2-多类支持向量机" class="headerlink" title="4.2 多类支持向量机"></a>4.2 多类支持向量机</h4><p>SVM本质上是二分类器，扩展多类分类的方法主要有：</p>
+<ol>
+<li><strong>一对多（One-vs-Rest）</strong>：为每个类别训练一个二分类器</li>
+<li><strong>一对一（One-vs-One）</strong>：为每两个类别训练一个二分类器</li>
+<li><strong>多类SVM</strong>：直接修改优化目标，考虑所有类别</li>
+</ol>
+<h4 id="4-3-结构化SVM"><a href="#4-3-结构化SVM" class="headerlink" title="4.3 结构化SVM"></a>4.3 结构化SVM</h4><p>用于结构化输出问题，如序列标注、解析树构建等，通过定义适当的损失函数和特征映射来处理复杂的输出结构。</p>
+<hr>
+<h3 id="5-支持向量机的实践考虑"><a href="#5-支持向量机的实践考虑" class="headerlink" title="5. 支持向量机的实践考虑"></a>5. 支持向量机的实践考虑</h3><h4 id="5-1-数据预处理与特征缩放"><a href="#5-1-数据预处理与特征缩放" class="headerlink" title="5.1 数据预处理与特征缩放"></a>5.1 数据预处理与特征缩放</h4><p>SVM对数据缩放敏感，特别是使用基于距离的核函数（如RBF核）时。常见的预处理方法：</p>
+<ul>
+<li>标准化：将特征缩放到均值为0，方差为1</li>
+<li>归一化：将特征缩放到[0,1]或[-1,1]区间</li>
+</ul>
+<h4 id="5-2-计算效率与大规模数据处理"><a href="#5-2-计算效率与大规模数据处理" class="headerlink" title="5.2 计算效率与大规模数据处理"></a>5.2 计算效率与大规模数据处理</h4><p>传统SVM训练算法的时间复杂度约为$O(n^3)$，空间复杂度约为$O(n^2)$，难以处理大规模数据集。改进方法包括：</p>
+<ul>
+<li>分解算法（如SMO）</li>
+<li>随机梯度下降</li>
+<li>近似核方法</li>
+<li>分布式计算</li>
+</ul>
+<h4 id="5-3-模型解释性与特征重要性"><a href="#5-3-模型解释性与特征重要性" class="headerlink" title="5.3 模型解释性与特征重要性"></a>5.3 模型解释性与特征重要性</h4><p>虽然核SVM具有良好的分类性能，但模型解释性较差。提高解释性的方法：</p>
+<ul>
+<li>使用线性核或可解释性强的核函数</li>
+<li>分析支持向量的权重</li>
+<li>使用模型无关的解释方法（如LIME、SHAP）</li>
+</ul>
+<h3 id="6-支持向量机的局限性与挑战"><a href="#6-支持向量机的局限性与挑战" class="headerlink" title="6. 支持向量机的局限性与挑战"></a>6. 支持向量机的局限性与挑战</h3><ul>
+<li><strong>计算复杂度</strong>：对于大规模数据集，训练时间较长，内存消耗大，限制了其在实际中的应用。</li>
+<li><strong>核函数选择</strong>：核函数及其参数的选择很大程度上依赖于经验和实验，缺乏系统的理论指导。</li>
+<li><strong>概率输出</strong>：标准SVM不直接提供概率输出，需要通过 Platt scaling 等额外方法进行校准。</li>
+<li><strong>多类分类</strong>：SVM本质上是二分类器，多类扩展需要额外的策略，增加了复杂性。</li>
+</ul>
+<hr>
+<h2 id="二。SVM模型应用于人脸分类"><a href="#二。SVM模型应用于人脸分类" class="headerlink" title="二。SVM模型应用于人脸分类"></a>二。SVM模型应用于人脸分类</h2><h3 id="1-数据加载与预处理"><a href="#1-数据加载与预处理" class="headerlink" title="1. 数据加载与预处理"></a>1. 数据加载与预处理</h3><pre><code class="language-python">from time import time
+
+import matplotlib.pyplot as plt
+from scipy.stats import loguniform
+
+from sklearn.datasets import fetch_lfw_people
+from sklearn.decomposition import PCA
+from sklearn.metrics import ConfusionMatrixDisplay, classification_report
+from sklearn.model_selection import RandomizedSearchCV, train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="language-bash">$ hexo server
+<pre><code class="language-python">people_faces = fetch_lfw_peopletch()
+# 从 LFW（Labeled Faces in the Wild）数据集中下载人脸图片
+# min_faces_per_person=70 → 只保留至少有 70 张照片的人物
+# resize=0.4 → 将图片缩小到原来的 40%，降低计算量
+lfw_people = fetch_lfw_people(min_faces_per_person=70, resize=0.4)
+
+# 获取数据集的基本形状信息
+n_samples, h, w = lfw_people.images.shape  # 样本数、高度、宽度
+
+# 机器学习使用拉平后的像素数据（忽略像素的空间位置信息）
+X = lfw_people.data  # 每张图片展平成一维向量
+n_features = X.shape[1]  # 特征数（像素个数）
+
+# 标签（人物 ID）
+y = lfw_people.target
+target_names = lfw_people.target_names  # 人物姓名
+n_classes = target_names.shape[0]  # 类别数
+
+# 打印数据集大小信息
+print(&quot;Total dataset size:&quot;)
+print(&quot;n_samples: %d&quot; % n_samples)
+print(&quot;n_features: %d&quot; % n_features)
+print(&quot;n_classes: %d&quot; % n_classes)
+
+结果：
+Total dataset size:
+n_samples: 1288
+n_features: 1850
+n_classes: 7
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="language-bash">$ hexo generate
+<p>从LFW（Labeled Faces in the Wild）数据集中加载人脸图像数据，并进行初步预处理。通过设置<code>min_faces_per_person=70</code>筛选出至少有70张图像的人物，确保每个类别有足够的样本；<code>resize=0.4</code>将图像缩小到原尺寸的40%，显著降低计算复杂度。随后，将图像数据展平为一维向量作为特征，提取对应的类别标签和人物名称，输出数据集的基本统计信息（样本数、特征维度和类别数）</p>
+<h3 id="2-训练测试划分与数据标准化"><a href="#2-训练测试划分与数据标准化" class="headerlink" title="2. 训练测试划分与数据标准化"></a>2. 训练测试划分与数据标准化</h3><pre><code class="language-python"># 划分训练集和测试集，比例 70% 训练 / 30% 测试
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=2025
+)
+
+# 数据标准化（均值为 0，方差为 1），有助于加快收敛并提升模型性能
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)  # 用训练集拟合并转换
+X_test = scaler.transform(X_test)        # 用相同参数转换测试集
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="language-bash">$ hexo deploy
+<p>将数据集按7:3比例划分为训练集和测试集。采用<code>StandardScaler</code>对数据进行标准化处理，使每个特征的均值为0、方差为1。这一步骤至关重要，因为SVM对特征尺度敏感，标准化可以加速模型收敛并提升性能。注意测试集使用训练集拟合的缩放参数进行转换，避免数据泄露。</p>
+<h3 id="3-主成分分析（PCA）降维"><a href="#3-主成分分析（PCA）降维" class="headerlink" title="3. 主成分分析（PCA）降维"></a>3. 主成分分析（PCA）降维</h3><pre><code class="language-python"># 设定 PCA 要保留的主成分个数，这里是 100 个
+n_components = 100
+
+# 记录开始时间，用于计算运行耗时
+start = time()
+
+# 创建 PCA 对象并拟合训练数据
+# 参数解释：
+#   n_components=n_components  -&gt; 保留的主成分数量
+#   svd_solver=&quot;randomized&quot;    -&gt; 使用随机化 SVD 算法，加速计算（适合高维数据）
+#   whiten=True                -&gt; 白化处理，使得每个主成分的方差为 1（有助于后续分类器性能）
+# .fit(X_train) -&gt; 在训练集上拟合 PCA 模型，学习主成分方向
+pca = PCA(n_components=n_components, svd_solver=&quot;randomized&quot;, whiten=True).fit(X_train)
+
+# 获取 PCA 学到的主成分（特征向量），并将它们还原成 h×w 的二维图像
+# 这些主成分在脸部识别领域被称为 &quot;eigenfaces&quot;（特征脸）
+eigenfaces = pca.components_.reshape((n_components, h, w))
+
+# 记录结束时间
+end = time()
+
+# 使用训练好的 PCA 模型将训练集投影到主成分空间
+# 得到的 X_train_pca 是降维后的特征表示
+X_train_pca = pca.transform(X_train)
+
+# 同样地，将测试集投影到主成分空间
+X_test_pca = pca.transform(X_test)
+
+# 输出整个 PCA 特征提取过程的耗时
+print(&quot;finished in %0.3fs&quot; % (end - start))
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>使用PCA对高维图像特征进行降维，保留100个主要成分。设置<code>whiten=True</code>对主成分进行白化处理，使各维度方差归一化，有助于提升后续分类器性能。采用随机化SVD算法（<code>svd_solver=&quot;randomized&quot;</code>）提高计算效率。降维后将训练集和测试集分别投影到主成分空间，得到低维特征表示（<code>X_train_pca</code>和<code>X_test_pca</code>），同时提取特征脸（eigenfaces）用于可视化。</p>
+<h3 id="4-支持向量机超参数优化"><a href="#4-支持向量机超参数优化" class="headerlink" title="4. 支持向量机超参数优化"></a>4. 支持向量机超参数优化</h3><pre><code class="language-python"># 记录开始时间
+start = time()
+
+# 定义超参数搜索范围 param_grid
+# 这里使用的是 loguniform 分布（对数均匀分布），适合搜索跨度很大的超参数
+#  - &quot;C&quot; 是 SVM 的正则化参数，控制分类器对训练集的拟合程度
+#  - &quot;gamma&quot; 是 RBF 核函数的核宽度参数，影响单个样本的影响范围
+#    范围：
+#      C: 从 1e3 到 1e5
+#      gamma: 从 1e-4 到 1e-1
+param_grid = &#123;
+    &quot;C&quot;: loguniform(1e3, 1e5),
+    &quot;gamma&quot;: loguniform(1e-4, 1e-1),
+&#125;
+
+# 创建一个随机搜索交叉验证器 RandomizedSearchCV
+#  - SVC(kernel=&quot;rbf&quot;, class_weight=&quot;balanced&quot;) ：使用 RBF 核的支持向量机，类别权重平衡处理
+#  - param_distributions=param_grid ：指定要搜索的参数分布
+#  - n_iter=10 ：随机采样 10 组参数组合进行测试
+clf = RandomizedSearchCV(
+    SVC(kernel=&quot;rbf&quot;, class_weight=&quot;balanced&quot;), param_grid, n_iter=10
+)
+
+# 在训练集（PCA 降维后的特征）上拟合模型并进行超参数搜索
+#  X_train_pca：降维后的训练数据
+#  y_train：对应的标签
+clf = clf.fit(X_train_pca, y_train)
+
+# 输出搜索过程耗时
+print(&quot;finished in %0.3f&quot; % (time() - start))
+
+# 输出搜索得到的最优模型（包含最佳参数 C 和 gamma）
+print(clf.best_estimator_)
+</code></pre>
+<p>使用随机搜索（<code>RandomizedSearchCV</code>）优化SVM的超参数（正则化参数<code>C</code>和RBF核参数<code>gamma</code>）。参数搜索范围设置为对数均匀分布（<code>loguniform</code>），涵盖合理的数值区间。采用带类别权重平衡（<code>class_weight=&quot;balanced&quot;</code>）的RBF核SVM，以处理类别样本量不均衡的问题。通过10次参数采样和交叉验证，寻找最优超参数组合。</p>
+<h3 id="5-模型预测与评估"><a href="#5-模型预测与评估" class="headerlink" title="5. 模型预测与评估"></a>5. 模型预测与评估</h3><pre><code class="language-python"># 记录开始时间
+start = time()
+
+# 使用训练好的分类器（clf）对测试集特征进行预测
+#  X_test_pca 是经过 PCA 降维的测试集数据
+#  y_pred 是预测得到的标签
+y_pred = clf.predict(X_test_pca)
+
+# 输出预测过程耗时
+print(&quot;finished in %0.3fs&quot; % (time() - start))
+
+# 打印分类性能评估报告
+# classification_report 会输出：
+#   - precision（精确率）
+#   - recall（召回率）
+#   - f1-score（F1 分数）
+#   - support（每个类别的样本数量）
+# target_names 用于显示每个类别的真实名称（这里是人物姓名）
+print(classification_report(y_test, y_pred, target_names=target_names))
+
+# 绘制混淆矩阵（Confusion Matrix）
+# ConfusionMatrixDisplay.from_estimator 会：
+#   - 用分类器 clf
+#   - 输入测试集数据和真实标签
+#   - 自动计算混淆矩阵并绘制
+# display_labels=target_names 用于显示真实的类别名称
+# xticks_rotation=&quot;vertical&quot; 让横轴标签竖直显示，防止文字重叠
+ConfusionMatrixDisplay.from_estimator(
+    clf, X_test_pca, y_test, display_labels=target_names, xticks_rotation=&quot;vertical&quot;
+)
+
+# 自动调整子图布局，避免文字或图像被遮挡
+plt.tight_layout()
+
+# 显示绘制好的混淆矩阵图
+plt.show()
+</code></pre>
+<p>使用优化后的SVM模型对测试集进行预测，并输出详细分类报告（包括精确率、召回率、F1分数等指标）和混淆矩阵。混淆矩阵可视化展示了各类别的分类情况。</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509140912767.png" alt="image-20250914091238591"></p>
+<h3 id="6-预测结果标题生成与可视化"><a href="#6-预测结果标题生成与可视化" class="headerlink" title="6. 预测结果标题生成与可视化"></a>6. 预测结果标题生成与可视化</h3><pre><code class="language-python">import matplotlib.pyplot as plt
+
+def plot_gallery(images, titles, h, w, n_row=4, n_col=4):
+    &quot;&quot;&quot;绘制图像网格（gallery）&quot;&quot;&quot;
+    fig, axes = plt.subplots(n_row, n_col, figsize=(1.8 * n_col, 2.4 * n_row))  # 创建子图
+    axes = axes.flatten()  # 展平成一维，方便索引
+    for i in range(n_row * n_col):
+        axes[i].imshow(images[i].reshape((h, w)), cmap=plt.cm.gray)  # 显示灰度图
+        axes[i].set_title(titles[i], size=12)  # 设置标题
+        axes[i].set_xticks([])  # 去掉横坐标刻度
+        axes[i].set_yticks([])  # 去掉纵坐标刻度
+    plt.tight_layout()  # 自动调整布局
+    plt.show()
+
+</code></pre>
+<p>定义<code>plot_gallery</code>函数，用于以网格形式展示多张图像。函数接受图像数据、标题列表和图像尺寸参数，自动创建子图布局，显示灰度图像并设置标题。</p>
+<pre><code class="language-python">def title(y_pred, y_test, target_names, i):
+    &quot;&quot;&quot;生成第 i 张图片的预测与真实标签标题&quot;&quot;&quot;
+    pred_name = target_names[y_pred[i]].rsplit(&quot; &quot;, 1)[-1]  # 预测姓名（取姓氏）
+    true_name = target_names[y_test[i]].rsplit(&quot; &quot;, 1)[-1]  # 真实姓名（取姓氏）
+    return &quot;predicted: %s\ntrue:      %s&quot; % (pred_name, true_name)
+
+# 生成预测结果标题列表
+prediction_titles = [
+    title(y_pred, y_test, target_names, i) for i in range(y_pred.shape[0])
+]
+
+# 绘制测试集图片及预测结果
+plot_gallery(X_test, prediction_titles, h, w)
+</code></pre>
+<p>根据预测结果和真实标签生成每张测试图像的标题，格式为“预测姓名&#x2F;真实姓名”。仅使用人物姓氏（通过<code>rsplit</code>提取）简化显示。</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509140913106.png" alt="image-20250914091357886"></p>
+<h3 id="7-特征脸可视化"><a href="#7-特征脸可视化" class="headerlink" title="7. 特征脸可视化"></a>7. 特征脸可视化</h3><pre><code class="language-python"># 生成特征脸（Eigenfaces）标题
+eigenface_titles = [&quot;eigenface %d&quot; % i for i in range(eigenfaces.shape[0])]
+
+# 绘制特征脸
+plot_gallery(eigenfaces, eigenface_titles, h, w)
+
+plt.show()
+</code></pre>
+<p>调用<code>plot_gallery</code>函数可视化PCA提取的前100个特征脸。特征脸反映了人脸图像的主要变化模式，是PCA降维的基础。</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509140914579.png" alt="image-20250914091444461"></p>
 
             
         </div>
     </div>
     <div class="post-tags">
         
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00a596">机器学习</a>
+        </span>
+        
+    </div>
+    <a href="/2025/09/15/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2025/09/15/%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/">
+        <h2 class="post-title">聚类方法：从理论到实践</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/15
+        </span>
         
         
     </div>
-    <a href="/2025/09/14/hello-world/" class="go-post">阅读全文</a>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <meta name="referrer" content="no-referrer" />
+
+
+<h1 id="聚类方法：从理论到实践"><a href="#聚类方法：从理论到实践" class="headerlink" title="聚类方法：从理论到实践"></a>聚类方法：从理论到实践</h1><h3 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a>1. 基本概念</h3><p>在机器学习和数据挖掘中，衡量样本（或特征）之间的<strong>相似度 (Similarity)</strong> 和 <strong>距离 (Distance)</strong> 是许多算法（如K近邻、聚类、降维）的基础。相似度越大，样本越相似；距离越大，样本差异越大。</p>
+<h4 id="（1）相似度与距离"><a href="#（1）相似度与距离" class="headerlink" title="（1）相似度与距离"></a>（1）相似度与距离</h4><p>假设我们有 $n$ 个样本，每个样本有 $p$ 个属性（特征）。数据矩阵 $X$ 可以表示为：<br>$$<br>X &#x3D; \begin{bmatrix}<br>x_{11} &amp; x_{12} &amp; \cdots &amp; x_{1p} \<br>x_{21} &amp; x_{22} &amp; \cdots &amp; x_{2p} \<br>\vdots &amp; \vdots &amp; \ddots &amp; \vdots \<br>x_{n1} &amp; x_{n2} &amp; \cdots &amp; x_{np}<br>\end{bmatrix}<br>$$<br>其中，$x_{ij}$ 表示<strong>第 $i$ 个样本的第 $j$ 个属性</strong>的值。 在机器学习中通常用行表示样本。为了与后续概念统一，我们这里采用<strong>样本-属性</strong>的视角。</p>
+<p>两个 $p$ 维样本点 $\mathbf{x}<em>i$ 和 $\mathbf{x}<em>j$ 可以表示为：<br>$$<br>\mathbf{x}<em>i &#x3D; (x</em>{i1}, x</em>{i2}, …, x</em>{ip})^T, \quad \mathbf{x}<em>j &#x3D; (x</em>{j1}, x_{j2}, …, x_{jp})^T<br>$$</p>
+<h5 id="闵可夫斯基距离"><a href="#闵可夫斯基距离" class="headerlink" title="闵可夫斯基距离"></a><strong>闵可夫斯基距离</strong></h5><p>闵可夫斯基距离是下述一系列距离度量的通用形式。</p>
+<p>$$d_{ij} &#x3D; \left( \sum_{k&#x3D;1}^{p} |x_{ik} - x_{jk}|^h \right)^{\frac{1}{h}}$$</p>
+<p>其中，$h$ 是一个参数。</p>
+<ul>
+<li><p><strong>曼哈顿距离</strong><br>当 $h&#x3D;1$ 时，得到曼哈顿距离，也称为“城市街区距离”。<br>$$d_{ij} &#x3D; \sum_{k&#x3D;1}^{p} |x_{ik} - x_{jk}|$$<br><strong>例子</strong>：想象在城市网格状道路中从A点到B点，只能沿着街道走。它的值是各维度差值绝对值的总和。它对数据中的异常值不如欧氏距离敏感。<br><strong>例子</strong>：点 $\mathbf{x}_i &#x3D; (1, 2)$，点 $\mathbf{x}<em>j &#x3D; (4, 6)$。<br>$d</em>{ij} &#x3D; |1-4| + |2-6| &#x3D; 3 + 4 &#x3D; 7$。</p>
+</li>
+<li><p>**欧氏距离 **<br>当 $h&#x3D;2$ 时，得到最常用的欧氏距离，即直线距离。<br>$$d_{ij} &#x3D; \left( \sum_{k&#x3D;1}^{p} (x_{ik} - x_{jk})^2 \right)^{\frac{1}{2}}$$<br><strong>例子</strong>：这是最直观的距离度量方式。它对数据中的异常值比较敏感。<br><strong>例子</strong>：点 $\mathbf{x}_i &#x3D; (1, 2)$，点 $\mathbf{x}<em>j &#x3D; (4, 6)$。<br>$d</em>{ij} &#x3D; \sqrt{(1-4)^2 + (2-6)^2} &#x3D; \sqrt{9 + 16} &#x3D; \sqrt{25} &#x3D; 5$。</p>
+</li>
+<li><p><strong>切比雪夫距离</strong><br>当 $h \to \infty$ 时，得到切比雪夫距离，它是所有维度上差值绝对值的最大值。<br>$$d_{ij} &#x3D; \max_k |x_{ik} - x_{jk}|$$<br><strong>例子</strong>：常用于国际象棋中，国王从一个格子移动到另一个格子所需的最少步数就是切比雪夫距离。<br><strong>例子</strong>：点 $\mathbf{x}_i &#x3D; (1, 2)$，点 $\mathbf{x}<em>j &#x3D; (4, 6)$。<br>$d</em>{ij} &#x3D; \max(|1-4|, |2-6|) &#x3D; \max(3, 4) &#x3D; 4$。</p>
+</li>
+</ul>
+<h5 id="马氏距离"><a href="#马氏距离" class="headerlink" title="**马氏距离 **"></a>**马氏距离 **</h5><p>马氏距离考虑了数据特征之间的相关性，并且与数据的尺度无关（scale-invariant）。<br>$$d_{ij} &#x3D; \sqrt{(\mathbf{x}_i - \mathbf{x}_j)^T \mathbf{S}^{-1} (\mathbf{x}_i - \mathbf{x}_j)}$$<br>其中，$\mathbf{S}$ 是数据集的<strong>协方差矩阵</strong>（定义见后文）。<br><strong>介绍</strong>：欧氏距离假设数据的各个维度不相关且尺度相同。当这个假设不成立时（例如，一个维度的单位是米，另一个是吨），欧氏距离就不合理。马氏距离通过引入协方差矩阵的逆 $\mathbf{S}^{-1}$ 来“修正”这个问题，它相当于在计算距离前，先对数据做了一个线性变换，使其变为各维度不相关且方差为1的标准形式，然后再计算欧氏距离。</p>
+<h5 id="相关系数"><a href="#相关系数" class="headerlink" title="相关系数"></a><strong>相关系数</strong></h5><p>相关系数衡量的是两个<strong>向量</strong>（比如两个样本或两个特征）之间的<strong>线性相关程度</strong>，属于相似度度量。值域为 $[-1, 1]$。</p>
+<ul>
+<li><strong>样本相关系数 (Pearson Correlation Coefficient)</strong>：<br>对于两个 $p$ 维样本向量 $\mathbf{x}<em>i$ 和 $\mathbf{x}<em>j$，其相关系数计算为：<br>$$\rho</em>{ij} &#x3D; \frac{\sum</em>{k&#x3D;1}^{p} (x_{ik} - \bar{x}<em>i)(x</em>{jk} - \bar{x}<em>j)}{\sqrt{\sum</em>{k&#x3D;1}^{p} (x_{ik} - \bar{x}<em>i)^2} \sqrt{\sum</em>{k&#x3D;1}^{p} (x_{jk} - \bar{x}<em>j)^2}}$$<br>其中 $\bar{x}<em>i &#x3D; \frac{1}{p}\sum</em>{k&#x3D;1}^p x</em>{ik}$ 是样本 $i$ 所有属性值的均值。<br><strong>介绍</strong>：$\rho_{ij} &#x3D; 1$ 表示完全正相关，$\rho_{ij} &#x3D; -1$ 表示完全负相关，$\rho_{ij} &#x3D; 0$ 表示无线性相关。</li>
+</ul>
+<h4 id="（2）类或簇"><a href="#（2）类或簇" class="headerlink" title="（2）类或簇"></a>（2）类或簇</h4><p>在聚类分析中，一组相似的样本被归为一个“簇”或“类”。我们需要一些指标来描述一个类的特性。</p>
+<p>假设一个类 $G$ 包含 $n$ 个 $p$ 维样本：$\mathbf{x}_1, \mathbf{x}_2, …, \mathbf{x}_n \in G$。</p>
+<ul>
+<li><p><strong>类中心 (Centroid)</strong><br>类中心是类中所有样本的均值向量，代表了类的平均位置。<br>$$\bar{\mathbf{x}}<em>G &#x3D; \frac{1}{n_G} \sum</em>{i&#x3D;1}^{n_G} \mathbf{x}_i$$</p>
+</li>
+<li><p><strong>类直径 (Diameter) $D_G$</strong><br>类直径衡量类内所有样本间的差异程度，即类的“大小”。<br>$$D_G &#x3D; \sum_{\mathbf{x}<em>i \in G} \sum</em>{\mathbf{x}_j \in G} ||\mathbf{x}_i - \mathbf{x}_j||^2$$<br>一个更常用的、与类直径相关的概念是<strong>类内方差</strong>。</p>
+</li>
+<li><p><strong>类的散布矩阵 $\mathbf{S}_G$ &amp; 协方差矩阵  $\mathbf{\Sigma}_G$</strong><br>这两个矩阵都描述了类内样本围绕类中心的分散情况，以及属性之间的关系。</p>
+<ul>
+<li><p><strong>散布矩阵</strong>：<br>$$\mathbf{S}<em>G &#x3D; \sum</em>{i&#x3D;1}^{n_G} (\mathbf{x}_i - \bar{\mathbf{x}}_G)(\mathbf{x}<em>i - \bar{\mathbf{x}}<em>G)^T$$<br>这是一个 $p \times p$ 的矩阵。其对角线元素 $s</em>{kk}$ 是第 $k$ 个属性的<strong>方差</strong>的 $(n_G-1)$ 倍，非对角线元素 $s</em>{kl}$ 是属性 $k$ 和 $l$ 的<strong>协方差</strong>的 $(n_G-1)$ 倍。</p>
+</li>
+<li><p><strong>协方差矩阵</strong>：<br>协方差矩阵是标准化后的散布矩阵。<br>$$\mathbf{\Sigma}_G &#x3D; \frac{1}{n_G - 1} \mathbf{S}<em>G &#x3D; \frac{1}{n_G - 1} \sum</em>{i&#x3D;1}^{n_G} (\mathbf{x}_i - \bar{\mathbf{x}}_G)(\mathbf{x}_i - \bar{\mathbf{x}}<em>G)^T$$<br><strong>介绍</strong>：协方差矩阵 $\mathbf{\Sigma}<em>G$ 的对角线元素 $\sigma</em>{kk}$ 是第 $k$ 个属性的<strong>方差</strong>，衡量该属性值的分散程度。非对角线元素 $\sigma</em>{kl}$ 是属性 $k$ 和 $l$ 的<strong>协方差</strong>，衡量两个属性之间的线性相关性。马氏距离中使用的正是整个数据集的协方差矩阵 $\mathbf{S}$（或 $\mathbf{\Sigma}$）。</p>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-层次聚类"><a href="#2-层次聚类" class="headerlink" title="2. 层次聚类"></a>2. 层次聚类</h3><p>层次聚类旨在构建一个层次的嵌套聚类树，包括**聚合（自底向上）<strong>和</strong>分裂（自底向下）**两种策略。其中最常用的是聚合聚类。</p>
+<h4 id="聚合聚类"><a href="#聚合聚类" class="headerlink" title="聚合聚类"></a>聚合聚类</h4><p><strong>基本流程</strong>：开始时将每个样本各自分到一个簇，然后按照某种准则逐步合并最相似的簇，直到所有样本归于一个簇或达到某个停止条件。</p>
+<p>该方法的核心是三个要素：</p>
+<ol>
+<li><strong>距离或相似度</strong>：用于衡量样本间的差异。常用欧氏距离、曼哈顿距离、余弦相似度等。</li>
+<li><strong>合并规则</strong>：用于衡量<strong>簇与簇之间</strong>的距离，决定哪两个簇将被合并。常见规则有：<ul>
+<li><strong>单链接 ：两簇中</strong>最近**样本间的距离。<br>$d(C_i, C_j) &#x3D; \min_{\mathbf{x} \in C_i, \mathbf{y} \in C_j} ||\mathbf{x} - \mathbf{y}||$</li>
+<li><strong>全链接：两簇中</strong>最远**样本间的距离。<br>$d(C_i, C_j) &#x3D; \max_{\mathbf{x} \in C_i, \mathbf{y} \in C_j} ||\mathbf{x} - \mathbf{y}||$</li>
+<li><strong>均链接：两簇中所有样本对间距离的</strong>平均值**。<br>$d(C_i, C_j) &#x3D; \frac{1}{|C_i||C_j|} \sum_{\mathbf{x} \in C_i} \sum_{\mathbf{y} \in C_j} ||\mathbf{x} - \mathbf{y}||$</li>
+<li><strong>质心链接 ：两簇</strong>质心**间的距离。<br>$d(C_i, C_j) &#x3D; ||\bar{\mathbf{x}}<em>{C_i} - \bar{\mathbf{x}}</em>{C_j}||$</li>
+</ul>
+</li>
+<li>**停止条件 ：通常是指定最终需要的簇数目 $K$，或指定一个距离阈值，当最近的两个簇距离超过该阈值时停止合并。</li>
+</ol>
+<hr>
+<h3 id="3-K均值聚类"><a href="#3-K均值聚类" class="headerlink" title="3. K均值聚类"></a>3. K均值聚类</h3><p>K均值是一种非常经典、高效的<strong>划分式（Partitional）</strong> 聚类算法。其核心思想是：<strong>以样本与簇质心间的距离为依据，通过迭代优化，使簇内样本尽可能相似（距离小），簇间样本尽可能不相似。</strong></p>
+<h4 id="（1）理论算法"><a href="#（1）理论算法" class="headerlink" title="（1）理论算法"></a>（1）理论算法</h4><p>从理论上看，K均值算法旨在最小化<strong>簇内平方和 (Within-Cluster Sum of Squares, WCSS)</strong>，也称为<strong>失真</strong>。<br>$$J &#x3D; \sum_{i&#x3D;1}^{K} \sum_{\mathbf{x} \in C_i} ||\mathbf{x} - \boldsymbol{\mu}_i||^2$$<br>其中：</p>
+<ul>
+<li>$K$ 是预先指定的簇的个数。</li>
+<li>$C_i$ 表示第 $i$ 个簇。</li>
+<li>$\boldsymbol{\mu}_i$ 是第 $i$ 个簇的质心（中心点）。</li>
+<li>$||\mathbf{x} - \boldsymbol{\mu}_i||^2$ 是样本 $\mathbf{x}$ 到其所属簇质心的欧氏距离的平方。</li>
+</ul>
+<p><strong>目标</strong>：找到簇划分 $C &#x3D; {C_1, C_2, …, C_K}$ 和质心 ${\boldsymbol{\mu}_1, \boldsymbol{\mu}_2, …, \boldsymbol{\mu}_K}$，使得目标函数 $J$ 最小化。</p>
+<h4 id="（2）实际步骤"><a href="#（2）实际步骤" class="headerlink" title="（2）实际步骤"></a>（2）实际步骤</h4><p>由于最小化 $J$ 是一个NP难问题，K均值采用一种<strong>贪心迭代</strong>策略来寻找近似最优解。其步骤如下：</p>
+<ol>
+<li><p>**初始化：</p>
+<ul>
+<li>随机选择 $K$ 个样本点作为<strong>初始簇质心</strong> ${\boldsymbol{\mu}_1^{(0)}, \boldsymbol{\mu}_2^{(0)}, …, \boldsymbol{\mu}_K^{(0)}}$。（上标 $(0)$ 表示第0次迭代）。</li>
+<li>这是关键一步，不同的初始值可能导致不同的聚类结果。</li>
+</ul>
+</li>
+<li><p>**分配步骤：</p>
+<ul>
+<li>对于数据集中的<strong>每一个样本 $\mathbf{x}_n$</strong>：<ul>
+<li>计算它到当前 $K$ 个质心中<strong>每一个</strong>的距离（通常为欧氏距离）。</li>
+<li>将其<strong>分配给距离最近的质心所对应的簇</strong>。</li>
+</ul>
+</li>
+<li>数学表述：$C_i^{(t)} &#x3D; { \mathbf{x}_n : ||\mathbf{x}_n - \boldsymbol{\mu}_i^{(t)}||^2 \le ||\mathbf{x}_n - \boldsymbol{\mu}_j^{(t)}||^2 ; \forall j, 1 \le j \le K }$</li>
+<li>（上标 $(t)$ 表示第 $t$ 次迭代）</li>
+</ul>
+</li>
+<li><p>**更新步骤 ：</p>
+<ul>
+<li>对于<strong>每一个簇 $C_i^{(t)}$</strong>：<ul>
+<li>重新计算该簇的质心。新的质心是该簇所有样本的<strong>均值向量</strong>。</li>
+</ul>
+</li>
+<li>数学表述：$\boldsymbol{\mu}<em>i^{(t+1)} &#x3D; \frac{1}{|C_i^{(t)}|} \sum</em>{\mathbf{x} \in C_i^{(t)}} \mathbf{x}$</li>
+</ul>
+</li>
+<li><p>**重复步骤：</p>
+<ul>
+<li>重复执行<strong>步骤2（分配）</strong> 和<strong>步骤3（更新）</strong>。</li>
+<li><strong>停止条件</strong>：当质心的位置不再发生变化（即 $\boldsymbol{\mu}_i^{(t+1)} &#x3D; \boldsymbol{\mu}_i^{(t)}$ 对所有 $i$ 成立），或者变化很小，或者达到最大迭代次数时，算法停止。</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>举例说明</strong>：<br>假设有样本点 <code>[1, 2], [1, 4], [2, 1], [3, 5], [4, 2], [5, 4]</code>，设定 $K&#x3D;2$。</p>
+<ol>
+<li><strong>初始化</strong>：随机选 <code>[1, 2]</code> 和 <code>[3, 5]</code> 作为初始质心。</li>
+<li><strong>分配</strong>：计算所有点到这两个质心的距离，将其分到更近的簇。<ul>
+<li>点 <code>[1,4]</code> 到 <code>[1,2]</code> 的距离是 <code>2</code>，到 <code>[3,5]</code> 的距离是 <code>√(4+1)≈2.2</code>，因此被分到第一个簇。</li>
+<li>同理，<code>[2,1]</code> 分到第一个簇，<code>[5,4]</code> 分到第二个簇，<code>[4,2]</code> 需要计算。</li>
+</ul>
+</li>
+<li><strong>更新</strong>：重新计算两个簇的均值。<ul>
+<li>簇1：<code>[1,2], [1,4], [2,1]</code> -&gt; 新质心 <code>[(1+1+2)/3, (2+4+1)/3] = [1.33, 2.33]</code></li>
+<li>簇2：<code>[3,5], [5,4], [4,2]</code> -&gt; 新质心 <code>[(3+5+4)/3, (5+4+2)/3] = [4, 3.67]</code></li>
+</ul>
+</li>
+<li><strong>重复</strong>：用新的质心 <code>[1.33, 2.33]</code> 和 <code>[4, 3.67]</code> 再次执行分配和更新步骤。直到质心稳定不变。</li>
+</ol>
+</blockquote>
+<h4 id="（3）算法特性"><a href="#（3）算法特性" class="headerlink" title="（3）算法特性"></a>（3）算法特性</h4><ul>
+<li><p><strong>收敛性</strong>：<br>K均值算法<strong>必定收敛</strong>。因为在每次迭代中：</p>
+<ol>
+<li>分配步骤通过将样本分配给最近质心来<strong>减小</strong> $J$。</li>
+<li>更新步骤通过计算均值来找到当前簇划分下最小化 $J$ 的最优质心，同样<strong>减小</strong> $J$。<br>由于目标函数 $J$ 有下界（且迭代过程使其不断减小），因此算法最终会收敛到一个局部最优解。<strong>注意：它不能保证收敛到全局最优解。</strong></li>
+</ol>
+</li>
+<li><p><strong>初始类的选择</strong>：<br>由于对初始质心敏感，不同的初始化可能导致不同的局部最优解。常用改进方法是<strong>K-means++</strong> 初始化策略，其核心思想是：让初始质心彼此尽可能远离。基本步骤是：</p>
+<ol>
+<li>随机选择第一个质心。</li>
+<li>对于每一个样本，计算其与已选质心的最短距离 $D(\mathbf{x})$。</li>
+<li>以概率 $\frac{D(\mathbf{x})^2}{\sum_{\mathbf{x}} D(\mathbf{x})^2}$ 选择一个距离已选质心较远的点作为新质心。</li>
+<li>重复步骤2、3，直到选出 $K$ 个质心。<br><em>“先用层次聚类得到k类”也是一种有效的策略，但计算成本较高。</em></li>
+</ol>
+</li>
+<li><p><strong>类别数k的选择</strong>：<br>$K$ 是一个超参数，需要预先指定。选择最佳 $K$ 值没有绝对正确的方法，常用方法是<strong>手肘法 (Elbow Method)</strong>。<br><strong>原理</strong>：随着 $K$ 值的增大，簇内样本更紧密，平均直径（或WCSS $J$）会不断减小。当 $K$ 增大到接近真实簇数时，WCSS的下降幅度会突然变缓，形成一个“手肘”一样的拐点。<br><strong>具体做法</strong>：</p>
+<ol>
+<li>分别计算 $K&#x3D;1, 2, 3, …$ 时聚类完成后的WCSS $J$。</li>
+<li>绘制 $K$ 与 $J$ 的关系曲线图。</li>
+<li>寻找曲线中的“拐点”（即下降速度由快变慢的点），对应的 $K$ 值通常是一个好的选择。</li>
+</ol>
+<p><strong>二分查找思想</strong>：并非字面上的二分查找算法，而是指一种策略：从一个较小的 $K_{min}$ 和一个较大的 $K_{max}$ 开始，通过观察不同 $K$ 值下 $J$ 的变化趋势，逐步缩小最佳 $K$ 值的候选范围，从而更高效地找到“手肘点”。</p>
+</li>
+</ul>
+<h3 id="4-K均值聚类用于手写字体分类"><a href="#4-K均值聚类用于手写字体分类" class="headerlink" title="4. K均值聚类用于手写字体分类"></a>4. K均值聚类用于手写字体分类</h3><h4 id="（1）数据导入"><a href="#（1）数据导入" class="headerlink" title="（1）数据导入"></a>（1）数据导入</h4><pre><code class="language-python">import numpy as np
+
+from sklearn.datasets import load_digits
+
+data, labels = load_digits(return_X_y=True)
+(n_samples, n_features), n_digits = data.shape, np.unique(labels).size
+
+print(f&quot;数字数: &#123;n_digits&#125;; # 样本量: &#123;n_samples&#125;; # 特征数 &#123;n_features&#125;&quot;)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509151033021.png" alt="image-20250915103305988"></p>
+<h4 id="（2）定义评估函数"><a href="#（2）定义评估函数" class="headerlink" title="（2）定义评估函数"></a>（2）定义评估函数</h4><pre><code class="language-python"># 导入所需模块
+from time import time  
+from sklearn import metrics  
+from sklearn.pipeline import make_pipeline  # 用于创建数据处理管道
+from sklearn.preprocessing import StandardScaler  
+
+
+def bench_k_means(kmeans, name, data, labels):
+    # 记录开始时间，用于计算整个pipeline的拟合时间
+    t0 = time()
+    
+    # 创建一个数据处理管道：先标准化数据，然后进行K均值聚类
+    # make_pipeline(StandardScaler(), kmeans) 创建了一个两步流程：
+    # 1. StandardScaler(): 对数据进行标准化（减去均值，除以标准差）
+    # 2. kmeans: 执行K均值聚类算法
+    # .fit(data) 方法依次执行这两个步骤
+    estimator = make_pipeline(StandardScaler(), kmeans).fit(data)
+    
+    # 计算整个拟合过程所花费的时间
+    fit_time = time() - t0
+    
+    # 初始化结果列表，包含算法名称、拟合时间和惯性值(inertia)
+    # estimator[-1] 获取管道中的最后一个估计器（即KMeans实例）
+    # inertia_ 是K均值的目标函数，表示簇内平方和，值越小表示聚类效果越好
+    results = [name, fit_time, estimator[-1].inertia_]
+
+    # 定义需要真实标签和预测标签的聚类评估指标
+    # 这些指标用于衡量聚类结果与真实标签的一致性
+    clustering_metrics = [
+        metrics.homogeneity_score,  # 同质性：每个簇只包含一个类的成员
+        metrics.completeness_score,  # 完整性：给定类的所有成员都被分配到同一个簇
+        metrics.v_measure_score,     # V度量：同质性和完整性的调和平均
+        metrics.adjusted_rand_score, # 调整兰德指数：衡量两个数据分配之间的相似度
+        metrics.adjusted_mutual_info_score,  # 调整互信息：考虑机会因素的互信息
+    ]
+    
+    # 每个指标函数m接受真实标签labels和预测标签estimator[-1].labels_
+    results += [m(labels, estimator[-1].labels_) for m in clustering_metrics]
+
+    # 轮廓系数需要完整的数据集（特征数据+预测标签）
+    results += [
+        metrics.silhouette_score(
+            data, 
+            estimator[-1].labels_,  # 聚类预测标签
+            metric=&quot;euclidean&quot;,  # 使用欧氏距离计算
+            sample_size=300,  
+        )
+    ]
+
+    formatter_result = (
+        &quot;&#123;:9s&#125;\t&#123;:.3f&#125;s\t&#123;:.0f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;\t&#123;:.3f&#125;&quot;
+    )
+  
+    print(formatter_result.format(*results))
+</code></pre>
+<p>定义了一个基准测试函数 <code>bench_k_means</code>，用于全面评估K均值聚类算法的性能，主要评估以下几个方面：</p>
+<ol>
+<li><strong>效率评估</strong>：计算算法的运行时间 (<code>fit_time</code>)</li>
+<li><strong>内部评估</strong>：计算簇内平方和 (<code>inertia_</code>) 和轮廓系数 (<code>silhouette_score</code>)</li>
+<li><strong>外部评估</strong>：使用真实标签计算多个评估指标，衡量聚类结果与真实类别的一致性</li>
+</ol>
+<h4 id="（3）运行对比算法"><a href="#（3）运行对比算法" class="headerlink" title="（3）运行对比算法"></a>（3）运行对比算法</h4><pre><code class="language-python">from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+
+print(82 * &quot;_&quot;)
+print(&quot;init\t\ttime\tinertia\thomo\tcompl\tv-meas\tARI\tAMI\tsilhouette&quot;)
+
+kmeans = KMeans(init=&quot;k-means++&quot;, n_clusters=n_digits, n_init=4, random_state=0)
+bench_k_means(kmeans=kmeans, name=&quot;k-means++&quot;, data=data, labels=labels)
+
+kmeans = KMeans(init=&quot;random&quot;, n_clusters=n_digits, n_init=4, random_state=0)
+bench_k_means(kmeans=kmeans, name=&quot;random&quot;, data=data, labels=labels)
+
+pca = PCA(n_components=n_digits).fit(data)
+kmeans = KMeans(init=pca.components_, n_clusters=n_digits, n_init=1)
+bench_k_means(kmeans=kmeans, name=&quot;PCA-based&quot;, data=data, labels=labels)
+
+print(82 * &quot;_&quot;)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509151032541.png" alt="image-20250915103248479"></p>
+<p><strong>1. k-means++ 初始化 (<code>init=&#39;k-means++&#39;</code>)</strong></p>
+<ul>
+<li><strong>原理</strong>: 一种智能的初始化方法，通过让初始聚类中心彼此远离来选择初始质心。第一个质心随机选择，后续质心以与已选质心距离平方成正比的概率被选中。</li>
+<li><strong>特性</strong>: <strong>随机性</strong> - 每次运行结果可能不同。</li>
+<li><strong>实验设置</strong>: 运行4次 (<code>n_init=4</code>) 以考虑其随机性，然后选择最佳结果。</li>
+</ul>
+<p><strong>2. 随机初始化 (<code>init=&#39;random&#39;</code>)</strong></p>
+<ul>
+<li><strong>原理</strong>: 完全随机选择数据点作为初始质心。</li>
+<li><strong>特性</strong>: <strong>随机性</strong> - 每次运行结果可能大不相同。</li>
+<li><strong>实验设置</strong>: 运行4次 (<code>n_init=4</code>) 以考虑其随机性，然后选择最佳结果。</li>
+</ul>
+<p><strong>3. 基于PCA的初始化 (确定性方法)</strong></p>
+<ul>
+<li><strong>原理</strong>: 使用主成分分析(PCA)的前n个主成分方向来初始化质心。具体来说，沿着前n个主成分方向，在数据范围内均匀分布质心。</li>
+<li><strong>特性</strong>: <strong>确定性</strong> - 每次运行结果相同。</li>
+<li><strong>实验设置</strong>: 只需要运行1次 (<code>n_init=1</code>)。</li>
+</ul>
+<h4 id="（4）可视化对比结果"><a href="#（4）可视化对比结果" class="headerlink" title="（4）可视化对比结果"></a>（4）可视化对比结果</h4><pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.decomposition import PCA
+from sklearn.datasets import make_blobs
+
+# 使用PCA降维到2维以便可视化
+reduced_data = PCA(n_components=2).fit_transform(data)
+
+# 设置网格步长
+h = 0.02  # 网格点间距
+
+# 计算绘图范围
+x_min, x_max = reduced_data[:, 0].min() - 1, reduced_data[:, 0].max() + 1
+y_min, y_max = reduced_data[:, 1].min() - 1, reduced_data[:, 1].max() + 1
+
+# 创建网格点
+xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+
+# 创建包含2个子图的图形
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+# 初始化方法列表
+init_methods = [&#39;k-means++&#39;, &#39;random&#39;]
+axes = [ax1, ax2]
+
+# 对每种初始化方法进行循环
+for i, init_method in enumerate(init_methods):
+    # 执行K均值聚类
+    kmeans = KMeans(init=init_method, n_clusters=n_digits, n_init=4, random_state=42)
+    kmeans.fit(reduced_data)
+    
+    # 预测网格点的聚类标签
+    Z = kmeans.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+    
+    # 在当前子图上绘制决策边界
+    axes[i].imshow(
+        Z,
+        interpolation=&quot;nearest&quot;,
+        extent=(xx.min(), xx.max(), yy.min(), yy.max()),
+        cmap=plt.cm.Paired,
+        aspect=&quot;auto&quot;,
+        origin=&quot;lower&quot;,
+    )
+    
+    # 绘制数据点
+    axes[i].plot(reduced_data[:, 0], reduced_data[:, 1], &#39;k.&#39;, markersize=2)
+    
+    # 绘制聚类中心
+    centroids = kmeans.cluster_centers_
+    axes[i].scatter(
+        centroids[:, 0],
+        centroids[:, 1],
+        marker=&quot;x&quot;,
+        s=169,
+        linewidths=3,
+        color=&quot;w&quot;,
+        zorder=10,
+    )
+    
+    # 设置子图标题和坐标轴
+    axes[i].set_title(f&quot;K-means with &#123;init_method&#125; initialization&quot;)
+    axes[i].set_xlim(x_min, x_max)
+    axes[i].set_ylim(y_min, y_max)
+    axes[i].set_xticks(())
+    axes[i].set_yticks(())
+    
+    # 在标题下方显示惯性值（inertia）
+    axes[i].text(0.5, -0.1, f&quot;Inertia: &#123;kmeans.inertia_:.2f&#125;&quot;, 
+                transform=axes[i].transAxes, ha=&#39;center&#39;, fontsize=12)
+
+# 调整子图间距
+plt.tight_layout()
+plt.show()
+</code></pre>
+<ol>
+<li><strong>数据预处理</strong>：首先使用PCA将高维数据降维到2维，这样可以在二维平面上进行可视化。</li>
+<li><strong>聚类分析</strong>：使用K-means++、random随机init算法对降维后的数据进行聚类。</li>
+<li><strong>决策边界绘制</strong>：<ul>
+<li>创建一个覆盖整个数据范围的密集网格</li>
+<li>对网格中的每个点进行聚类预测，确定它属于哪个簇</li>
+<li>使用<code>imshow()</code>将不同簇的区域用不同颜色显示，形成Voronoi图效果的决策边界</li>
+</ul>
+</li>
+<li><strong>数据点可视化</strong>：在决策背景上，用黑色小点绘制原始数据点的实际位置。</li>
+<li><strong>聚类中心标记</strong>：用醒目的白色”X”标记每个簇的中心点（质心）。</li>
+</ol>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509151046285.png" alt="image-20250915104629207"></p>
+<p>最终输出每个方法的inertia：也就是簇内平方和，这个值越小说明分类越集中，效果更好</p>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">机器学习</a>
+        </span>
+        
+    </div>
+    <a href="/2025/09/15/%E8%81%9A%E7%B1%BB%E6%96%B9%E6%B3%95%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/" class="go-post">阅读全文</a>
 </div>
 
 <div class="post">
@@ -663,7 +1378,7 @@ submission.to_csv(&quot;/kaggle/working/submission.csv&quot;, index=False)
         
         <span class="tag">
             
-            <a href="/tags/Kaggle/" style="color: #00bcd4">Kaggle</a>
+            <a href="/tags/Kaggle/" style="color: #ffa2c4">Kaggle</a>
         </span>
         
     </div>
@@ -804,7 +1519,7 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/pandas/" style="color: #00bcd4">pandas</a>
+            <a href="/tags/pandas/" style="color: #00a596">pandas</a>
         </span>
         
     </div>
@@ -2070,7 +2785,7 @@ tiv_2015 值为 10 与第三条和第四条记录相同，且其位置是唯一�
         
         <span class="tag">
             
-            <a href="/tags/Leetcode/" style="color: #00bcd4">Leetcode</a>
+            <a href="/tags/Leetcode/" style="color: #03a9f4">Leetcode</a>
         </span>
         
         <span class="tag">
@@ -2396,7 +3111,7 @@ merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].repla
         
         <span class="tag">
             
-            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" style="color: #03a9f4">数据建模</a>
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" style="color: #ff7d73">数据建模</a>
         </span>
         
     </div>
@@ -2505,7 +3220,7 @@ merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].repla
         
         <span class="tag">
             
-            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="color: #00a596">统计分析</a>
+            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="color: #03a9f4">统计分析</a>
         </span>
         
     </div>
@@ -3287,6 +4002,132 @@ Activity table:
 <p><strong>解答：</strong></p>
 <pre><code class="language-sql">select player_id, event_date, sum(games_played)over (partition by player_id order by event_date)as games_played_so_far from Activity;
 </code></pre>
+<hr>
+<h3 id="1783-大满贯数量"><a href="#1783-大满贯数量" class="headerlink" title="1783.大满贯数量"></a>1783.大满贯数量</h3><p>表：<code>Players</code></p>
+<pre><code>+----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| player_id      | int     |
+| player_name    | varchar |
++----------------+---------+
+player_id 是这个表的主键（具有唯一值的列）
+这个表的每一行给出一个网球运动员的 ID 和 姓名
+</code></pre>
+<p>表：<code>Championships</code></p>
+<pre><code>+---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| year          | int     |
+| Wimbledon     | int     |
+| Fr_open       | int     |
+| US_open       | int     |
+| Au_open       | int     |
++---------------+---------+
+year 是这个表的主键（具有唯一值的列）
+该表的每一行都包含在每场大满贯网球比赛中赢得比赛的球员的 ID
+</code></pre>
+<p>编写解决方案，找出每一个球员赢得大满贯比赛的次数。结果不包含没有赢得比赛的球员的ID 。</p>
+<p>结果集 <strong>无顺序要求</strong> 。</p>
+<p>结果的格式，如下所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Players 表：
++-----------+-------------+
+| player_id | player_name |
++-----------+-------------+
+| 1         | Nadal       |
+| 2         | Federer     |
+| 3         | Novak       |
++-----------+-------------+
+Championships 表：
++------+-----------+---------+---------+---------+
+| year | Wimbledon | Fr_open | US_open | Au_open |
++------+-----------+---------+---------+---------+
+| 2018 | 1         | 1       | 1       | 1       |
+| 2019 | 1         | 1       | 2       | 2       |
+| 2020 | 2         | 1       | 2       | 2       |
++------+-----------+---------+---------+---------+
+输出：
++-----------+-------------+-------------------+
+| player_id | player_name | grand_slams_count |
++-----------+-------------+-------------------+
+| 2         | Federer     | 5                 |
+| 1         | Nadal       | 7                 |
++-----------+-------------+-------------------+
+解释：
+Player 1 (Nadal) 获得了 7 次大满贯：其中温网 2 次(2018, 2019), 法国公开赛 3 次 (2018, 2019, 2020), 美国公开赛 1 次 (2018)以及澳网公开赛 1 次 (2018) 。
+Player 2 (Federer) 获得了 5 次大满贯：其中温网 1 次 (2020), 美国公开赛 2 次 (2019, 2020) 以及澳网公开赛 2 次 (2019, 2020) 。
+Player 3 (Novak)  没有赢得，因此不包含在结果集中。
+</code></pre>
+<p><strong>解答：</strong></p>
+<p>我用的是列转行的思路进行解答，把比赛名这几列转为新列competition的不同行，把不同比赛的获胜id转为player_id的不同行。</p>
+<pre><code class="language-sql">select a.player_id , a.player_name, count(b.player_id) as grand_slams_count from Players a right join(
+select Wimbledon as player_id, &#39;Wimbledon&#39; as competition from Championships  
+union all
+select Fr_open as player_id, &#39;Fr_open&#39; as competition from Championships  
+union all
+select US_open as player_id, &#39;US_open&#39; as competition from Championships  
+union all
+select Au_open as player_id, &#39;Au_open&#39; as competition from Championships )b 
+on a.player_id = b.player_id group by b.player_id;
+</code></pre>
+<hr>
+<h3 id="1747-应该被禁止的Leetflex账户"><a href="#1747-应该被禁止的Leetflex账户" class="headerlink" title="1747..应该被禁止的Leetflex账户"></a>1747..应该被禁止的Leetflex账户</h3><p>表: <code>LogInfo</code></p>
+<pre><code>+-------------+----------+
+| Column Name | Type     |
++-------------+----------+
+| account_id  | int      |
+| ip_address  | int      |
+| login       | datetime |
+| logout      | datetime |
++-------------+----------+
+该表可能包含重复项。
+该表包含有关Leetflex帐户的登录和注销日期的信息。 它还包含了该账户用于登录和注销的网络地址的信息。
+题目确保每一个注销时间都在登录时间之后。
+</code></pre>
+<p>编写解决方案，查找那些应该被禁止的Leetflex帐户编号 <code>account_id</code> 。 如果某个帐户在某一时刻从两个不同的网络地址登录了，则这个帐户应该被禁止。</p>
+<p>可以以 <strong>任何顺序</strong> 返回结果。</p>
+<p>查询结果格式如下例所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+LogInfo table:
++------------+------------+---------------------+---------------------+
+| account_id | ip_address | login               | logout              |
++------------+------------+---------------------+---------------------+
+| 1          | 1          | 2021-02-01 09:00:00 | 2021-02-01 09:30:00 |
+| 1          | 2          | 2021-02-01 08:00:00 | 2021-02-01 11:30:00 |
+| 2          | 6          | 2021-02-01 20:30:00 | 2021-02-01 22:00:00 |
+| 2          | 7          | 2021-02-02 20:30:00 | 2021-02-02 22:00:00 |
+| 3          | 9          | 2021-02-01 16:00:00 | 2021-02-01 16:59:59 |
+| 3          | 13         | 2021-02-01 17:00:00 | 2021-02-01 17:59:59 |
+| 4          | 10         | 2021-02-01 16:00:00 | 2021-02-01 17:00:00 |
+| 4          | 11         | 2021-02-01 17:00:00 | 2021-02-01 17:59:59 |
++------------+------------+---------------------+---------------------+
+输出：
++------------+
+| account_id |
++------------+
+| 1          |
+| 4          |
++------------+
+解释：
+Account ID 1 --&gt; 该账户从 &quot;2021-02-01 09:00:00&quot; 到 &quot;2021-02-01 09:30:00&quot; 在两个不同的网络地址(1 and 2)上激活了。它应该被禁止.
+Account ID 2 --&gt; 该账户在两个不同的网络地址 (6, 7) 激活了，但在不同的时间上.
+Account ID 3 --&gt; 该账户在两个不同的网络地址 (9, 13) 激活了，虽然是同一天，但时间上没有交集.
+Account ID 4 --&gt; 该账户从 &quot;2021-02-01 17:00:00&quot; 到 &quot;2021-02-01 17:00:00&quot; 在两个不同的网络地址 (10 and 11)上激活了。它应该被禁止.
+</code></pre>
+<p><strong>解答：</strong></p>
+<p>同一个id的不同列数值进行对比——&gt;使用自连接。</p>
+<p>注意：使用join时on的条件越少效率越高。</p>
+<pre><code class="language-sql">select account_id from (
+select max(case when b.login &gt; a.login and b.login &lt;= a.logout then a.account_id else 0 end) as account_id
+from LogInfo a join LogInfo b on a.account_id = b.account_id where a.ip_address != b.ip_address group by a.account_id)t where account_id &gt; 0;
+</code></pre>
+<p>若把a.ip_address !&#x3D; b.ip_address写到on中则会报超时</p>
+<pre><code class="language-sql">from LogInfo a join LogInfo b on a.account_id = b.account_id and a.ip_address != b.ip_address group by a.account_id)t where account_id &gt; 0;
+</code></pre>
+<p>补充：</p>
+<p>将null转化为0——&gt;IFNULL(a.column, 0)</p>
 
             
         </div>
@@ -3301,7 +4142,7 @@ Activity table:
         
         <span class="tag">
             
-            <a href="/tags/Leetcode/" style="color: #00bcd4">Leetcode</a>
+            <a href="/tags/Leetcode/" style="color: #00a596">Leetcode</a>
         </span>
         
     </div>

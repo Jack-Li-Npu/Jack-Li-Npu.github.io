@@ -1,0 +1,610 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>聚类方法：从理论到实践 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>聚类方法：从理论到实践</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/15
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                    机器学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+<h1 id="支持向量机：从理论到实践"><a href="#支持向量机：从理论到实践" class="headerlink" title="支持向量机：从理论到实践"></a>支持向量机：从理论到实践</h1><h2 id="一。理论概述"><a href="#一。理论概述" class="headerlink" title="一。理论概述"></a>一。理论概述</h2><p>支持向量机（Support Vector Machine, SVM）是机器学习中最强大和最广泛使用的算法之一，尤其在小样本、高维数据的分类任务中表现出色。其核心思想基于统计学习理论中的结构风险最小化原则，通过构建最大间隔超平面来实现分类任务。本文将从数学基础到实际应用，全面深入地解析SVM的工作原理和实现细节。</p>
+<h3 id="1-线性可分支持向量机"><a href="#1-线性可分支持向量机" class="headerlink" title="1. 线性可分支持向量机"></a>1. 线性可分支持向量机</h3><h4 id="1-1-基本概念与数学形式"><a href="#1-1-基本概念与数学形式" class="headerlink" title="1.1 基本概念与数学形式"></a>1.1 基本概念与数学形式</h4><p>对于完全线性可分的数据集，存在无数个超平面能够将两类样本完全分开。SVM通过<strong>间隔最大化</strong>原则从中选择唯一的最优超平面，该超平面不仅能够正确分类所有训练样本，而且具有最好的泛化能力。</p>
+<p>超平面的数学表示为：<br>$$w^T x + b &#x3D; 0$$<br>其中$w \in \mathbb{R}^n$是超平面的法向量，决定了超平面的方向；$b \in \mathbb{R}$是位移项，决定了超平面与原点的距离。</p>
+<p>样本点$x_i$到超平面的几何距离为：<br>$$d_i &#x3D; \frac{|w^T x_i + b|}{|w|}$$</p>
+<h4 id="1-2-函数间隔与几何间隔"><a href="#1-2-函数间隔与几何间隔" class="headerlink" title="1.2 函数间隔与几何间隔"></a>1.2 函数间隔与几何间隔</h4><p><strong>函数间隔</strong>的概念引入了类别信息：<br>$$\hat{\gamma}_i &#x3D; y_i(w^T x_i + b)$$<br>其中$y_i \in {-1, 1}$是样本的类别标签。函数间隔的符号表示分类的正确性，绝对值表示分类的确信度。</p>
+<p>整个数据集的函数间隔定义为所有样本中函数间隔的最小值：<br>$$\hat{\gamma} &#x3D; \min_{i&#x3D;1,\dots,N} \hat{\gamma}_i$$</p>
+<p>然而，函数间隔存在一个显著问题：对$w$和$b$进行等比例缩放时，超平面不变但函数间隔会改变。为解决这个问题，我们引入<strong>几何间隔</strong>：</p>
+<p>$$\gamma_i &#x3D; \frac{\hat{\gamma}_i}{|w|} &#x3D; \frac{y_i(w^T x_i + b)}{|w|}$$</p>
+<p>几何间隔表示样本点到超平面的真实欧几里得距离，具有缩放不变性，能够真实反映分类的确信度。</p>
+<h4 id="1-3-间隔最大化与优化问题"><a href="#1-3-间隔最大化与优化问题" class="headerlink" title="1.3 间隔最大化与优化问题"></a>1.3 间隔最大化与优化问题</h4><p>SVM的核心目标是找到最大几何间隔的超平面，这可以表述为以下优化问题：</p>
+<p>$$\max_{w,b} \gamma$$<br>$$\text{s.t. } \frac{y_i(w^T x_i + b)}{|w|} \geq \gamma, \quad i&#x3D;1,\dots,N$$</p>
+<p>通过令$\hat{\gamma} &#x3D; 1$（这可以通过调整$w$和$b$的尺度实现），问题转化为等价的约束优化问题：</p>
+<p>$$\min_{w,b} \frac{1}{2} |w|^2$$<br>$$\text{s.t. } y_i(w^T x_i + b) \geq 1, \quad i&#x3D;1,\dots,N$$</p>
+<p>这是一个典型的<strong>凸二次规划问题</strong>，具有全局最优解。目标函数中的$\frac{1}{2}$是为了后续求导方便而添加的系数，不影响优化结果。</p>
+<h4 id="1-4-拉格朗日对偶理论与求解"><a href="#1-4-拉格朗日对偶理论与求解" class="headerlink" title="1.4 拉格朗日对偶理论与求解"></a>1.4 拉格朗日对偶理论与求解</h4><p>应用拉格朗日乘子法，我们引入拉格朗日乘子$\alpha_i \geq 0$，构造拉格朗日函数：</p>
+<p>$$L(w,b,\alpha) &#x3D; \frac{1}{2} |w|^2 - \sum_{i&#x3D;1}^N \alpha_i [y_i(w^T x_i + b) - 1]$$</p>
+<p>根据KKT条件，原问题的最优解满足：</p>
+<p>$$\nabla_w L &#x3D; w - \sum_{i&#x3D;1}^N \alpha_i y_i x_i &#x3D; 0$$<br>$$\frac{\partial L}{\partial b} &#x3D; -\sum_{i&#x3D;1}^N \alpha_i y_i &#x3D; 0$$<br>$$\alpha_i [y_i(w^T x_i + b) - 1] &#x3D; 0, \quad i&#x3D;1,\dots,N$$</p>
+<p>代入拉格朗日函数，得到对偶问题：</p>
+<p>$$\max_{\alpha} -\frac{1}{2} \sum_{i&#x3D;1}^N \sum_{j&#x3D;1}^N \alpha_i \alpha_j y_i y_j x_i^T x_j + \sum_{i&#x3D;1}^N \alpha_i$$<br>$$\text{s.t. } \alpha_i \geq 0, \quad \sum_{i&#x3D;1}^N \alpha_i y_i &#x3D; 0$$</p>
+<h4 id="1-5-支持向量与决策函数"><a href="#1-5-支持向量与决策函数" class="headerlink" title="1.5 支持向量与决策函数"></a>1.5 支持向量与决策函数</h4><p>从KKT条件中的互补松弛条件$\alpha_i [y_i(w^T x_i + b) - 1] &#x3D; 0$可知：</p>
+<ul>
+<li>当$\alpha_i &#x3D; 0$时，对应样本不是支持向量，对决策边界没有影响</li>
+<li>当$\alpha_i &gt; 0$时，必有$y_i(w^T x_i + b) &#x3D; 1$，对应样本是<strong>支持向量</strong></li>
+</ul>
+<p>支持向量是位于间隔边界上的样本点，它们决定了最终的超平面。这一特性使得SVM的解具有稀疏性，仅依赖于少数支持向量。</p>
+<p>最终的决策函数为：<br>$$f(x) &#x3D; \text{sign} \left( \sum_{i&#x3D;1}^N \alpha_i y_i x_i^T x + b \right)$$</p>
+<p>其中$b$可以通过任意支持向量计算得到：$b &#x3D; y_i - w^T x_i$（对于满足$0 &lt; \alpha_i$的样本）。</p>
+<hr>
+<h3 id="2-近似线性可分数据（软间隔SVM）"><a href="#2-近似线性可分数据（软间隔SVM）" class="headerlink" title="2. 近似线性可分数据（软间隔SVM）"></a>2. 近似线性可分数据（软间隔SVM）</h3><h4 id="2-1-松弛变量与软间隔概念"><a href="#2-1-松弛变量与软间隔概念" class="headerlink" title="2.1 松弛变量与软间隔概念"></a>2.1 松弛变量与软间隔概念</h4><p>在实际应用中，数据很少是完美线性可分的，可能存在噪声或异常点。软间隔SVM通过引入<strong>松弛变量</strong>$\xi_i \geq 0$，允许一些样本被错误分类，从而提高模型的鲁棒性。</p>
+<p>优化问题变为：<br>$$\min_{w,b,\xi} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N \xi_i$$<br>$$\text{s.t. } y_i(w^T x_i + b) \geq 1 - \xi_i, \quad \xi_i \geq 0, \quad i&#x3D;1,\dots,N$$</p>
+<p>其中$C &gt; 0$是正则化参数，控制误分类惩罚与间隔大小之间的平衡：</p>
+<ul>
+<li>$C$值较大时，误分类惩罚重，间隔较小，可能过拟合</li>
+<li>$C$值较小时，误分类惩罚轻，间隔较大，可能欠拟合</li>
+</ul>
+<h4 id="2-2-软间隔的对偶问题与支持向量分类"><a href="#2-2-软间隔的对偶问题与支持向量分类" class="headerlink" title="2.2 软间隔的对偶问题与支持向量分类"></a>2.2 软间隔的对偶问题与支持向量分类</h4><p>软间隔SVM的对偶问题与硬间隔形式相似：</p>
+<p>$$\max_{\alpha} -\frac{1}{2} \sum_{i&#x3D;1}^N \sum_{j&#x3D;1}^N \alpha_i \alpha_j y_i y_j x_i^T x_j + \sum_{i&#x3D;1}^N \alpha_i$$<br>$$\text{s.t. } 0 \leq \alpha_i \leq C, \quad \sum_{i&#x3D;1}^N \alpha_i y_i &#x3D; 0$$</p>
+<p>KKT条件扩展为：<br>$$\alpha_i [y_i(w^T x_i + b) - 1 + \xi_i] &#x3D; 0$$<br>$$(C - \alpha_i) \xi_i &#x3D; 0$$</p>
+<p>支持向量分为三类：</p>
+<ol>
+<li>$\alpha_i &#x3D; 0$：正确分类的非支持向量，对决策边界没有影响</li>
+<li>$0 &lt; \alpha_i &lt; C$：位于间隔边界上的支持向量，满足$y_i(w^T x_i + b) &#x3D; 1$</li>
+<li>$\alpha_i &#x3D; C$：被错误分类的支持向量或落在间隔内的样本，满足$\xi_i &gt; 0$</li>
+</ol>
+<hr>
+<h3 id="3-非线性支持向量机与核方法"><a href="#3-非线性支持向量机与核方法" class="headerlink" title="3. 非线性支持向量机与核方法"></a>3. 非线性支持向量机与核方法</h3><h4 id="3-1-核技巧的数学原理"><a href="#3-1-核技巧的数学原理" class="headerlink" title="3.1 核技巧的数学原理"></a>3.1 核技巧的数学原理</h4><p>当数据在原始特征空间中线性不可分时，可以通过非线性映射$\phi: \mathbb{R}^d \to \mathcal{H}$将数据映射到高维特征空间$\mathcal{H}$，在其中数据变得线性可分。</p>
+<p>在高维空间中的优化问题变为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N \xi_i$$<br>$$\text{s.t. } y_i(w^T \phi(x_i) + b) \geq 1 - \xi_i, \quad \xi_i \geq 0$$</p>
+<p>对偶问题为：<br>$$\max_{\alpha} -\frac{1}{2} \sum_{i&#x3D;1}^N \sum_{j&#x3D;1}^N \alpha_i \alpha_j y_i y_j \phi(x_i)^T \phi(x_j) + \sum_{i&#x3D;1}^N \alpha_i$$</p>
+<p>直接计算$\phi(x_i)^T \phi(x_j)$可能非常困难（甚至不可能），因此引入<strong>核函数</strong>：<br>$$K(x_i, x_j) &#x3D; \phi(x_i)^T \phi(x_j)$$</p>
+<h4 id="3-2-常用核函数及其特性"><a href="#3-2-常用核函数及其特性" class="headerlink" title="3.2 常用核函数及其特性"></a>3.2 常用核函数及其特性</h4><ol>
+<li><p><strong>线性核</strong>：$K(x_i, x_j) &#x3D; x_i^T x_j$</p>
+<ul>
+<li>参数少，速度快，适用于线性可分情况</li>
+<li>简单，可解释性强</li>
+</ul>
+</li>
+<li><p><strong>多项式核</strong>：$K(x_i, x_j) &#x3D; (x_i^T x_j + c)^d$</p>
+<ul>
+<li>参数$d$控制映射后的空间维度</li>
+<li>当$d$较大时计算可能不稳定</li>
+</ul>
+</li>
+<li><p><strong>高斯径向基核（RBF）</strong>：$K(x_i, x_j) &#x3D; \exp(-\gamma |x_i - x_j|^2)$</p>
+<ul>
+<li>应用最广泛的核函数，具有很强的非线性映射能力</li>
+<li>参数$\gamma$控制高斯函数的宽度，影响模型的复杂度</li>
+</ul>
+</li>
+<li><p><strong>Sigmoid核</strong>：$K(x_i, x_j) &#x3D; \tanh(\kappa x_i^T x_j + \theta)$</p>
+<ul>
+<li>来源于神经网络理论，在某些特定问题上表现良好</li>
+<li>不是对所有参数都满足Mercer条件</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-3-核函数的选择与模型选择"><a href="#3-3-核函数的选择与模型选择" class="headerlink" title="3.3 核函数的选择与模型选择"></a>3.3 核函数的选择与模型选择</h4><p>核函数的选择依赖于具体问题和数据特性：</p>
+<ul>
+<li>文本分类：通常使用线性核，因为文本数据往往已经是高维的</li>
+<li>图像识别：常用RBF核或多项式核，可以捕捉像素间的复杂关系</li>
+<li>生物信息学：RBF核表现优异，适用于基因序列等复杂数据</li>
+</ul>
+<p>模型选择涉及参数调优，常用交叉验证来确定最优的$C$和核参数（如RBF核的$\gamma$）。</p>
+<h4 id="3-4-Mercer定理与核函数有效性"><a href="#3-4-Mercer定理与核函数有效性" class="headerlink" title="3.4 Mercer定理与核函数有效性"></a>3.4 Mercer定理与核函数有效性</h4><p>核函数必须满足Mercer条件：对任意函数$g(x)$满足$\int g(x)^2 dx &lt; \infty$，有：<br>$$\iint K(x, y) g(x) g(y) dx dy \geq 0$$</p>
+<p>这保证了核矩阵$K &#x3D; [K(x_i, x_j)]$是半正定的，对应的优化问题是凸的，有全局最优解。</p>
+<hr>
+<h3 id="4-支持向量机的扩展与变体"><a href="#4-支持向量机的扩展与变体" class="headerlink" title="4. 支持向量机的扩展与变体"></a>4. 支持向量机的扩展与变体</h3><h4 id="4-1-支持向量回归（SVR）"><a href="#4-1-支持向量回归（SVR）" class="headerlink" title="4.1 支持向量回归（SVR）"></a>4.1 支持向量回归（SVR）</h4><p>支持向量机也可以用于回归任务，称为支持向量回归。其基本思想是：寻找一个函数$f(x) &#x3D; w^T \phi(x) + b$，使得$f(x)$与$y$的偏差不超过$\epsilon$，同时保持函数尽量平坦。</p>
+<p>优化问题为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N (\xi_i + \xi_i^<em>)$$<br>$$\text{s.t. } \begin{cases}<br>y_i - w^T \phi(x_i) - b \leq \epsilon + \xi_i \<br>w^T \phi(x_i) + b - y_i \leq \epsilon + \xi_i^</em> \<br>\xi_i, \xi_i^* \geq 0<br>\end{cases}$$</p>
+<h4 id="4-2-多类支持向量机"><a href="#4-2-多类支持向量机" class="headerlink" title="4.2 多类支持向量机"></a>4.2 多类支持向量机</h4><p>SVM本质上是二分类器，扩展多类分类的方法主要有：</p>
+<ol>
+<li><strong>一对多（One-vs-Rest）</strong>：为每个类别训练一个二分类器</li>
+<li><strong>一对一（One-vs-One）</strong>：为每两个类别训练一个二分类器</li>
+<li><strong>多类SVM</strong>：直接修改优化目标，考虑所有类别</li>
+</ol>
+<h4 id="4-3-结构化SVM"><a href="#4-3-结构化SVM" class="headerlink" title="4.3 结构化SVM"></a>4.3 结构化SVM</h4><p>用于结构化输出问题，如序列标注、解析树构建等，通过定义适当的损失函数和特征映射来处理复杂的输出结构。</p>
+<hr>
+<h3 id="5-支持向量机的实践考虑"><a href="#5-支持向量机的实践考虑" class="headerlink" title="5. 支持向量机的实践考虑"></a>5. 支持向量机的实践考虑</h3><h4 id="5-1-数据预处理与特征缩放"><a href="#5-1-数据预处理与特征缩放" class="headerlink" title="5.1 数据预处理与特征缩放"></a>5.1 数据预处理与特征缩放</h4><p>SVM对数据缩放敏感，特别是使用基于距离的核函数（如RBF核）时。常见的预处理方法：</p>
+<ul>
+<li>标准化：将特征缩放到均值为0，方差为1</li>
+<li>归一化：将特征缩放到[0,1]或[-1,1]区间</li>
+</ul>
+<h4 id="5-2-计算效率与大规模数据处理"><a href="#5-2-计算效率与大规模数据处理" class="headerlink" title="5.2 计算效率与大规模数据处理"></a>5.2 计算效率与大规模数据处理</h4><p>传统SVM训练算法的时间复杂度约为$O(n^3)$，空间复杂度约为$O(n^2)$，难以处理大规模数据集。改进方法包括：</p>
+<ul>
+<li>分解算法（如SMO）</li>
+<li>随机梯度下降</li>
+<li>近似核方法</li>
+<li>分布式计算</li>
+</ul>
+<h4 id="5-3-模型解释性与特征重要性"><a href="#5-3-模型解释性与特征重要性" class="headerlink" title="5.3 模型解释性与特征重要性"></a>5.3 模型解释性与特征重要性</h4><p>虽然核SVM具有良好的分类性能，但模型解释性较差。提高解释性的方法：</p>
+<ul>
+<li>使用线性核或可解释性强的核函数</li>
+<li>分析支持向量的权重</li>
+<li>使用模型无关的解释方法（如LIME、SHAP）</li>
+</ul>
+<h3 id="6-支持向量机的局限性与挑战"><a href="#6-支持向量机的局限性与挑战" class="headerlink" title="6. 支持向量机的局限性与挑战"></a>6. 支持向量机的局限性与挑战</h3><ul>
+<li><strong>计算复杂度</strong>：对于大规模数据集，训练时间较长，内存消耗大，限制了其在实际中的应用。</li>
+<li><strong>核函数选择</strong>：核函数及其参数的选择很大程度上依赖于经验和实验，缺乏系统的理论指导。</li>
+<li><strong>概率输出</strong>：标准SVM不直接提供概率输出，需要通过 Platt scaling 等额外方法进行校准。</li>
+<li><strong>多类分类</strong>：SVM本质上是二分类器，多类扩展需要额外的策略，增加了复杂性。</li>
+</ul>
+<hr>
+<h2 id="二。SVM模型应用于人脸分类"><a href="#二。SVM模型应用于人脸分类" class="headerlink" title="二。SVM模型应用于人脸分类"></a>二。SVM模型应用于人脸分类</h2><h3 id="1-数据加载与预处理"><a href="#1-数据加载与预处理" class="headerlink" title="1. 数据加载与预处理"></a>1. 数据加载与预处理</h3><pre><code class="language-python">from time import time
+
+import matplotlib.pyplot as plt
+from scipy.stats import loguniform
+
+from sklearn.datasets import fetch_lfw_people
+from sklearn.decomposition import PCA
+from sklearn.metrics import ConfusionMatrixDisplay, classification_report
+from sklearn.model_selection import RandomizedSearchCV, train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+</code></pre>
+<pre><code class="language-python">people_faces = fetch_lfw_peopletch()
+# 从 LFW（Labeled Faces in the Wild）数据集中下载人脸图片
+# min_faces_per_person=70 → 只保留至少有 70 张照片的人物
+# resize=0.4 → 将图片缩小到原来的 40%，降低计算量
+lfw_people = fetch_lfw_people(min_faces_per_person=70, resize=0.4)
+
+# 获取数据集的基本形状信息
+n_samples, h, w = lfw_people.images.shape  # 样本数、高度、宽度
+
+# 机器学习使用拉平后的像素数据（忽略像素的空间位置信息）
+X = lfw_people.data  # 每张图片展平成一维向量
+n_features = X.shape[1]  # 特征数（像素个数）
+
+# 标签（人物 ID）
+y = lfw_people.target
+target_names = lfw_people.target_names  # 人物姓名
+n_classes = target_names.shape[0]  # 类别数
+
+# 打印数据集大小信息
+print(&quot;Total dataset size:&quot;)
+print(&quot;n_samples: %d&quot; % n_samples)
+print(&quot;n_features: %d&quot; % n_features)
+print(&quot;n_classes: %d&quot; % n_classes)
+
+结果：
+Total dataset size:
+n_samples: 1288
+n_features: 1850
+n_classes: 7
+</code></pre>
+<p>从LFW（Labeled Faces in the Wild）数据集中加载人脸图像数据，并进行初步预处理。通过设置<code>min_faces_per_person=70</code>筛选出至少有70张图像的人物，确保每个类别有足够的样本；<code>resize=0.4</code>将图像缩小到原尺寸的40%，显著降低计算复杂度。随后，将图像数据展平为一维向量作为特征，提取对应的类别标签和人物名称，输出数据集的基本统计信息（样本数、特征维度和类别数）</p>
+<h3 id="2-训练测试划分与数据标准化"><a href="#2-训练测试划分与数据标准化" class="headerlink" title="2. 训练测试划分与数据标准化"></a>2. 训练测试划分与数据标准化</h3><pre><code class="language-python"># 划分训练集和测试集，比例 70% 训练 / 30% 测试
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=2025
+)
+
+# 数据标准化（均值为 0，方差为 1），有助于加快收敛并提升模型性能
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)  # 用训练集拟合并转换
+X_test = scaler.transform(X_test)        # 用相同参数转换测试集
+</code></pre>
+<p>将数据集按7:3比例划分为训练集和测试集。采用<code>StandardScaler</code>对数据进行标准化处理，使每个特征的均值为0、方差为1。这一步骤至关重要，因为SVM对特征尺度敏感，标准化可以加速模型收敛并提升性能。注意测试集使用训练集拟合的缩放参数进行转换，避免数据泄露。</p>
+<h3 id="3-主成分分析（PCA）降维"><a href="#3-主成分分析（PCA）降维" class="headerlink" title="3. 主成分分析（PCA）降维"></a>3. 主成分分析（PCA）降维</h3><pre><code class="language-python"># 设定 PCA 要保留的主成分个数，这里是 100 个
+n_components = 100
+
+# 记录开始时间，用于计算运行耗时
+start = time()
+
+# 创建 PCA 对象并拟合训练数据
+# 参数解释：
+#   n_components=n_components  -&gt; 保留的主成分数量
+#   svd_solver=&quot;randomized&quot;    -&gt; 使用随机化 SVD 算法，加速计算（适合高维数据）
+#   whiten=True                -&gt; 白化处理，使得每个主成分的方差为 1（有助于后续分类器性能）
+# .fit(X_train) -&gt; 在训练集上拟合 PCA 模型，学习主成分方向
+pca = PCA(n_components=n_components, svd_solver=&quot;randomized&quot;, whiten=True).fit(X_train)
+
+# 获取 PCA 学到的主成分（特征向量），并将它们还原成 h×w 的二维图像
+# 这些主成分在脸部识别领域被称为 &quot;eigenfaces&quot;（特征脸）
+eigenfaces = pca.components_.reshape((n_components, h, w))
+
+# 记录结束时间
+end = time()
+
+# 使用训练好的 PCA 模型将训练集投影到主成分空间
+# 得到的 X_train_pca 是降维后的特征表示
+X_train_pca = pca.transform(X_train)
+
+# 同样地，将测试集投影到主成分空间
+X_test_pca = pca.transform(X_test)
+
+# 输出整个 PCA 特征提取过程的耗时
+print(&quot;finished in %0.3fs&quot; % (end - start))
+</code></pre>
+<p>使用PCA对高维图像特征进行降维，保留100个主要成分。设置<code>whiten=True</code>对主成分进行白化处理，使各维度方差归一化，有助于提升后续分类器性能。采用随机化SVD算法（<code>svd_solver=&quot;randomized&quot;</code>）提高计算效率。降维后将训练集和测试集分别投影到主成分空间，得到低维特征表示（<code>X_train_pca</code>和<code>X_test_pca</code>），同时提取特征脸（eigenfaces）用于可视化。</p>
+<h3 id="4-支持向量机超参数优化"><a href="#4-支持向量机超参数优化" class="headerlink" title="4. 支持向量机超参数优化"></a>4. 支持向量机超参数优化</h3><pre><code class="language-python"># 记录开始时间
+start = time()
+
+# 定义超参数搜索范围 param_grid
+# 这里使用的是 loguniform 分布（对数均匀分布），适合搜索跨度很大的超参数
+#  - &quot;C&quot; 是 SVM 的正则化参数，控制分类器对训练集的拟合程度
+#  - &quot;gamma&quot; 是 RBF 核函数的核宽度参数，影响单个样本的影响范围
+#    范围：
+#      C: 从 1e3 到 1e5
+#      gamma: 从 1e-4 到 1e-1
+param_grid = &#123;
+    &quot;C&quot;: loguniform(1e3, 1e5),
+    &quot;gamma&quot;: loguniform(1e-4, 1e-1),
+&#125;
+
+# 创建一个随机搜索交叉验证器 RandomizedSearchCV
+#  - SVC(kernel=&quot;rbf&quot;, class_weight=&quot;balanced&quot;) ：使用 RBF 核的支持向量机，类别权重平衡处理
+#  - param_distributions=param_grid ：指定要搜索的参数分布
+#  - n_iter=10 ：随机采样 10 组参数组合进行测试
+clf = RandomizedSearchCV(
+    SVC(kernel=&quot;rbf&quot;, class_weight=&quot;balanced&quot;), param_grid, n_iter=10
+)
+
+# 在训练集（PCA 降维后的特征）上拟合模型并进行超参数搜索
+#  X_train_pca：降维后的训练数据
+#  y_train：对应的标签
+clf = clf.fit(X_train_pca, y_train)
+
+# 输出搜索过程耗时
+print(&quot;finished in %0.3f&quot; % (time() - start))
+
+# 输出搜索得到的最优模型（包含最佳参数 C 和 gamma）
+print(clf.best_estimator_)
+</code></pre>
+<p>使用随机搜索（<code>RandomizedSearchCV</code>）优化SVM的超参数（正则化参数<code>C</code>和RBF核参数<code>gamma</code>）。参数搜索范围设置为对数均匀分布（<code>loguniform</code>），涵盖合理的数值区间。采用带类别权重平衡（<code>class_weight=&quot;balanced&quot;</code>）的RBF核SVM，以处理类别样本量不均衡的问题。通过10次参数采样和交叉验证，寻找最优超参数组合。</p>
+<h3 id="5-模型预测与评估"><a href="#5-模型预测与评估" class="headerlink" title="5. 模型预测与评估"></a>5. 模型预测与评估</h3><pre><code class="language-python"># 记录开始时间
+start = time()
+
+# 使用训练好的分类器（clf）对测试集特征进行预测
+#  X_test_pca 是经过 PCA 降维的测试集数据
+#  y_pred 是预测得到的标签
+y_pred = clf.predict(X_test_pca)
+
+# 输出预测过程耗时
+print(&quot;finished in %0.3fs&quot; % (time() - start))
+
+# 打印分类性能评估报告
+# classification_report 会输出：
+#   - precision（精确率）
+#   - recall（召回率）
+#   - f1-score（F1 分数）
+#   - support（每个类别的样本数量）
+# target_names 用于显示每个类别的真实名称（这里是人物姓名）
+print(classification_report(y_test, y_pred, target_names=target_names))
+
+# 绘制混淆矩阵（Confusion Matrix）
+# ConfusionMatrixDisplay.from_estimator 会：
+#   - 用分类器 clf
+#   - 输入测试集数据和真实标签
+#   - 自动计算混淆矩阵并绘制
+# display_labels=target_names 用于显示真实的类别名称
+# xticks_rotation=&quot;vertical&quot; 让横轴标签竖直显示，防止文字重叠
+ConfusionMatrixDisplay.from_estimator(
+    clf, X_test_pca, y_test, display_labels=target_names, xticks_rotation=&quot;vertical&quot;
+)
+
+# 自动调整子图布局，避免文字或图像被遮挡
+plt.tight_layout()
+
+# 显示绘制好的混淆矩阵图
+plt.show()
+</code></pre>
+<p>使用优化后的SVM模型对测试集进行预测，并输出详细分类报告（包括精确率、召回率、F1分数等指标）和混淆矩阵。混淆矩阵可视化展示了各类别的分类情况。</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509140912767.png" alt="image-20250914091238591"></p>
+<h3 id="6-预测结果标题生成与可视化"><a href="#6-预测结果标题生成与可视化" class="headerlink" title="6. 预测结果标题生成与可视化"></a>6. 预测结果标题生成与可视化</h3><pre><code class="language-python">import matplotlib.pyplot as plt
+
+def plot_gallery(images, titles, h, w, n_row=4, n_col=4):
+    &quot;&quot;&quot;绘制图像网格（gallery）&quot;&quot;&quot;
+    fig, axes = plt.subplots(n_row, n_col, figsize=(1.8 * n_col, 2.4 * n_row))  # 创建子图
+    axes = axes.flatten()  # 展平成一维，方便索引
+    for i in range(n_row * n_col):
+        axes[i].imshow(images[i].reshape((h, w)), cmap=plt.cm.gray)  # 显示灰度图
+        axes[i].set_title(titles[i], size=12)  # 设置标题
+        axes[i].set_xticks([])  # 去掉横坐标刻度
+        axes[i].set_yticks([])  # 去掉纵坐标刻度
+    plt.tight_layout()  # 自动调整布局
+    plt.show()
+
+</code></pre>
+<p>定义<code>plot_gallery</code>函数，用于以网格形式展示多张图像。函数接受图像数据、标题列表和图像尺寸参数，自动创建子图布局，显示灰度图像并设置标题。</p>
+<pre><code class="language-python">def title(y_pred, y_test, target_names, i):
+    &quot;&quot;&quot;生成第 i 张图片的预测与真实标签标题&quot;&quot;&quot;
+    pred_name = target_names[y_pred[i]].rsplit(&quot; &quot;, 1)[-1]  # 预测姓名（取姓氏）
+    true_name = target_names[y_test[i]].rsplit(&quot; &quot;, 1)[-1]  # 真实姓名（取姓氏）
+    return &quot;predicted: %s\ntrue:      %s&quot; % (pred_name, true_name)
+
+# 生成预测结果标题列表
+prediction_titles = [
+    title(y_pred, y_test, target_names, i) for i in range(y_pred.shape[0])
+]
+
+# 绘制测试集图片及预测结果
+plot_gallery(X_test, prediction_titles, h, w)
+</code></pre>
+<p>根据预测结果和真实标签生成每张测试图像的标题，格式为“预测姓名&#x2F;真实姓名”。仅使用人物姓氏（通过<code>rsplit</code>提取）简化显示。</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509140913106.png" alt="image-20250914091357886"></p>
+<h3 id="7-特征脸可视化"><a href="#7-特征脸可视化" class="headerlink" title="7. 特征脸可视化"></a>7. 特征脸可视化</h3><pre><code class="language-python"># 生成特征脸（Eigenfaces）标题
+eigenface_titles = [&quot;eigenface %d&quot; % i for i in range(eigenfaces.shape[0])]
+
+# 绘制特征脸
+plot_gallery(eigenfaces, eigenface_titles, h, w)
+
+plt.show()
+</code></pre>
+<p>调用<code>plot_gallery</code>函数可视化PCA提取的前100个特征脸。特征脸反映了人脸图像的主要变化模式，是PCA降维的基础。</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509140914579.png" alt="image-20250914091444461"></p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>
