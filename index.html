@@ -35,6 +35,11 @@
 <script src="/js/lib/highlight.js"></script>
 
 
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<script src="/js/lib/math.js"></script>
+
 
 <script src="/js/lib/preview.js"></script>
 
@@ -182,7 +187,7 @@
 
 <div class="post">
     <a href="/2025/09/15/%E6%94%AF%E6%8C%81%E5%90%91%E9%87%8F%E6%9C%BA%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/">
-        <h2 class="post-title">聚类方法：从理论到实践</h2>
+        <h2 class="post-title">支持向量机：从理论到实践</h2>
     </a>
     <div class="category-and-date">
         
@@ -296,7 +301,8 @@
 <p>这保证了核矩阵$K &#x3D; [K(x_i, x_j)]$是半正定的，对应的优化问题是凸的，有全局最优解。</p>
 <hr>
 <h3 id="4-支持向量机的扩展与变体"><a href="#4-支持向量机的扩展与变体" class="headerlink" title="4. 支持向量机的扩展与变体"></a>4. 支持向量机的扩展与变体</h3><h4 id="4-1-支持向量回归（SVR）"><a href="#4-1-支持向量回归（SVR）" class="headerlink" title="4.1 支持向量回归（SVR）"></a>4.1 支持向量回归（SVR）</h4><p>支持向量机也可以用于回归任务，称为支持向量回归。其基本思想是：寻找一个函数$f(x) &#x3D; w^T \phi(x) + b$，使得$f(x)$与$y$的偏差不超过$\epsilon$，同时保持函数尽量平坦。</p>
-<p>优化问题为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N (\xi_i + \xi_i^<em>)$$<br>$$\text{s.t. } \begin{cases}<br>y_i - w^T \phi(x_i) - b \leq \epsilon + \xi_i \<br>w^T \phi(x_i) + b - y_i \leq \epsilon + \xi_i^</em> \<br>\xi_i, \xi_i^* \geq 0<br>\end{cases}$$</p>
+<p>优化问题为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N (\xi_i + \xi_i^*)$$</p>
+<p>$$\text{s.t. } \begin{cases}<br>y_i - w^T \phi(x_i) - b \leq \epsilon + \xi_i \<br>w^T \phi(x_i) + b - y_i \leq \epsilon + \xi_i^* \<br>\xi_i, \xi_i^* \geq 0<br>\end{cases}$$</p>
 <h4 id="4-2-多类支持向量机"><a href="#4-2-多类支持向量机" class="headerlink" title="4.2 多类支持向量机"></a>4.2 多类支持向量机</h4><p>SVM本质上是二分类器，扩展多类分类的方法主要有：</p>
 <ol>
 <li><strong>一对多（One-vs-Rest）</strong>：为每个类别训练一个二分类器</li>
@@ -931,7 +937,7 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">机器学习</a>
         </span>
         
     </div>
@@ -1043,7 +1049,7 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00a596">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">机器学习</a>
         </span>
         
     </div>
@@ -1378,7 +1384,7 @@ submission.to_csv(&quot;/kaggle/working/submission.csv&quot;, index=False)
         
         <span class="tag">
             
-            <a href="/tags/Kaggle/" style="color: #ffa2c4">Kaggle</a>
+            <a href="/tags/Kaggle/" style="color: #00a596">Kaggle</a>
         </span>
         
     </div>
@@ -2790,7 +2796,7 @@ tiv_2015 值为 10 与第三条和第四条记录相同，且其位置是唯一�
         
         <span class="tag">
             
-            <a href="/tags/SQL/" style="color: #ff7d73">SQL</a>
+            <a href="/tags/SQL/" style="color: #00bcd4">SQL</a>
         </span>
         
     </div>
@@ -3220,7 +3226,7 @@ merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].repla
         
         <span class="tag">
             
-            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="color: #03a9f4">统计分析</a>
+            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="color: #00bcd4">统计分析</a>
         </span>
         
     </div>
@@ -4126,6 +4132,63 @@ from LogInfo a join LogInfo b on a.account_id = b.account_id where a.ip_address 
 <p>若把a.ip_address !&#x3D; b.ip_address写到on中则会报超时</p>
 <pre><code class="language-sql">from LogInfo a join LogInfo b on a.account_id = b.account_id and a.ip_address != b.ip_address group by a.account_id)t where account_id &gt; 0;
 </code></pre>
+<hr>
+<h3 id="184-部门工资最高的员工"><a href="#184-部门工资最高的员工" class="headerlink" title="184.部门工资最高的员工"></a>184.部门工资最高的员工</h3><p>表： <code>Employee</code></p>
+<pre><code>+--------------+---------+
+| 列名          | 类型    |
++--------------+---------+
+| id           | int     |
+| name         | varchar |
+| salary       | int     |
+| departmentId | int     |
++--------------+---------+
+在 SQL 中，id是此表的主键。
+departmentId 是 Department 表中 id 的外键（在 Pandas 中称为 join key）。
+此表的每一行都表示员工的 id、姓名和工资。它还包含他们所在部门的 id。
+</code></pre>
+<p>表： <code>Department</code></p>
+<pre><code>+-------------+---------+
+| 列名         | 类型    |
++-------------+---------+
+| id          | int     |
+| name        | varchar |
++-------------+---------+
+在 SQL 中，id 是此表的主键列。
+此表的每一行都表示一个部门的 id 及其名称。
+</code></pre>
+<p>查找出每个部门中薪资最高的员工。<br>按 <strong>任意顺序</strong> 返回结果表。<br>查询结果格式如下例所示。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入：
+Employee 表:
++----+-------+--------+--------------+
+| id | name  | salary | departmentId |
++----+-------+--------+--------------+
+| 1  | Joe   | 70000  | 1            |
+| 2  | Jim   | 90000  | 1            |
+| 3  | Henry | 80000  | 2            |
+| 4  | Sam   | 60000  | 2            |
+| 5  | Max   | 90000  | 1            |
++----+-------+--------+--------------+
+Department 表:
++----+-------+
+| id | name  |
++----+-------+
+| 1  | IT    |
+| 2  | Sales |
++----+-------+
+输出：
++------------+----------+--------+
+| Department | Employee | Salary |
++------------+----------+--------+
+| IT         | Jim      | 90000  |
+| Sales      | Henry    | 80000  |
+| IT         | Max      | 90000  |
++------------+----------+--------+
+解释：Max 和 Jim 在 IT 部门的工资都是最高的，Henry 在销售部的工资最高。
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-sql">select b.name as Department, a.name as Employee, a.salary as Salary from (select *, RANK() over(partition by departmentId order by salary DESC) as rk from Employee) a join Department b on a.departmentId = b.id where a.rk = 1;
+</code></pre>
 <p>补充：</p>
 <p>将null转化为0——&gt;IFNULL(a.column, 0)</p>
 
@@ -4142,7 +4205,7 @@ from LogInfo a join LogInfo b on a.account_id = b.account_id where a.ip_address 
         
         <span class="tag">
             
-            <a href="/tags/Leetcode/" style="color: #00a596">Leetcode</a>
+            <a href="/tags/Leetcode/" style="color: #00bcd4">Leetcode</a>
         </span>
         
     </div>

@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>聚类方法：从理论到实践 | KING!BOB!</title>
+    <title>支持向量机：从理论到实践 | KING!BOB!</title>
     <meta name="author" content="KING BOB" />
     <meta name="description" content="LET'S MAKE IT HAPPEN" />
     <meta name="keywords" content="" />
@@ -34,6 +34,11 @@
 />
 <script src="/js/lib/highlight.js"></script>
 
+
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<script src="/js/lib/math.js"></script>
 
 
 <script src="/js/lib/preview.js"></script>
@@ -156,7 +161,7 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>聚类方法：从理论到实践</h1>
+        <h1>支持向量机：从理论到实践</h1>
     </div>
     <div class="info">
         <span class="date">
@@ -184,7 +189,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">
                     机器学习
                 </a>
             </span>
@@ -283,7 +288,8 @@
 <p>这保证了核矩阵$K &#x3D; [K(x_i, x_j)]$是半正定的，对应的优化问题是凸的，有全局最优解。</p>
 <hr>
 <h3 id="4-支持向量机的扩展与变体"><a href="#4-支持向量机的扩展与变体" class="headerlink" title="4. 支持向量机的扩展与变体"></a>4. 支持向量机的扩展与变体</h3><h4 id="4-1-支持向量回归（SVR）"><a href="#4-1-支持向量回归（SVR）" class="headerlink" title="4.1 支持向量回归（SVR）"></a>4.1 支持向量回归（SVR）</h4><p>支持向量机也可以用于回归任务，称为支持向量回归。其基本思想是：寻找一个函数$f(x) &#x3D; w^T \phi(x) + b$，使得$f(x)$与$y$的偏差不超过$\epsilon$，同时保持函数尽量平坦。</p>
-<p>优化问题为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N (\xi_i + \xi_i^<em>)$$<br>$$\text{s.t. } \begin{cases}<br>y_i - w^T \phi(x_i) - b \leq \epsilon + \xi_i \<br>w^T \phi(x_i) + b - y_i \leq \epsilon + \xi_i^</em> \<br>\xi_i, \xi_i^* \geq 0<br>\end{cases}$$</p>
+<p>优化问题为：<br>$$\min_{w,b} \frac{1}{2} |w|^2 + C \sum_{i&#x3D;1}^N (\xi_i + \xi_i^*)$$</p>
+<p>$$\text{s.t. } \begin{cases}<br>y_i - w^T \phi(x_i) - b \leq \epsilon + \xi_i \<br>w^T \phi(x_i) + b - y_i \leq \epsilon + \xi_i^* \<br>\xi_i, \xi_i^* \geq 0<br>\end{cases}$$</p>
 <h4 id="4-2-多类支持向量机"><a href="#4-2-多类支持向量机" class="headerlink" title="4.2 多类支持向量机"></a>4.2 多类支持向量机</h4><p>SVM本质上是二分类器，扩展多类分类的方法主要有：</p>
 <ol>
 <li><strong>一对多（One-vs-Rest）</strong>：为每个类别训练一个二分类器</li>
