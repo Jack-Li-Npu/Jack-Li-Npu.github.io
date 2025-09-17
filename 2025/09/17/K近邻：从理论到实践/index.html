@@ -1,0 +1,530 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>K近邻算法：从理论到实践 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<script src="/js/lib/math.js"></script>
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>K近邻算法：从理论到实践</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/17
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">
+                    机器学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+
+
+<h1 id="K近邻算法：从理论到实践"><a href="#K近邻算法：从理论到实践" class="headerlink" title="K近邻算法：从理论到实践"></a>K近邻算法：从理论到实践</h1><h2 id="1-核心思想"><a href="#1-核心思想" class="headerlink" title="1. 核心思想"></a>1. 核心思想</h2><p>K近邻（KNN）是一种基于实例的监督学习方法。其基本思想是：<br> <strong>对于一个待分类样本，根据训练集中与其“距离”最近的 kk 个邻居的类别，通过投票或加权投票的方式决定该样本的类别。</strong></p>
+<p>数学表达：<br> 设训练集为</p>
+<p>$${D} &#x3D; { (x_1,y_1), (x_2,y_2), \dots, (x_n,y_n) }, \quad x_i \in \mathbb{R}^d, ; y_i \in {1,2,\dots,C}$$</p>
+<p>给定测试样本x，找到其最近的 kk 个邻居集合${N}_k(x)$。<br> 预测类别为：</p>
+<p>$$\hat{y}(x) &#x3D; \arg\max_{c \in {1,\dots,C}} \sum_{(x_i,y_i) \in \mathcal{N}_k(x)} \mathbf{1}(y_i &#x3D; c)$$</p>
+<p>其中，${1}(\cdot)$ 是指示函数。</p>
+<p>如果采用加权投票（考虑距离远近），则为：</p>
+<p>$$\hat{y}(x) &#x3D; \arg\max_{c \in {1,\dots,C}} \sum_{(x_i,y_i) \in \mathcal{N}_k(x)} \frac{1}{|x - x_i|} \cdot \mathbf{1}(y_i &#x3D; c)$$</p>
+<hr>
+<h2 id="2-距离度量"><a href="#2-距离度量" class="headerlink" title="2. 距离度量"></a>2. 距离度量</h2><p>KNN 依赖距离来衡量样本相似度。常见的度量方式有：</p>
+<ul>
+<li>欧氏距离：</li>
+</ul>
+<p>$$d(x_i, x_j) &#x3D; \sqrt{\sum_{l&#x3D;1}^d (x_i^{(l)} - x_j^{(l)})^2}$$</p>
+<ul>
+<li>曼哈顿距离：</li>
+</ul>
+<p>$$d(x_i, x_j) &#x3D; \sum_{l&#x3D;1}^d |x_i^{(l)} - x_j^{(l)}|$$</p>
+<ul>
+<li>闵可夫斯基距离（推广形式）：</li>
+</ul>
+<p>$$d(x_i, x_j) &#x3D; \left( \sum_{l&#x3D;1}^d |x_i^{(l)} - x_j^{(l)}|^p \right)^{1&#x2F;p}$$</p>
+<hr>
+<h2 id="3-k的选择与误差分析"><a href="#3-k的选择与误差分析" class="headerlink" title="3. k的选择与误差分析"></a>3. k的选择与误差分析</h2><p>KNN 的性能对 k 值选择敏感，体现了 <strong>近似误差</strong> 与 <strong>估计误差</strong> 的权衡。</p>
+<h3 id="3-1-近似误差"><a href="#3-1-近似误差" class="headerlink" title="3.1 近似误差"></a>3.1 近似误差</h3><ul>
+<li>定义：模型表达能力不足，导致预测结果无法逼近真实分布。</li>
+<li><strong>k 较大时</strong>：决策边界过于平滑，难以捕捉复杂模式 → <strong>近似误差大</strong>。</li>
+<li><strong>k 较小时</strong>：决策边界灵活，可以更好地拟合真实模式 → <strong>近似误差小</strong>。</li>
+</ul>
+<p>数学上，假设真实函数为 f(x)，KNN 的期望预测为：</p>
+<p>$$\hat{f}(x) &#x3D; \mathbb{E}_{\mathcal{D}}[\hat{y}(x)]$$</p>
+<p>则近似误差为：</p>
+<p>$$\text{Bias}^2(x) &#x3D; \big( \mathbb{E}_{\mathcal{D}}[\hat{y}(x)] - f(x) \big)^2$$</p>
+<h3 id="3-2-估计误差"><a href="#3-2-估计误差" class="headerlink" title="3.2 估计误差"></a>3.2 估计误差</h3><ul>
+<li>定义：模型对有限训练数据过于依赖，泛化性差，导致预测不稳定。</li>
+<li><strong>k 较小时</strong>：极易受噪声点影响，估计误差大。</li>
+<li><strong>k 较大时</strong>：结果受单个点波动影响小，估计误差小。</li>
+</ul>
+<p>其数学形式为：</p>
+<p>$$\text{Var}(x) &#x3D; \mathbb{E}<em>{\mathcal{D}}\big[(\hat{y}(x) - \mathbb{E}</em>{\mathcal{D}}[\hat{y}(x)])^2\big]$$</p>
+<h3 id="3-3-总误差"><a href="#3-3-总误差" class="headerlink" title="3.3 总误差"></a>3.3 总误差</h3><p>$$text{MSE}(x) &#x3D; \text{Bias}^2(x) + \text{Var}(x) + \sigma^2$$</p>
+<p>其中，$\sigma^2$ 是不可约误差。<br> 因此，选择合适的 k 值非常重要。</p>
+<hr>
+<h2 id="4-kd树的构造与搜索"><a href="#4-kd树的构造与搜索" class="headerlink" title="4. kd树的构造与搜索"></a>4. kd树的构造与搜索</h2><p>由于 KNN 需要计算测试点与所有训练点的距离，时间复杂度为O(n)。为了加速，可以用 <strong>kd树</strong>进行近邻搜索。</p>
+<h3 id="4-1-kd树的构造"><a href="#4-1-kd树的构造" class="headerlink" title="4.1 kd树的构造"></a>4.1 kd树的构造</h3><ul>
+<li>kd树是一种对数据进行递归二分的空间划分结构。</li>
+<li>每次选择一个维度（通常是方差最大的维度），按照该维度的中位数划分数据。</li>
+<li>构造过程：<ol>
+<li>从根节点开始，选择一个维度作为切分轴；</li>
+<li>找到该维度的中位数，作为节点存储值；</li>
+<li>左子树存储小于该值的样本，右子树存储大于该值的样本；</li>
+<li>递归进行直到样本数过少或树深度达到限制。</li>
+</ol>
+</li>
+</ul>
+<p><strong>伪代码：</strong></p>
+<blockquote>
+<p>function build_kd_tree(points, depth):<br>    if points is empty:<br>        return None<br>    axis &#x3D; depth mod d<br>    sort points by axis<br>    median &#x3D; len(points) &#x2F;&#x2F; 2<br>    node &#x3D; new Node(points[median])<br>    node.left &#x3D; build_kd_tree(points[:median], depth+1)<br>    node.right &#x3D; build_kd_tree(points[median+1:], depth+1)<br>    return node</p>
+</blockquote>
+<hr>
+<h3 id="4-2-kd树的搜索"><a href="#4-2-kd树的搜索" class="headerlink" title="4.2 kd树的搜索"></a>4.2 kd树的搜索</h3><p>kd树搜索遵循“回溯+剪枝”原则：</p>
+<ol>
+<li>从根节点开始，递归到叶子节点，找到测试点所属的区域；</li>
+<li>以该叶子节点为“当前最近邻”；</li>
+<li>回溯检查父节点和另一子树，若另一子树中可能存在更近邻，则递归进入；</li>
+<li>维护一个大小为 kk 的优先队列，存储当前最近的 kk 个邻居；</li>
+<li>搜索结束时队列中的点即为近邻结果。</li>
+</ol>
+<p><strong>伪代码：</strong></p>
+<blockquote>
+<p>function knn_search(node, target, k, depth):<br>    if node is None:<br>        return<br>    axis &#x3D; depth mod d<br>    if target[axis] &lt; node.point[axis]:<br>        next &#x3D; node.left<br>        other &#x3D; node.right<br>    else:<br>        next &#x3D; node.right<br>        other &#x3D; node.left</p>
+</blockquote>
+<pre><code>function knn_search(node, target, k, depth):
+    if node is None:
+        return
+    axis = depth mod d
+    if target[axis] &lt; node.point[axis]:
+        next = node.left
+        other = node.right
+    else:
+        next = node.right
+        other = node.left
+    
+    knn_search(next, target, k, depth+1)
+    update priority queue with node.point
+    
+    if |target[axis] - node.point[axis]| &lt; current_max_distance_in_queue:
+        knn_search(other, target, k, depth+1)
+</code></pre>
+<hr>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><ul>
+<li><strong>核心思想</strong>：KNN 通过寻找最近的 kk 个邻居来分类或回归。</li>
+<li><strong>k 的选择</strong>：小 kk → 近似误差小、估计误差大（过拟合）；大 kk → 近似误差大、估计误差小（欠拟合）。</li>
+<li><strong>kd树</strong>：通过空间划分加速近邻搜索，提升算法效率。</li>
+</ul>
+<p>最终，KNN 的关键在于 <strong>合适的 k 值选择</strong> 和 <strong>高效的搜索结构</strong>。</p>
+<hr>
+<h3 id="6-K近邻用于Iris数据集分类"><a href="#6-K近邻用于Iris数据集分类" class="headerlink" title="6. K近邻用于Iris数据集分类"></a>6. K近邻用于Iris数据集分类</h3><h4 id="6-1加载数据"><a href="#6-1加载数据" class="headerlink" title="6.1加载数据"></a>6.1加载数据</h4><pre><code class="language-python">from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+iris = load_iris(as_frame=True)
+X = iris.data[[&quot;sepal length (cm)&quot;, &quot;sepal width (cm)&quot;]]
+y = iris.target
+X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=0)
+</code></pre>
+<p>鸢尾花数据集，<code>as_frame=True</code> 表示返回 <strong>pandas DataFrame</strong> 而不是 numpy 数组，方便做列选择。</p>
+<p>这个数据集有 <strong>150 条样本</strong>，<strong>4 个特征</strong>：<code>sepal length</code>, <code>sepal width</code>, <code>petal length</code>, <code>petal width</code>。目标变量 <code>target</code> 有三类 (0&#x3D;setosa, 1&#x3D;versicolor, 2&#x3D;virginica)。</p>
+<h4 id="6-2加载模型并可视化"><a href="#6-2加载模型并可视化" class="headerlink" title="6.2加载模型并可视化"></a>6.2加载模型并可视化</h4><pre><code class="language-python">import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.inspection import DecisionBoundaryDisplay
+import pandas as pd
+import time
+
+# 1. 载入数据
+iris = load_iris(as_frame=True)
+X = iris.data[[&quot;sepal length (cm)&quot;, &quot;sepal width (cm)&quot;]]
+y = iris.target
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, stratify=y, random_state=0
+)
+
+# 2. 构建 pipeline：标准化 + KNN
+clf = Pipeline(
+    steps=[
+        (&quot;scaler&quot;, StandardScaler()),
+        (&quot;knn&quot;, KNeighborsClassifier(n_neighbors=11))
+    ]
+)
+
+# 3. 不同的 weights 和 algorithm 组合
+weights_list = [&quot;uniform&quot;, &quot;distance&quot;]
+algorithms = [&quot;auto&quot;, &quot;ball_tree&quot;, &quot;kd_tree&quot;]
+
+
+# 定义结果存储表
+results = []
+
+
+# 4. 画图：每行一个 weights，每列一个 algorithm
+fig, axs = plt.subplots(
+    nrows=len(weights_list), ncols=len(algorithms), figsize=(18, 10)
+)
+
+for i, weights in enumerate(weights_list):
+    for j, algo in enumerate(algorithms):
+        ax = axs[i, j]
+
+        # 设置参数并拟合
+        start_train = time.time()
+        clf.set_params(knn__weights=weights, knn__algorithm=algo).fit(X_train, y_train)
+        end_train = time.time()
+        
+        start_pred = time.time()
+        clf.predict(X_test)
+        end_pred = time.time()
+        
+        acc = clf.score(X_test, y_test)
+
+        results.append(&#123;
+            &quot;weights&quot;: weights,
+            &quot;algorithm&quot;: algo,
+            &quot;accuracy&quot;: acc,
+            &quot;train_time (s)&quot;: end_train - start_train,
+            &quot;predict_time (s)&quot;: end_pred - start_pred
+        &#125;)
+        # 决策边界
+        disp = DecisionBoundaryDisplay.from_estimator(
+            clf,
+            X_test,
+            response_method=&quot;predict&quot;,
+            plot_method=&quot;pcolormesh&quot;,
+            xlabel=iris.feature_names[0],
+            ylabel=iris.feature_names[1],
+            shading=&quot;auto&quot;,
+            alpha=0.5,
+            ax=ax,
+        )
+
+        # 训练样本点
+        scatter = disp.ax_.scatter(X.iloc[:, 0], X.iloc[:, 1], c=y, edgecolors=&quot;k&quot;)
+
+        # 图例
+        disp.ax_.legend(
+            scatter.legend_elements()[0],
+            iris.target_names,
+            loc=&quot;lower left&quot;,
+            title=&quot;Classes&quot;,
+        )
+
+        # 子图标题
+        ax.set_title(
+            f&quot;k=&#123;clf[-1].n_neighbors&#125;, weights=&#123;weights&#125;, algo=&#123;algo&#125;&quot;
+        )
+
+plt.tight_layout()
+plt.show()
+df_results = pd.DataFrame(results)
+print(df_results)
+</code></pre>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509171831492.png" alt="image-20250917183120303"></p>
+<pre><code> weights  algorithm  accuracy  train_time (s)  predict_time (s)
+0   uniform       auto  0.710526        0.003293          0.004401
+1   uniform  ball_tree  0.710526        0.004864          0.006618
+2   uniform    kd_tree  0.710526        0.003537          0.004044
+3  distance       auto  0.631579        0.003269          0.001961
+4  distance  ball_tree  0.631579        0.003211          0.001694
+5  distance    kd_tree  0.631579        0.003055          0.001578
+</code></pre>
+<p><strong>不同 algorithm 的表现</strong></p>
+<ul>
+<li><code>auto</code>、<code>ball_tree</code>、<code>kd_tree</code> 在相同权重下的 <strong>准确率完全一致，训练预测速度不同</strong>，这说明 <strong>搜索算法仅影响计算效率，不会改变最终分类结果</strong>。</li>
+<li>这和理论一致：算法只是用不同的数据结构加速邻居查找，不会影响邻居集合本身。</li>
+</ul>
+<p><strong>不同 weights 的表现</strong></p>
+<ul>
+<li><code>uniform</code> 权重下，测试集准确率为 <strong>71.05%</strong>；</li>
+<li><code>distance</code> 权重下，测试集准确率为 <strong>63.16%</strong>；</li>
+<li>在本实验中，<strong>uniform 明显优于 distance</strong>。</li>
+<li>这表明在鸢尾花数据的 <strong>前两个特征（花萼长、宽）</strong> 上，等权投票比加权投票更适合。可能原因是：<ul>
+<li>特征维度少，距离加权放大了噪声点或边界点的影响；</li>
+<li>类别边界本身不完全线性，用距离权重反而削弱了多数邻居的稳定性。</li>
+</ul>
+</li>
+</ul>
+<p><strong>结合可视化</strong></p>
+<ul>
+<li>从决策边界图上可以看到：<ul>
+<li><code>uniform</code> 的边界相对平滑，更符合数据整体分布；</li>
+<li><code>distance</code> 在交界区域会出现一些不规则边界，可能导致更多误判。</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>
