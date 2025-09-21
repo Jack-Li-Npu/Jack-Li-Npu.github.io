@@ -1,0 +1,378 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>统计学习及监督学习概论 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<script src="/js/lib/math.js"></script>
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>统计学习及监督学习概论</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/18
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                统计学
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" style="color: #00bcd4">
+                    统计学
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+
+
+<h2 id="统计学习及监督学习概论"><a href="#统计学习及监督学习概论" class="headerlink" title="统计学习及监督学习概论"></a>统计学习及监督学习概论</h2><p>统计学习的核心是基于数据构建概率统计模型，并运用模型对数据进行预测与分析。其基本流程可以概括为：<strong>模型</strong> -&gt; <strong>策略</strong> -&gt; <strong>算法</strong>。</p>
+<h3 id="一。策略"><a href="#一。策略" class="headerlink" title="一。策略"></a>一。策略</h3><p>策略的核心是选择一个标准来评估模型的好坏，并以此为依据从假设空间中选择最优模型。</p>
+<h4 id="1-损失函数与风险函数"><a href="#1-损失函数与风险函数" class="headerlink" title="1. 损失函数与风险函数"></a>1. 损失函数与风险函数</h4><p><strong>损失函数</strong> $L(Y, f(X))$ 度量模型<strong>一次预测</strong>的好坏，即预测值 $f(X)$ 与真实值 $Y$ 之间的差异程度。</p>
+<ul>
+<li><p><strong>0-1损失函数 (0-1 Loss Function)</strong><br>$$L(Y, f(X)) &#x3D; \begin{cases}<br>1, &amp; Y \neq f(X) \<br>0, &amp; Y &#x3D; f(X)<br>\end{cases}$$<br><strong>介绍</strong>：主要用于分类问题。预测正确则无损失（0），预测错误则产生恒定的损失（1）。它是分类问题最直观的损失函数，但因为其数学性质不光滑（非凸、不连续），直接优化较困难。</p>
+</li>
+<li><p><strong>平方损失函数 (Quadratic Loss Function)</strong><br>$$L(Y, f(X)) &#x3D; (Y - f(X))^2$$<br><strong>介绍</strong>：最常用于回归问题。其优势是数学性质优良（光滑、可导、凸函数），便于求解。但对异常值比较敏感。</p>
+</li>
+<li><p><strong>绝对损失函数 (Absolute Loss Function)</strong><br>$$L(Y, f(X)) &#x3D; |Y - f(X)|$$<br><strong>介绍</strong>：也用于回归问题。相比平方损失，它对异常值更不敏感，但其在零点处不可导，求解更复杂。</p>
+</li>
+<li><p><strong>对数损失函数 (Logarithmic Loss Function) &#x2F; 交叉熵损失 (Cross-Entropy Loss)</strong><br>$$L(Y, P(Y|X)) &#x3D; -\log P(Y|X)$$<br><strong>介绍</strong>：主要用于分类问题，特别是模型输出为概率的情况（如逻辑回归）。$P(Y|X)$ 是模型预测的正确类别的概率。损失随预测概率的减小而呈指数级增长，极大鼓励模型给出高置信度的正确预测。</p>
+</li>
+</ul>
+<h4 id="2-风险函数-期望损失"><a href="#2-风险函数-期望损失" class="headerlink" title="2.风险函数  &#x2F; 期望损失"></a>2.风险函数  &#x2F; 期望损失</h4><p>期望风险函数 $R_{exp}(f)$ 衡量模型 $f(X)$ <strong>期望意义上的平均损失</strong>，是理论上最优模型的选择标准。<br>$$R_{exp}(f) &#x3D; E_p[L(Y, f(X))] &#x3D; \int_{\mathcal{X}\times\mathcal{Y}} L(y, f(x)) P(x, y)  dxdy$$<br><strong>介绍</strong>：我们的终极目标是最小化期望风险。然而，联合分布 $P(X, Y)$ 是未知的，因此 $R_{exp}(f)$ 无法直接计算。</p>
+<h5 id="经验风险、-经验损失"><a href="#经验风险、-经验损失" class="headerlink" title="**经验风险、 经验损失 **"></a>**经验风险、 经验损失 **</h5><p>给定一个训练数据集，经验风险 $R_{emp}(f)$ 是模型在<strong>训练集上</strong>的平均损失。<br>$$R_{emp}(f) &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^{N} L(y_i, f(x_i))$$<br><strong>介绍</strong>：根据<strong>大数定律 (Law of Large Numbers)</strong>，当样本容量 $N$ 趋于无穷时，经验风险会无限接近于期望风险。因此，一个很自然的想法就是使用<strong>经验风险</strong>来估计<strong>期望风险</strong>。</p>
+<h5 id="经验风险最小化-Empirical-Risk-Minimization-ERM"><a href="#经验风险最小化-Empirical-Risk-Minimization-ERM" class="headerlink" title="经验风险最小化 (Empirical Risk Minimization, ERM)"></a><strong>经验风险最小化 (Empirical Risk Minimization, ERM)</strong></h5><p>$$\min_{f \in \mathcal{F}} \frac{1}{N} \sum_{i&#x3D;1}^{N} L(y_i, f(x_i))$$<br><strong>介绍</strong>：当样本量足够大时，ERM 非常有效。例如，<strong>极大似然估计 (Maximum Likelihood Estimation, MLE)</strong> 就是 ERM 的一个例子（当模型是条件概率分布，损失函数是对数损失时）。但当样本容量较小时，ERM 容易导致<strong>过拟合 (Overfitting)</strong>，即模型在训练集上表现很好，但在未知数据上表现很差。</p>
+<p><strong>结构风险最小化 **<br>为了防止过拟合，SRM 在 ERM 的基础上增加了</strong>正则化项 (Regularizer)** 或<strong>罚项 (Penalty term)</strong>，用于衡量模型的复杂度。<br>$$\min_{f \in \mathcal{F}} \frac{1}{N} \sum_{i&#x3D;1}^{N} L(y_i, f(x_i)) + \lambda J(f)$$<br>其中 $J(f)$ 是模型复杂度，$\lambda \geq 0$ 是权衡经验风险与模型复杂度的系数。<br><strong>介绍</strong>：SRM 要求同时最小化经验风险和模型复杂度，从而寻找一个简单且预测精度高的模型，这符合<strong>奥卡姆剃刀原理</strong>。这等价于<strong>最大后验概率估计 (Maximum A Posteriori Estimation, MAP)</strong>。正则化项如 L1 范数（Lasso）、L2 范数（Ridge）都是常见的 $J(f)$。</p>
+<hr>
+<h3 id="二。模型评估与选择"><a href="#二。模型评估与选择" class="headerlink" title="二。模型评估与选择"></a>二。模型评估与选择</h3><p>模型训练的最终目的是为了很好的预测未知数据。因此需要一个<strong>测试集 (Test Set)</strong> 来模拟未知数据，以评估模型的<strong>泛化能力 (Generalization Ability)</strong>。</p>
+<p>交叉验证 (Cross-Validation)</p>
+<p>基本思想是重复使用数据：将数据切分，一部分作为训练集，另一部分作为验证集，来回交替训练和测试。</p>
+<ul>
+<li><strong>简单交叉验证</strong>：随机将数据分为训练集（如70%）和验证集（如30%），用训练集训练模型，用验证集评估测试误差。此过程重复多次，取误差平均值。</li>
+<li><strong>S折交叉验证 (S-Fold Cross-Validation)</strong>：<ol>
+<li>随机将数据切分为 $S$ 个互不相交、大小相同的子集。</li>
+<li>每次用 $S-1$ 个子集的数据训练模型，剩下的1个子集做验证。</li>
+<li>重复 $S$ 次，确保每个子集都被用作一次验证集。</li>
+<li>对 $S$ 次评估结果取平均。<br>（最常见的是10折交叉验证）</li>
+</ol>
+</li>
+<li><strong>留一交叉验证 (Leave-One-Out Cross-Validation, LOOCV)</strong>：是 $S$ 折交叉验证的特例，此时 $S &#x3D; N$（$N$ 为样本总量）。即每次只留下一个样本做验证，用其余所有样本训练。结果评估非常准确，但计算成本极高。</li>
+</ul>
+<hr>
+<h3 id="三。监督学习方法：生成模型与判别模型"><a href="#三。监督学习方法：生成模型与判别模型" class="headerlink" title="三。监督学习方法：生成模型与判别模型"></a>三。监督学习方法：生成模型与判别模型</h3><ul>
+<li><p><strong>生成模型 (Generative Model)</strong></p>
+<ul>
+<li><strong>本质</strong>：首先学习联合概率分布 $P(X, Y)$，然后通过贝叶斯定理求出条件概率分布 $P(Y|X)$ 作为预测模型。</li>
+<li><strong>公式</strong>：$P(Y|X) &#x3D; \frac{P(X, Y)}{P(X)} &#x3D; \frac{P(X|Y)P(Y)}{P(X)}$</li>
+<li><strong>例子</strong>：朴素贝叶斯、隐马尔可夫模型。</li>
+<li><strong>特点</strong>：可以还原出联合分布，能处理隐变量问题。</li>
+</ul>
+</li>
+<li><p><strong>判别模型 (Discriminative Model)</strong></p>
+<ul>
+<li><strong>本质</strong>：直接学习决策函数 $f(X)$ 或条件概率分布 $P(Y|X)$。</li>
+<li><strong>公式</strong>：直接对 $P(Y|X)$ 建模或学习 $Y \rightarrow f(X)$ 的映射。</li>
+<li><strong>例子</strong>：k近邻、感知机、逻辑回归、决策树、支持向量机。</li>
+<li><strong>特点</strong>：准确率通常更高，且学习过程更简单直接。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="1-分类问题"><a href="#1-分类问题" class="headerlink" title="1. 分类问题"></a>1. 分类问题</h4><p>对于二分类问题，模型的预测结果和真实标签可以组成一个<strong>混淆矩阵 (Confusion Matrix)</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">真实为正例 (Positive)</th>
+<th align="left">真实为负例 (Negative)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>预测为正例</strong></td>
+<td align="left">真正例 (True Positive, <strong>TP</strong>)</td>
+<td align="left">假正例 (False Positive, <strong>FP</strong>)</td>
+</tr>
+<tr>
+<td align="left"><strong>预测为负例</strong></td>
+<td align="left">假负例 (False Negative, <strong>FN</strong>)</td>
+<td align="left">真负例 (True Negative, <strong>TN</strong>)</td>
+</tr>
+</tbody></table>
+<p>基于此矩阵，可以定义多个评估指标：</p>
+<ul>
+<li><p><strong>精确率 (Precision)</strong> - <strong>查准率</strong>：预测为正例的样本中，有多少是真的正例。<br>$$P &#x3D; \frac{TP}{TP + FP}$$</p>
+</li>
+<li><p><strong>召回率 (Recall)</strong> - <strong>查全率</strong>：真正的正例中，有多少被模型找了出来。<br>$$R &#x3D; \frac{TP}{TP + FN}$$</p>
+</li>
+<li><p><strong>F1值 (F1-Score)</strong>：精确率和召回率的调和平均。调和平均更重视较小值，因此P和R必须都高，F1才会高。<br>$$\frac{2}{F1} &#x3D; \frac{1}{P} + \frac{1}{R} \quad \Rightarrow \quad F1 &#x3D; \frac{2TP}{2TP + FP + FN} &#x3D; \frac{2 \cdot P \cdot R}{P + R}$$</p>
+</li>
+</ul>
+<p><strong>P-R曲线</strong>下的面积和<strong>ROC曲线</strong>下的面积（AUC）也是综合衡量分类器性能的重要工具。</p>
+<h4 id="2-标注问题"><a href="#2-标注问题" class="headerlink" title="2. 标注问题"></a>2. 标注问题</h4><p>可以看作是更复杂的分类问题。输入序列预测对应的输出序列。例如，<strong>词性标注 (POS Tagging)</strong>、<strong>命名实体识别 (NER)</strong>。常用的模型有隐马尔可夫模型 (HMM)、条件随机场 (CRF) 等。</p>
+<h4 id="3-回归问题"><a href="#3-回归问题" class="headerlink" title="3. 回归问题"></a>3. 回归问题</h4><p>输出是连续值。其学习的本质是学习一个从输入 $X$ 到输出 $Y$ 的映射函数。评估回归模型性能最常用的指标是<strong>均方误差 (Mean Squared Error, MSE)</strong>，它直接对应于平方损失函数的经验风险。<br>$$MSE &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^{N} (y_i - f(x_i))^2$$</p>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>

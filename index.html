@@ -342,11 +342,623 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">机器学习</a>
         </span>
         
     </div>
     <a href="/2025/09/21/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2025/09/19/%E7%BB%9F%E8%AE%A1%E5%AD%A6/">
+        <h2 class="post-title">统计学</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                统计学
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/19
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <meta name="referrer" content="no-referrer" />
+
+
+
+<h2 id="统计学"><a href="#统计学" class="headerlink" title="统计学"></a>统计学</h2><p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102007126.png" alt="image-20250910200732834"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102008025.png" alt="image-20250910200813926"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102009320.png" alt="image-20250910200942275"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102011021.png" alt="image-20250910201117966"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102011902.png" alt="image-20250910201107849"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102013607.png" alt="image-20250910201321554"></p>
+<h2 id="1-回顾分解公式"><a href="#1-回顾分解公式" class="headerlink" title="1. 回顾分解公式"></a>1. 回顾分解公式</h2><p>在回归分析里有一个核心分解：</p>
+<p>TSS&#x3D;ESS+SSRTSS &#x3D; ESS + SSR</p>
+<ul>
+<li><strong>TSS（总平方和）</strong>：所有观测值 $iY_i $相对于均值 Yˉ\bar{Y} 的总波动。</li>
+<li><strong>ESS（回归平方和）</strong>：模型预测值 $\hat{Y}_i $相对于均值 $\bar{Y} $的波动。</li>
+<li><strong>SSR（残差平方和）</strong>：实际值 $Y_i $和预测值 $\hat{Y}_i $的差异。</li>
+</ul>
+<hr>
+<h2 id="2-为什么-ESS-叫做“模型捕捉到的波动”"><a href="#2-为什么-ESS-叫做“模型捕捉到的波动”" class="headerlink" title="2. 为什么 ESS 叫做“模型捕捉到的波动”"></a>2. 为什么 ESS 叫做“模型捕捉到的波动”</h2><p>你可以这样理解：</p>
+<ul>
+<li>如果我们不用任何模型，只预测均值 $\bar{Y}$，那么所有点都预测成一条水平线（比如平均工资）。此时解释力为 0。</li>
+<li>如果我们用了回归模型，它会给出不同的预测值 $\hat{Y}_i$，这些预测值和均值的差异，正好说明了模型认为“哪些人比平均值高&#x2F;低、以及高&#x2F;低多少”。</li>
+</ul>
+<p>👉 所以，ESS 就是模型解释的那部分变化量。它反映了模型“识别出来的有规律的波动”。</p>
+<hr>
+<h2 id="3-举个具体例子"><a href="#3-举个具体例子" class="headerlink" title="3. 举个具体例子"></a>3. 举个具体例子</h2><p>还是房价的例子：</p>
+<ul>
+<li>平均房价 $\bar{Y}&#x3D;112$。</li>
+<li>总变动（TSS&#x3D;2680）表示“所有房价相对均值的离散程度”。</li>
+</ul>
+<p>当我们引入面积作为解释变量：</p>
+<ul>
+<li>模型预测 $\hat{Y}$：小房子预测便宜，大房子预测贵。</li>
+<li>这些预测值和均值之间的差异（ESS&#x3D;2295）就说明：面积这一个因素就能解释掉大部分的价格变动。</li>
+<li>剩下的小部分（SSR&#x3D;175）是面积没解释到的，比如地段、装修等。</li>
+</ul>
+<p>所以：</p>
+<p>$$\frac{ESS}{TSS} &#x3D; R^2 &#x3D; 0.935$$</p>
+<p>意味着：93.5% 的房价波动可以用面积解释。</p>
+<hr>
+<h2 id="4-图形直观理解"><a href="#4-图形直观理解" class="headerlink" title="4. 图形直观理解"></a>4. 图形直观理解</h2><p>如果把 YY 画在纵轴上：</p>
+<ul>
+<li><strong>$bar{Y}$</strong>：一条水平线（没有解释变量时的预测）。</li>
+<li><strong>$\hat{Y}_i$</strong>：回归直线给出的预测值（模型能识别的变化）。</li>
+<li><strong>ESS</strong>：预测直线相对于水平线的波动，代表模型解释力。</li>
+<li><strong>SSR</strong>：真实点和直线之间的距离平方，代表误差。</li>
+</ul>
+<hr>
+<p>✅ <strong>一句话总结</strong>：<br> ESS 是“模型预测值和均值之间的差异平方和”，它衡量了模型从自变量中“抓住了多少因变量的规律性波动”。</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102017897.png" alt="image-20250910201704841"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102026715.png" alt="image-20250910202619574"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102029264.png" alt="image-20250910202904174"></p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509102038498.png" alt="image-20250910203828306"></p>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" style="color: #ffa2c4">统计学</a>
+        </span>
+        
+    </div>
+    <a href="/2025/09/19/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2025/09/18/%E7%AE%97%E6%B3%95/">
+        <h2 class="post-title">Leetcode 算法 八股</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E7%AE%97%E6%B3%95/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                算法
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/18
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <meta name="referrer" content="no-referrer" />
+
+
+
+
+
+<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><h3 id="1-二分查找"><a href="#1-二分查找" class="headerlink" title="1. 二分查找"></a>1. 二分查找</h3><p>两数之和</p>
+<pre><code class="language-python">class Solution:
+    def twoSum(self, numbers: List[int], target: int) -&gt; List[int]:
+        n = len(numbers)
+        for i in range(n):
+            low, high = i +1, n-1
+            while low &lt;= high:
+                mid = (low + high) // 2
+                if numbers[mid] == target - numbers[i]:
+                    return [i+1, mid+1]
+                elif numbers[mid] &gt; target - numbers[i]:
+                    high = mid - 1
+                else:
+                    low = mid + 1
+        return [-1, -1]
+</code></pre>
+<p>二分查找只能用于有序数组，时间复杂度为O(logn)，对于两数之和问题，我们首先遍历数组找到第一个数O(n)，然后用二分查找在有序数组里找到第二个数O(logn)，总为O(nlogn)</p>
+<h3 id="2-双指针"><a href="#2-双指针" class="headerlink" title="2. 双指针"></a>2. 双指针</h3><p><strong>只有一个输入，从两端开始遍历</strong></p>
+<pre><code class="language-python">class Solution:
+    def twoSum(self, numbers: List[int], target: int) -&gt; List[int]:
+        low, high = 0, len(numbers) - 1
+        while low &lt; high:
+            total = numbers[low] + numbers[high]
+            if total == target:
+                return [low + 1, high + 1]
+            elif total &lt; target:
+                low += 1
+            else:
+                high -= 1
+
+        return [-1, -1]
+</code></pre>
+<p>时间复杂度为O(n)</p>
+<p><strong>有两个输入，两个都需要遍历完</strong></p>
+<p><strong>《合并有序数组》</strong></p>
+<pre><code class="language-python">class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -&gt; None:
+        &quot;&quot;&quot;
+        Do not return anything, modify nums1 in-place instead.
+        &quot;&quot;&quot;
+        sorted = []
+        p1, p2 = 0, 0
+        while p1 &lt; m or p2 &lt; n:
+            if p1 == m:
+                sorted.append(nums2[p2])
+                p2 = p2 + 1
+            elif p2 == n:
+                sorted.append(nums1[p1])
+                p1 = p1 + 1
+            elif nums1[p1] &lt; nums2[p2]:
+                sorted.append(nums1[p1])
+                p1 = p1 + 1
+            else:
+                sorted.append(nums2[p2])
+                p2 = p2 + 1
+        nums1[:] = sorted
+</code></pre>
+<p>时间复杂度O(m+n)</p>
+<h3 id="3-滑动窗口"><a href="#3-滑动窗口" class="headerlink" title="3. 滑动窗口"></a>3. 滑动窗口</h3><p>通用解法：</p>
+<pre><code class="language-python">class Solution:
+    def problemName(self, s: str) -&gt; int:
+        # Step 1: 定义需要维护的变量们 (对于滑动窗口类题目，这些变量通常是最小长度，最大长度，或者哈希表)
+        x, y = ..., ...
+
+        # Step 2: 定义窗口的首尾端 (start, end)， 然后滑动窗口
+        start = 0
+        for end in range(len(s)):
+            # Step 3: 更新需要维护的变量, 有的变量需要一个if语句来维护 (比如最大最小长度)
+            x = new_x
+            if condition:
+                y = new_y
+
+            &#39;&#39;&#39;
+            ------------- 下面是两种情况，读者请根据题意二选1 -------------
+            &#39;&#39;&#39;
+            # Step 4 - 情况1
+            # 如果题目的窗口长度固定：用一个if语句判断一下当前窗口长度是否超过限定长度 
+            # 如果超过了，窗口左指针前移一个单位保证窗口长度固定, 在那之前, 先更新Step 1定义的(部分或所有)维护变量 
+            if 窗口长度大于限定值:
+                # 更新 (部分或所有) 维护变量 
+                # 窗口左指针前移一个单位保证窗口长度固定
+
+            # Step 4 - 情况2
+            # 如果题目的窗口长度可变: 这个时候一般涉及到窗口是否合法的问题
+            # 如果当前窗口不合法时, 用一个while去不断移动窗口左指针, 从而剔除非法元素直到窗口再次合法
+            # 在左指针移动之前更新Step 1定义的(部分或所有)维护变量 
+            while 不合法:
+                # 更新 (部分或所有) 维护变量 
+                # 不断移动窗口左指针直到窗口再次合法
+
+        # Step 5: 返回答案
+        return ...
+</code></pre>
+<h4 id="（1）子数组最大平均数"><a href="#（1）子数组最大平均数" class="headerlink" title="（1）子数组最大平均数"></a>（1）子数组最大平均数</h4><p>给你一个由 <code>n</code> 个元素组成的整数数组 <code>nums</code> 和一个整数 <code>k</code> 。</p>
+<p>请你找出平均数最大且 <strong>长度为 <code>k</code></strong> 的连续子数组，并输出该最大平均数。</p>
+<p>任何误差小于 <code>10-5</code> 的答案都将被视为正确答案。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：nums = [1,12,-5,-6,50,3], k = 4
+输出：12.75
+解释：最大平均数 (12-5-6+50)/4 = 51/4 = 12.75
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：nums = [5], k = 1
+输出：5.00000
+</code></pre>
+<p><strong>解答：</strong></p>
+<pre><code class="language-python">class Solution:
+    def findMaxAverage(self, nums: List[int], k: int) -&gt; float:
+        start = 0
+        sum_, max_avg = 0, -math.inf
+        for end, x in enumerate(nums):
+            sum_ = sum_ + x
+            if end + 1 - start &gt;= k:
+                max_avg = max(max_avg, (sum_ / k))
+                sum_ = sum_ - nums[start]
+                start = start + 1
+        return max_avg
+</code></pre>
+<h4 id="（2）至多包含两个不同字符的最长子串"><a href="#（2）至多包含两个不同字符的最长子串" class="headerlink" title="（2）至多包含两个不同字符的最长子串"></a>（2）至多包含两个不同字符的最长子串</h4><p>给你一个字符串 <code>s</code> ，请你找出 <strong>至多</strong> 包含 <strong>两个不同字符</strong> 的最长子串，并返回该子串的长度。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：s = &quot;eceba&quot;
+输出：3
+解释：满足题目要求的子串是 &quot;ece&quot; ，长度为 3 。
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：s = &quot;ccaabbb&quot;
+输出：5
+解释：满足题目要求的子串是 &quot;aabbb&quot; ，长度为 5 。
+</code></pre>
+<p>循环的条件：不符合题意（字串里面有超过三个的不同字符）</p>
+<p><strong>解答：</strong></p>
+<p><strong>最长类问题</strong>：</p>
+<ul>
+<li>先扩张窗口，让它尽可能大；</li>
+<li>如果超出限制（非法），再收缩。</li>
+<li><code>while</code> 条件 → <strong>窗口不合法时收缩</strong>。</li>
+</ul>
+<pre><code class="language-python">class Solution:
+    def lengthOfLongestSubstringTwoDistinct(self, s: str) -&gt; int:
+        start = 0
+        max_len, hashmap = 0, &#123;&#125;
+
+        for end in range(len(s)):
+            tail = s[end]
+            hashmap[tail] = hashmap.get(tail, 0) + 1
+            while len(hashmap) &gt; 2:
+                head = s[start]
+                hashmap[head] -= 1
+                if hashmap[head] == 0:
+                    del hashmap[head]
+                start += 1
+            max_len = max(max_len, end + 1 - start)
+        return max_len
+</code></pre>
+<h4 id="（3）无重复字符的最长字串"><a href="#（3）无重复字符的最长字串" class="headerlink" title="（3）无重复字符的最长字串"></a>（3）无重复字符的最长字串</h4><p>给定一个字符串 <code>s</code> ，请你找出其中不含有重复字符的 <strong>最长 子串</strong> 的长度。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: s = &quot;abcabcbb&quot;
+输出: 3 
+解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。
+</code></pre>
+<p><strong>示例 2:</strong></p>
+<pre><code>输入: s = &quot;bbbbb&quot;
+输出: 1
+解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。
+</code></pre>
+<p><strong>示例 3:</strong></p>
+<pre><code>输入: s = &quot;pwwkew&quot;
+输出: 3
+解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。
+</code></pre>
+<p><strong>解答：</strong></p>
+<ul>
+<li><strong>最长类问题</strong>：<ul>
+<li>先扩张窗口，让它尽可能大；</li>
+<li>如果超出限制（非法），再收缩。</li>
+<li><code>while</code> 条件 → <strong>窗口不合法时收缩</strong>。</li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-python">class Solution:
+    def lengthOfLongestSubstring(self, s: str) -&gt; int:
+        start = 0
+        hashmap = &#123;&#125;
+        max_len = 0
+        for end in range(len(s)):
+            hashmap[s[end]] = hashmap.get(s[end], 0) + 1
+            while end + 1 - start &gt; len(hashmap):
+                head = s[start]
+                hashmap[head] -= 1
+                start += 1
+                if hashmap[head] == 0:
+                    del hashmap[head]
+            max_len = max(max_len, end + 1 - start)
+
+        return max_len
+</code></pre>
+<h4 id="（4）和大于某数值的长度最小的子数组"><a href="#（4）和大于某数值的长度最小的子数组" class="headerlink" title="（4）和大于某数值的长度最小的子数组"></a>（4）和大于某数值的长度最小的子数组</h4><p>给定一个含有 <code>n</code> 个正整数的数组和一个正整数 <code>target</code> <strong>。</strong></p>
+<p>找出该数组中满足其总和大于等于 <code>target</code> 的长度最小的 <strong>子数组</strong> <code>[numsl, numsl+1, ..., numsr-1, numsr]</code> ，并返回其长度**。**如果不存在符合条件的子数组，返回 <code>0</code> 。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：target = 7, nums = [2,3,1,2,4,3]
+输出：2
+解释：子数组 [4,3] 是该条件下的长度最小的子数组。
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：target = 4, nums = [1,4,4]
+输出：1
+</code></pre>
+<p><strong>示例 3：</strong></p>
+<pre><code>输入：target = 11, nums = [1,1,1,1,1,1,1,1]
+输出：0
+</code></pre>
+<p><strong>解答：</strong></p>
+<p><strong>最短类问题</strong>：</p>
+<ul>
+<li>先扩张窗口，直到满足条件；</li>
+<li>一旦满足条件，尝试收缩，保证尽可能小。</li>
+<li><code>while</code> 条件 → <strong>窗口合法时收缩</strong>。</li>
+</ul>
+<pre><code class="language-python">class Solution:
+    def minSubArrayLen(self, target: int, nums: List[int]) -&gt; int:
+        start  = 0
+        sum_ = 0
+        min_len = math.inf
+        for end in range(len(nums)):
+            sum_ += nums[end]
+            while sum_ &gt;= target:
+                min_len = min(min_len, end + 1 -start)
+                sum_ -= nums[start]
+                start += 1
+        if min_len == math.inf:
+            return 0
+        return min_len
+</code></pre>
+<h4 id="（5）找到字符串中所有字母异位词"><a href="#（5）找到字符串中所有字母异位词" class="headerlink" title="（5）找到字符串中所有字母异位词"></a>（5）找到字符串中所有字母异位词</h4><p>给定两个字符串 <code>s</code> 和 <code>p</code>，找到 <code>s</code> 中所有 <code>p</code> 的 <strong>异位词</strong> 的子串，返回这些子串的起始索引。不考虑答案输出的顺序。</p>
+<p><strong>示例 1:</strong></p>
+<pre><code>输入: s = &quot;cbaebabacd&quot;, p = &quot;abc&quot;
+输出: [0,6]
+解释:
+起始索引等于 0 的子串是 &quot;cba&quot;, 它是 &quot;abc&quot; 的异位词。
+起始索引等于 6 的子串是 &quot;bac&quot;, 它是 &quot;abc&quot; 的异位词。
+</code></pre>
+<p> <strong>示例 2:</strong></p>
+<pre><code>输入: s = &quot;abab&quot;, p = &quot;ab&quot;
+输出: [0,1,2]
+解释:
+起始索引等于 0 的子串是 &quot;ab&quot;, 它是 &quot;ab&quot; 的异位词。
+起始索引等于 1 的子串是 &quot;ba&quot;, 它是 &quot;ab&quot; 的异位词。
+起始索引等于 2 的子串是 &quot;ab&quot;, 它是 &quot;ab&quot; 的异位词。
+</code></pre>
+<p><strong>解答：</strong></p>
+<ul>
+<li>窗口长度固定，判断条件用if</li>
+</ul>
+<pre><code class="language-python">class Solution:
+    def findAnagrams(self, s: str, p: str) -&gt; List[int]:
+        start = 0
+        hashmap_, hashmap = &#123;&#125;, &#123;&#125;
+        ans = []
+        # 统计 p 中每个字符的频率
+        for i, x in enumerate(p):
+            hashmap_[x] = hashmap_.get(x, 0) + 1
+
+        # 遍历 s，用滑动窗口检查子串是否是 p 的字母异位词
+        for end in range(len(s)):
+            # 扩展窗口：加入右边的字符
+            hashmap[s[end]] = hashmap.get(s[end], 0) + 1
+
+            # 如果窗口和目标频率表相等，说明找到一个异位词
+            if hashmap == hashmap_:
+                ans.append(start)
+
+            # 保持窗口长度不超过 len(p)
+            if len(p) &lt;= end - start + 1:
+                hashmap[s[start]] -= 1
+                if hashmap[s[start]] == 0:
+                    del hashmap[s[start]]
+                start += 1
+
+        return ans
+</code></pre>
+<hr>
+<h4 id="（6）删除子数组的最大得分"><a href="#（6）删除子数组的最大得分" class="headerlink" title="（6）删除子数组的最大得分"></a>（6）删除子数组的最大得分</h4><p>给你一个正整数数组 <code>nums</code> ，请你从中删除一个含有 <strong>若干不同元素</strong> 的子数组**。**删除子数组的 <strong>得分</strong> 就是子数组各元素之 <strong>和</strong> 。</p>
+<p>返回 <strong>只删除一个</strong> 子数组可获得的 <strong>最大得分</strong> <em>。</em></p>
+<p>如果数组 <code>b</code> 是数组 <code>a</code> 的一个连续子序列，即如果它等于 <code>a[l],a[l+1],...,a[r]</code> ，那么它就是 <code>a</code> 的一个子数组。</p>
+<p><strong>示例 1：</strong></p>
+<pre><code>输入：nums = [4,2,4,5,6]
+输出：17
+解释：最优子数组是 [2,4,5,6]
+</code></pre>
+<p><strong>示例 2：</strong></p>
+<pre><code>输入：nums = [5,2,1,2,5,2,1,2,5]
+输出：8
+解释：最优子数组是 [5,2,1] 或 [1,2,5]
+</code></pre>
+<p><strong>解答：</strong></p>
+<p>也就是找到没有重复字符的最长子串，输出结果为子串和</p>
+<p>最长类问题：超出限制，再收缩（while条件为不符合）</p>
+<pre><code class="language-python">class Solution:
+    def maximumUniqueSubarray(self, nums: List[int]) -&gt; int:
+        start = 0
+        sum_ = 0
+        ans = 0
+        hashmap = &#123;&#125;
+        for end in range(len(nums)):
+            # 从这里开始是子串扩张
+            sum_ += nums[end]
+            hashmap[nums[end]] = hashmap.get(nums[end], 0) + 1
+            if len(hashmap) == end + 1 - start:
+                # 满足条件时更新答案
+                ans = max(ans, sum_)
+            while len(hashmap) &lt; end + 1 - start:
+                head = nums[start]
+                # 子串缩小，记得删除头元素
+                sum_ -= head
+                hashmap[head] -= 1
+                if hashmap[head] == 0:
+                    del hashmap[head]
+                start += 1
+        return ans
+</code></pre>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E7%AE%97%E6%B3%95%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="color: #03a9f4">算法、数据结构</a>
+        </span>
+        
+    </div>
+    <a href="/2025/09/18/%E7%AE%97%E6%B3%95/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
+    <a href="/2025/09/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E5%8F%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%AE%BA/">
+        <h2 class="post-title">统计学习及监督学习概论</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                统计学
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/18
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <meta name="referrer" content="no-referrer" />
+
+
+
+<h2 id="统计学习及监督学习概论"><a href="#统计学习及监督学习概论" class="headerlink" title="统计学习及监督学习概论"></a>统计学习及监督学习概论</h2><p>统计学习的核心是基于数据构建概率统计模型，并运用模型对数据进行预测与分析。其基本流程可以概括为：<strong>模型</strong> -&gt; <strong>策略</strong> -&gt; <strong>算法</strong>。</p>
+<h3 id="一。策略"><a href="#一。策略" class="headerlink" title="一。策略"></a>一。策略</h3><p>策略的核心是选择一个标准来评估模型的好坏，并以此为依据从假设空间中选择最优模型。</p>
+<h4 id="1-损失函数与风险函数"><a href="#1-损失函数与风险函数" class="headerlink" title="1. 损失函数与风险函数"></a>1. 损失函数与风险函数</h4><p><strong>损失函数</strong> $L(Y, f(X))$ 度量模型<strong>一次预测</strong>的好坏，即预测值 $f(X)$ 与真实值 $Y$ 之间的差异程度。</p>
+<ul>
+<li><p><strong>0-1损失函数 (0-1 Loss Function)</strong><br>$$L(Y, f(X)) &#x3D; \begin{cases}<br>1, &amp; Y \neq f(X) \<br>0, &amp; Y &#x3D; f(X)<br>\end{cases}$$<br><strong>介绍</strong>：主要用于分类问题。预测正确则无损失（0），预测错误则产生恒定的损失（1）。它是分类问题最直观的损失函数，但因为其数学性质不光滑（非凸、不连续），直接优化较困难。</p>
+</li>
+<li><p><strong>平方损失函数 (Quadratic Loss Function)</strong><br>$$L(Y, f(X)) &#x3D; (Y - f(X))^2$$<br><strong>介绍</strong>：最常用于回归问题。其优势是数学性质优良（光滑、可导、凸函数），便于求解。但对异常值比较敏感。</p>
+</li>
+<li><p><strong>绝对损失函数 (Absolute Loss Function)</strong><br>$$L(Y, f(X)) &#x3D; |Y - f(X)|$$<br><strong>介绍</strong>：也用于回归问题。相比平方损失，它对异常值更不敏感，但其在零点处不可导，求解更复杂。</p>
+</li>
+<li><p><strong>对数损失函数 (Logarithmic Loss Function) &#x2F; 交叉熵损失 (Cross-Entropy Loss)</strong><br>$$L(Y, P(Y|X)) &#x3D; -\log P(Y|X)$$<br><strong>介绍</strong>：主要用于分类问题，特别是模型输出为概率的情况（如逻辑回归）。$P(Y|X)$ 是模型预测的正确类别的概率。损失随预测概率的减小而呈指数级增长，极大鼓励模型给出高置信度的正确预测。</p>
+</li>
+</ul>
+<h4 id="2-风险函数-期望损失"><a href="#2-风险函数-期望损失" class="headerlink" title="2.风险函数  &#x2F; 期望损失"></a>2.风险函数  &#x2F; 期望损失</h4><p>期望风险函数 $R_{exp}(f)$ 衡量模型 $f(X)$ <strong>期望意义上的平均损失</strong>，是理论上最优模型的选择标准。<br>$$R_{exp}(f) &#x3D; E_p[L(Y, f(X))] &#x3D; \int_{\mathcal{X}\times\mathcal{Y}} L(y, f(x)) P(x, y)  dxdy$$<br><strong>介绍</strong>：我们的终极目标是最小化期望风险。然而，联合分布 $P(X, Y)$ 是未知的，因此 $R_{exp}(f)$ 无法直接计算。</p>
+<h5 id="经验风险、-经验损失"><a href="#经验风险、-经验损失" class="headerlink" title="**经验风险、 经验损失 **"></a>**经验风险、 经验损失 **</h5><p>给定一个训练数据集，经验风险 $R_{emp}(f)$ 是模型在<strong>训练集上</strong>的平均损失。<br>$$R_{emp}(f) &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^{N} L(y_i, f(x_i))$$<br><strong>介绍</strong>：根据<strong>大数定律 (Law of Large Numbers)</strong>，当样本容量 $N$ 趋于无穷时，经验风险会无限接近于期望风险。因此，一个很自然的想法就是使用<strong>经验风险</strong>来估计<strong>期望风险</strong>。</p>
+<h5 id="经验风险最小化-Empirical-Risk-Minimization-ERM"><a href="#经验风险最小化-Empirical-Risk-Minimization-ERM" class="headerlink" title="经验风险最小化 (Empirical Risk Minimization, ERM)"></a><strong>经验风险最小化 (Empirical Risk Minimization, ERM)</strong></h5><p>$$\min_{f \in \mathcal{F}} \frac{1}{N} \sum_{i&#x3D;1}^{N} L(y_i, f(x_i))$$<br><strong>介绍</strong>：当样本量足够大时，ERM 非常有效。例如，<strong>极大似然估计 (Maximum Likelihood Estimation, MLE)</strong> 就是 ERM 的一个例子（当模型是条件概率分布，损失函数是对数损失时）。但当样本容量较小时，ERM 容易导致<strong>过拟合 (Overfitting)</strong>，即模型在训练集上表现很好，但在未知数据上表现很差。</p>
+<p><strong>结构风险最小化 **<br>为了防止过拟合，SRM 在 ERM 的基础上增加了</strong>正则化项 (Regularizer)** 或<strong>罚项 (Penalty term)</strong>，用于衡量模型的复杂度。<br>$$\min_{f \in \mathcal{F}} \frac{1}{N} \sum_{i&#x3D;1}^{N} L(y_i, f(x_i)) + \lambda J(f)$$<br>其中 $J(f)$ 是模型复杂度，$\lambda \geq 0$ 是权衡经验风险与模型复杂度的系数。<br><strong>介绍</strong>：SRM 要求同时最小化经验风险和模型复杂度，从而寻找一个简单且预测精度高的模型，这符合<strong>奥卡姆剃刀原理</strong>。这等价于<strong>最大后验概率估计 (Maximum A Posteriori Estimation, MAP)</strong>。正则化项如 L1 范数（Lasso）、L2 范数（Ridge）都是常见的 $J(f)$。</p>
+<hr>
+<h3 id="二。模型评估与选择"><a href="#二。模型评估与选择" class="headerlink" title="二。模型评估与选择"></a>二。模型评估与选择</h3><p>模型训练的最终目的是为了很好的预测未知数据。因此需要一个<strong>测试集 (Test Set)</strong> 来模拟未知数据，以评估模型的<strong>泛化能力 (Generalization Ability)</strong>。</p>
+<p>交叉验证 (Cross-Validation)</p>
+<p>基本思想是重复使用数据：将数据切分，一部分作为训练集，另一部分作为验证集，来回交替训练和测试。</p>
+<ul>
+<li><strong>简单交叉验证</strong>：随机将数据分为训练集（如70%）和验证集（如30%），用训练集训练模型，用验证集评估测试误差。此过程重复多次，取误差平均值。</li>
+<li><strong>S折交叉验证 (S-Fold Cross-Validation)</strong>：<ol>
+<li>随机将数据切分为 $S$ 个互不相交、大小相同的子集。</li>
+<li>每次用 $S-1$ 个子集的数据训练模型，剩下的1个子集做验证。</li>
+<li>重复 $S$ 次，确保每个子集都被用作一次验证集。</li>
+<li>对 $S$ 次评估结果取平均。<br>（最常见的是10折交叉验证）</li>
+</ol>
+</li>
+<li><strong>留一交叉验证 (Leave-One-Out Cross-Validation, LOOCV)</strong>：是 $S$ 折交叉验证的特例，此时 $S &#x3D; N$（$N$ 为样本总量）。即每次只留下一个样本做验证，用其余所有样本训练。结果评估非常准确，但计算成本极高。</li>
+</ul>
+<hr>
+<h3 id="三。监督学习方法：生成模型与判别模型"><a href="#三。监督学习方法：生成模型与判别模型" class="headerlink" title="三。监督学习方法：生成模型与判别模型"></a>三。监督学习方法：生成模型与判别模型</h3><ul>
+<li><p><strong>生成模型 (Generative Model)</strong></p>
+<ul>
+<li><strong>本质</strong>：首先学习联合概率分布 $P(X, Y)$，然后通过贝叶斯定理求出条件概率分布 $P(Y|X)$ 作为预测模型。</li>
+<li><strong>公式</strong>：$P(Y|X) &#x3D; \frac{P(X, Y)}{P(X)} &#x3D; \frac{P(X|Y)P(Y)}{P(X)}$</li>
+<li><strong>例子</strong>：朴素贝叶斯、隐马尔可夫模型。</li>
+<li><strong>特点</strong>：可以还原出联合分布，能处理隐变量问题。</li>
+</ul>
+</li>
+<li><p><strong>判别模型 (Discriminative Model)</strong></p>
+<ul>
+<li><strong>本质</strong>：直接学习决策函数 $f(X)$ 或条件概率分布 $P(Y|X)$。</li>
+<li><strong>公式</strong>：直接对 $P(Y|X)$ 建模或学习 $Y \rightarrow f(X)$ 的映射。</li>
+<li><strong>例子</strong>：k近邻、感知机、逻辑回归、决策树、支持向量机。</li>
+<li><strong>特点</strong>：准确率通常更高，且学习过程更简单直接。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="1-分类问题"><a href="#1-分类问题" class="headerlink" title="1. 分类问题"></a>1. 分类问题</h4><p>对于二分类问题，模型的预测结果和真实标签可以组成一个<strong>混淆矩阵 (Confusion Matrix)</strong>：</p>
+<table>
+<thead>
+<tr>
+<th align="left"></th>
+<th align="left">真实为正例 (Positive)</th>
+<th align="left">真实为负例 (Negative)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>预测为正例</strong></td>
+<td align="left">真正例 (True Positive, <strong>TP</strong>)</td>
+<td align="left">假正例 (False Positive, <strong>FP</strong>)</td>
+</tr>
+<tr>
+<td align="left"><strong>预测为负例</strong></td>
+<td align="left">假负例 (False Negative, <strong>FN</strong>)</td>
+<td align="left">真负例 (True Negative, <strong>TN</strong>)</td>
+</tr>
+</tbody></table>
+<p>基于此矩阵，可以定义多个评估指标：</p>
+<ul>
+<li><p><strong>精确率 (Precision)</strong> - <strong>查准率</strong>：预测为正例的样本中，有多少是真的正例。<br>$$P &#x3D; \frac{TP}{TP + FP}$$</p>
+</li>
+<li><p><strong>召回率 (Recall)</strong> - <strong>查全率</strong>：真正的正例中，有多少被模型找了出来。<br>$$R &#x3D; \frac{TP}{TP + FN}$$</p>
+</li>
+<li><p><strong>F1值 (F1-Score)</strong>：精确率和召回率的调和平均。调和平均更重视较小值，因此P和R必须都高，F1才会高。<br>$$\frac{2}{F1} &#x3D; \frac{1}{P} + \frac{1}{R} \quad \Rightarrow \quad F1 &#x3D; \frac{2TP}{2TP + FP + FN} &#x3D; \frac{2 \cdot P \cdot R}{P + R}$$</p>
+</li>
+</ul>
+<p><strong>P-R曲线</strong>下的面积和<strong>ROC曲线</strong>下的面积（AUC）也是综合衡量分类器性能的重要工具。</p>
+<h4 id="2-标注问题"><a href="#2-标注问题" class="headerlink" title="2. 标注问题"></a>2. 标注问题</h4><p>可以看作是更复杂的分类问题。输入序列预测对应的输出序列。例如，<strong>词性标注 (POS Tagging)</strong>、<strong>命名实体识别 (NER)</strong>。常用的模型有隐马尔可夫模型 (HMM)、条件随机场 (CRF) 等。</p>
+<h4 id="3-回归问题"><a href="#3-回归问题" class="headerlink" title="3. 回归问题"></a>3. 回归问题</h4><p>输出是连续值。其学习的本质是学习一个从输入 $X$ 到输出 $Y$ 的映射函数。评估回归模型性能最常用的指标是<strong>均方误差 (Mean Squared Error, MSE)</strong>，它直接对应于平方损失函数的经验风险。<br>$$MSE &#x3D; \frac{1}{N} \sum_{i&#x3D;1}^{N} (y_i - f(x_i))^2$$</p>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" style="color: #00bcd4">统计学</a>
+        </span>
+        
+    </div>
+    <a href="/2025/09/18/%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E5%8F%8A%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0%E6%A6%82%E8%AE%BA/" class="go-post">阅读全文</a>
 </div>
 
 <div class="post">
@@ -630,7 +1242,7 @@ print(df_results)
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00a596">机器学习</a>
         </span>
         
     </div>
@@ -1004,7 +1616,7 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00a596">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">机器学习</a>
         </span>
         
     </div>
@@ -1389,7 +2001,7 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #03a9f4">机器学习</a>
         </span>
         
     </div>
@@ -1836,7 +2448,7 @@ submission.to_csv(&quot;/kaggle/working/submission.csv&quot;, index=False)
         
         <span class="tag">
             
-            <a href="/tags/Kaggle/" style="color: #00a596">Kaggle</a>
+            <a href="/tags/Kaggle/" style="color: #ffa2c4">Kaggle</a>
         </span>
         
     </div>
@@ -1977,1712 +2589,11 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/pandas/" style="color: #ff7d73">pandas</a>
+            <a href="/tags/pandas/" style="color: #03a9f4">pandas</a>
         </span>
         
     </div>
     <a href="/2022/08/30/pandas/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2022/05/26/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%95/">
-        <h2 class="post-title">Leetcode sql题目记录</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/Leetcode/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                Leetcode
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2022/5/26
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="Leetcode-sql题目记录"><a href="#Leetcode-sql题目记录" class="headerlink" title="Leetcode  sql题目记录"></a>Leetcode  sql题目记录</h2><p>本博客仅记录**高频 SQL 50 题（基础版）**中的中等难度题目，后续不定期更新</p>
-<h3 id="570-至少有5名直接下属的经理"><a href="#570-至少有5名直接下属的经理" class="headerlink" title="570. 至少有5名直接下属的经理"></a>570. 至少有5名直接下属的经理</h3><p>表: <code>Employee</code></p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| id          | int     |
-| name        | varchar |
-| department  | varchar |
-| managerId   | int     |
-+-------------+---------+
-id 是此表的主键（具有唯一值的列）。
-该表的每一行表示雇员的名字、他们的部门和他们的经理的id。
-如果managerId为空，则该员工没有经理。
-没有员工会成为自己的管理者。
-</code></pre>
-<p>编写一个解决方案，找出至少有<strong>五个直接下属</strong>的经理。</p>
-<p>以 <strong>任意顺序</strong> 返回结果表。</p>
-<p>查询结果格式如下所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入: 
-Employee 表:
-+-----+-------+------------+-----------+
-| id  | name  | department | managerId |
-+-----+-------+------------+-----------+
-| 101 | John  | A          | Null      |
-| 102 | Dan   | A          | 101       |
-| 103 | James | A          | 101       |
-| 104 | Amy   | A          | 101       |
-| 105 | Anne  | A          | 101       |
-| 106 | Ron   | B          | 101       |
-+-----+-------+------------+-----------+
-输出: 
-+------+
-| name |
-+------+
-| John |
-+------+
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">select a.name from Employee a join Employee b on a.id = b.managerId group by a.id having count(*) &gt;= 5;
-</code></pre>
-<p>没有 <code>GROUP BY</code><br> <code>HAVING</code> 是对<strong>分组后的结果</strong>过滤的。你没分组时，MySQL把整张结果集当成<strong>一个大组</strong>，<code>COUNT(a.id)</code> 统计的是<strong>所有经理–下属配对的总行数</strong>，不是“每个经理的下属数”。因此当测试数据里只有一个经理且刚好有 5 个下属时看起来“正确”，但只要有两个经理，合计行数 ≥5，你这句就会把两位经理都放进结果里，甚至还会重复多行。</p>
-<hr>
-<h3 id="1934-确认率"><a href="#1934-确认率" class="headerlink" title="1934. 确认率"></a>1934. 确认率</h3><p>表: <code>Signups</code></p>
-<pre><code>+----------------+----------+
-| Column Name    | Type     |
-+----------------+----------+
-| user_id        | int      |
-| time_stamp     | datetime |
-+----------------+----------+
-User_id是该表的主键。
-每一行都包含ID为user_id的用户的注册时间信息。
-</code></pre>
-<p>表: <code>Confirmations</code></p>
-<pre><code>+----------------+----------+
-| Column Name    | Type     |
-+----------------+----------+
-| user_id        | int      |
-| time_stamp     | datetime |
-| action         | ENUM     |
-+----------------+----------+
-(user_id, time_stamp)是该表的主键。
-user_id是一个引用到注册表的外键。
-action是类型为(&#39;confirmed&#39;， &#39;timeout&#39;)的ENUM
-该表的每一行都表示ID为user_id的用户在time_stamp请求了一条确认消息，该确认消息要么被确认(&#39;confirmed&#39;)，要么被过期(&#39;timeout&#39;)。
-</code></pre>
-<p>用户的 <strong>确认率</strong> 是 <code>&#39;confirmed&#39;</code> 消息的数量除以请求的确认消息的总数。没有请求任何确认消息的用户的确认率为 <code>0</code> 。确认率四舍五入到 <strong>小数点后两位</strong> 。</p>
-<p>编写一个SQL查询来查找每个用户的 确认率 。</p>
-<p>以 任意顺序 返回结果表。</p>
-<p>查询结果格式如下所示。</p>
-<p><strong>示例1:</strong></p>
-<pre><code>输入：
-Signups 表:
-+---------+---------------------+
-| user_id | time_stamp          |
-+---------+---------------------+
-| 3       | 2020-03-21 10:16:13 |
-| 7       | 2020-01-04 13:57:59 |
-| 2       | 2020-07-29 23:09:44 |
-| 6       | 2020-12-09 10:39:37 |
-+---------+---------------------+
-Confirmations 表:
-+---------+---------------------+-----------+
-| user_id | time_stamp          | action    |
-+---------+---------------------+-----------+
-| 3       | 2021-01-06 03:30:46 | timeout   |
-| 3       | 2021-07-14 14:00:00 | timeout   |
-| 7       | 2021-06-12 11:57:29 | confirmed |
-| 7       | 2021-06-13 12:58:28 | confirmed |
-| 7       | 2021-06-14 13:59:27 | confirmed |
-| 2       | 2021-01-22 00:00:00 | confirmed |
-| 2       | 2021-02-28 23:59:59 | timeout   |
-+---------+---------------------+-----------+
-输出: 
-+---------+-------------------+
-| user_id | confirmation_rate |
-+---------+-------------------+
-| 6       | 0.00              |
-| 3       | 0.00              |
-| 7       | 1.00              |
-| 2       | 0.50              |
-+---------+-------------------+
-解释:
-用户 6 没有请求任何确认消息。确认率为 0。
-用户 3 进行了 2 次请求，都超时了。确认率为 0。
-用户 7 提出了 3 个请求，所有请求都得到了确认。确认率为 1。
-用户 2 做了 2 个请求，其中一个被确认，另一个超时。确认率为 1 / 2 = 0.5。
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">WITH base AS (
-  SELECT 
-    user_id,
-    COUNT(*) AS total,
-    SUM(CASE WHEN action = &#39;confirmed&#39; THEN 1 ELSE 0 END) AS confirmed
-  FROM Confirmations
-  GROUP BY user_id
-)
-SELECT 
-  s.user_id,
-  ROUND(IFNULL(b.confirmed / b.total, 0), 2) AS confirmation_rate
-FROM Signups s
-LEFT JOIN base b
-  ON s.user_id = b.user_id;
-</code></pre>
-<hr>
-<h3 id="1193-每月交易I"><a href="#1193-每月交易I" class="headerlink" title="1193. 每月交易I"></a>1193. 每月交易I</h3><p>表：<code>Transactions</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| id            | int     |
-| country       | varchar |
-| state         | enum    |
-| amount        | int     |
-| trans_date    | date    |
-+---------------+---------+
-id 是这个表的主键。
-该表包含有关传入事务的信息。
-state 列类型为 [&quot;approved&quot;, &quot;declined&quot;] 之一。
-</code></pre>
-<p>编写一个 sql 查询来查找每个月和每个国家&#x2F;地区的事务数及其总金额、已批准的事务数及其总金额。</p>
-<p>以 <strong>任意顺序</strong> 返回结果表。</p>
-<p>查询结果格式如下所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Transactions table:
-+------+---------+----------+--------+------------+
-| id   | country | state    | amount | trans_date |
-+------+---------+----------+--------+------------+
-| 121  | US      | approved | 1000   | 2018-12-18 |
-| 122  | US      | declined | 2000   | 2018-12-19 |
-| 123  | US      | approved | 2000   | 2019-01-01 |
-| 124  | DE      | approved | 2000   | 2019-01-07 |
-+------+---------+----------+--------+------------+
-输出：
-+----------+---------+-------------+----------------+--------------------+-----------------------+
-| month    | country | trans_count | approved_count | trans_total_amount | approved_total_amount |
-+----------+---------+-------------+----------------+--------------------+-----------------------+
-| 2018-12  | US      | 2           | 1              | 3000               | 1000                  |
-| 2019-01  | US      | 1           | 1              | 2000               | 2000                  |
-| 2019-01  | DE      | 1           | 1              | 2000               | 2000                  |
-+----------+---------+-------------+----------------+--------------------+-----------------------+
-</code></pre>
-<p>解答：</p>
-<p>多个 CTE 用 <code>WITH a AS (...), b AS (...)</code>。</p>
-<p>按 <code>month、country</code> 分组；<code>approved</code> 相关用 <code>CASE WHEN</code> 计数&#x2F;求和。</p>
-<p>取月份用 <code>DATE_FORMAT(trans_date, &#39;%Y-%m&#39;)</code> 更稳妥。</p>
-<p><strong>DATE_FORMAT(…, ‘%y-%m’)：结果是20-02，若是’%Y-%m，结果是2020-02，若是’%Y-%M，结果是2020-Febrary’</strong></p>
-<pre><code class="language-sql">WITH base AS (
-  SELECT
-    DATE_FORMAT(trans_date, &#39;%Y-%m&#39;) AS month,
-    country,
-    state,
-    amount
-  FROM Transactions
-),
-seq AS (
-  SELECT
-    month,
-    country,
-    COUNT(*) AS trans_count,
-    SUM(CASE WHEN state = &#39;approved&#39; THEN 1 ELSE 0 END) AS approved_count,
-    SUM(amount) AS trans_total_amount,
-    SUM(CASE WHEN state = &#39;approved&#39; THEN amount ELSE 0 END) AS approved_total_amount
-  FROM base
-  GROUP BY month, country
-)
-SELECT *
-FROM seq;
-</code></pre>
-<hr>
-<h3 id="1174-即时食物配送II"><a href="#1174-即时食物配送II" class="headerlink" title="1174. 即时食物配送II"></a>1174. 即时食物配送II</h3><p>配送表: <code>Delivery</code></p>
-<pre><code>+-----------------------------+---------+
-| Column Name                 | Type    |
-+-----------------------------+---------+
-| delivery_id                 | int     |
-| customer_id                 | int     |
-| order_date                  | date    |
-| customer_pref_delivery_date | date    |
-+-----------------------------+---------+
-delivery_id 是该表中具有唯一值的列。
-该表保存着顾客的食物配送信息，顾客在某个日期下了订单，并指定了一个期望的配送日期（和下单日期相同或者在那之后）。
-</code></pre>
-<p>如果顾客期望的配送日期和下单日期相同，则该订单称为 「<strong>即时订单</strong>」，否则称为「<strong>计划订单</strong>」。</p>
-<p>「<strong>首次订单</strong>」是顾客最早创建的订单。我们保证一个顾客只会有一个「首次订单」。</p>
-<p>编写解决方案以获取即时订单在所有用户的首次订单中的比例。<strong>保留两位小数。</strong></p>
-<p>结果示例如下所示：</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Delivery 表：
-+-------------+-------------+------------+-----------------------------+
-| delivery_id | customer_id | order_date | customer_pref_delivery_date |
-+-------------+-------------+------------+-----------------------------+
-| 1           | 1           | 2019-08-01 | 2019-08-02                  |
-| 2           | 2           | 2019-08-02 | 2019-08-02                  |
-| 3           | 1           | 2019-08-11 | 2019-08-12                  |
-| 4           | 3           | 2019-08-24 | 2019-08-24                  |
-| 5           | 3           | 2019-08-21 | 2019-08-22                  |
-| 6           | 2           | 2019-08-11 | 2019-08-13                  |
-| 7           | 4           | 2019-08-09 | 2019-08-09                  |
-+-------------+-------------+------------+-----------------------------+
-输出：
-+----------------------+
-| immediate_percentage |
-+----------------------+
-| 50.00                |
-+----------------------+
-解释：
-1 号顾客的 1 号订单是首次订单，并且是计划订单。
-2 号顾客的 2 号订单是首次订单，并且是即时订单。
-3 号顾客的 5 号订单是首次订单，并且是计划订单。
-4 号顾客的 7 号订单是首次订单，并且是即时订单。
-因此，一半顾客的首次订单是即时的。
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">with base as (
-select *, row_number() over(partition by customer_id order by order_date) as rn 
-from Delivery),
-seq as (
-    select round((sum(case when customer_pref_delivery_date = order_date then 1 else 0 end) / count(*)) * 100, 2) as immediate_percentage from base where rn = 1
-)
-select * from seq;
-</code></pre>
-<hr>
-<h3 id="176-第二高的薪水"><a href="#176-第二高的薪水" class="headerlink" title="176. 第二高的薪水"></a>176. 第二高的薪水</h3><p><code>Employee</code> 表：</p>
-<pre><code>+-------------+------+
-| Column Name | Type |
-+-------------+------+
-| id          | int  |
-| salary      | int  |
-+-------------+------+
-id 是这个表的主键。
-表的每一行包含员工的工资信息。
-</code></pre>
-<p>查询并返回 <code>Employee</code> 表中第二高的 <strong>不同</strong> 薪水 。如果不存在第二高的薪水，查询应该返回 <code>null(Pandas 则返回 None)</code> 。</p>
-<p>查询结果如下例所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Employee 表：
-+----+--------+
-| id | salary |
-+----+--------+
-| 1  | 100    |
-| 2  | 200    |
-| 3  | 300    |
-+----+--------+
-输出：
-+---------------------+
-| SecondHighestSalary |
-+---------------------+
-| 200                 |
-+---------------------+
-</code></pre>
-<p><strong>示例 2：</strong></p>
-<pre><code>输入：
-Employee 表：
-+----+--------+
-| id | salary |
-+----+--------+
-| 1  | 100    |
-+----+--------+
-输出：
-+---------------------+
-| SecondHighestSalary |
-+---------------------+
-| null                |
-+---------------------+
-</code></pre>
-<p>解答</p>
-<pre><code class="language-sql">SELECT MAX(salary) AS SecondHighestSalary
-FROM (
-  SELECT DISTINCT salary,
-         DENSE_RANK() OVER (ORDER BY salary DESC) AS rk
-  FROM Employee
-) t
-WHERE rk = 2;
-</code></pre>
-<h4 id="（1）-子查询为空但外层用了聚合函数"><a href="#（1）-子查询为空但外层用了聚合函数" class="headerlink" title="（1） 子查询为空但外层用了聚合函数"></a>（1） 子查询为空但外层用了聚合函数</h4><p>SQL 的定义是：聚合函数对空输入时，返回 <strong>NULL</strong>。<br> 例子：</p>
-<pre><code class="language-sql">SELECT MAX(salary) FROM (SELECT 1 AS salary WHERE 1=0) t;
-</code></pre>
-<p><code>(SELECT 1 WHERE 1=0)</code> 为空表 → <code>MAX</code> 没有任何值可比较 → 返回 <code>NULL</code>。</p>
-<p>所以这就是为什么“第二高薪水不存在”时 <code>MAX</code> 可以帮我们自动返回 <code>NULL</code>。</p>
-<hr>
-<h4 id="（2）子查询为空而外层没有聚合函数"><a href="#（2）子查询为空而外层没有聚合函数" class="headerlink" title="（2）子查询为空而外层没有聚合函数"></a>（2）子查询为空而外层没有聚合函数</h4><p>如果你直接：</p>
-<pre><code class="language-sql">SELECT salary 
-FROM (SELECT salary WHERE 1=0) t;
-</code></pre>
-<p>那结果就是 <strong>0 行</strong>（即直接返回空结果集，不会自动给你一行 <code>NULL</code>）。</p>
-<hr>
-<h3 id="550-游戏玩法分析IV"><a href="#550-游戏玩法分析IV" class="headerlink" title="550. 游戏玩法分析IV"></a>550. 游戏玩法分析IV</h3><p>Table: <code>Activity</code></p>
-<pre><code>+--------------+---------+
-| Column Name  | Type    |
-+--------------+---------+
-| player_id    | int     |
-| device_id    | int     |
-| event_date   | date    |
-| games_played | int     |
-+--------------+---------+
-（player_id，event_date）是此表的主键（具有唯一值的列的组合）。
-这张表显示了某些游戏的玩家的活动情况。
-每一行是一个玩家的记录，他在某一天使用某个设备注销之前登录并玩了很多游戏（可能是 0）。
-</code></pre>
-<p>编写解决方案，报告在首次登录的第二天再次登录的玩家的 <strong>比率</strong>，<strong>四舍五入到小数点后两位</strong>。换句话说，你需要计算从首次登录后的第二天登录的玩家数量，并将其除以总玩家数。</p>
-<p>结果格式如下所示：</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Activity table:
-+-----------+-----------+------------+--------------+
-| player_id | device_id | event_date | games_played |
-+-----------+-----------+------------+--------------+
-| 1         | 2         | 2016-03-01 | 5            |
-| 1         | 2         | 2016-03-02 | 6            |
-| 2         | 3         | 2017-06-25 | 1            |
-| 3         | 1         | 2016-03-02 | 0            |
-| 3         | 4         | 2018-07-03 | 5            |
-+-----------+-----------+------------+--------------+
-输出：
-+-----------+
-| fraction  |
-+-----------+
-| 0.33      |
-+-----------+
-解释：
-只有 ID 为 1 的玩家在第一天登录后才重新登录，所以答案是 1/3 = 0.33
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql"># Write your MySQL query statement below
-with base as(
-    select *,min(event_date) over(partition by player_id)as first from Activity
-),
-seq as(
-    select player_id, sum(case when datediff(event_date, first) = 1 then 1 else 0 end) as rn from base
-    group by player_id
-)
-select round(IFNULL((sum(rn) / count(distinct player_id)), 0), 2) as fraction from seq;
-</code></pre>
-<p>注意：</p>
-<ol>
-<li>在使用with base as(), seq as() select from seq时，要记得每个嵌套内部的select很重要，前一个select需要包含后一个select的内容。</li>
-<li>使用聚合函数min,max,count后结果会被压缩，如果后续要同行对最大、最小进行比较，要使用窗口函数形式的max,min…</li>
-</ol>
-<hr>
-<h3 id="1045-买下所有产品的客户"><a href="#1045-买下所有产品的客户" class="headerlink" title="1045. 买下所有产品的客户"></a>1045. 买下所有产品的客户</h3><p><code>Customer</code> 表：</p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| customer_id | int     |
-| product_key | int     |
-+-------------+---------+
-该表可能包含重复的行。
-customer_id 不为 NULL。
-product_key 是 Product 表的外键(reference 列)。
-</code></pre>
-<p><code>Product</code> 表：</p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| product_key | int     |
-+-------------+---------+
-product_key 是这张表的主键（具有唯一值的列）。
-</code></pre>
-<p>编写解决方案，报告 <code>Customer</code> 表中购买了 <code>Product</code> 表中所有产品的客户的 id。</p>
-<p>返回结果表 <strong>无顺序要求</strong> 。</p>
-<p>返回结果格式如下所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Customer 表：
-+-------------+-------------+
-| customer_id | product_key |
-+-------------+-------------+
-| 1           | 5           |
-| 2           | 6           |
-| 3           | 5           |
-| 3           | 6           |
-| 1           | 6           |
-+-------------+-------------+
-Product 表：
-+-------------+
-| product_key |
-+-------------+
-| 5           |
-| 6           |
-+-------------+
-输出：
-+-------------+
-| customer_id |
-+-------------+
-| 1           |
-| 3           |
-+-------------+
-解释：
-购买了所有产品（5 和 6）的客户的 id 是 1 和 3 。
-</code></pre>
-<p>解答：</p>
-<ol>
-<li><strong><code>WHERE DISTINCT</code> 是非法语法</strong>。<code>DISTINCT</code> 只能放在 <code>SELECT</code> 或 <code>COUNT(DISTINCT ...)</code> 里面，不能直接放在 <code>WHERE</code>。</li>
-<li>题目要求的是“买了所有产品的顾客”，所以应该比较顾客买到的 <strong>去重后产品数</strong> 和 <strong>Product 表里的产品总数</strong>。</li>
-</ol>
-<pre><code class="language-sql">SELECT customer_id
-FROM Customer
-GROUP BY customer_id
-HAVING COUNT(DISTINCT product_key) = (
-    SELECT COUNT(*) FROM Product
-);
-</code></pre>
-<p>解释一下：</p>
-<ul>
-<li><code>GROUP BY customer_id</code>：按顾客分组。</li>
-<li><code>COUNT(DISTINCT product_key)</code>：统计该顾客买了多少种不同的产品。</li>
-<li>子查询 <code>(SELECT COUNT(*) FROM Product)</code>：统计总共有多少种产品。</li>
-<li><code>HAVING ... = ...</code>：筛选出买全所有产品的顾客。</li>
-</ul>
-<hr>
-<h3 id="180-连续出现的数字"><a href="#180-连续出现的数字" class="headerlink" title="180. 连续出现的数字"></a>180. 连续出现的数字</h3><p>表：<code>Logs</code></p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| id          | int     |
-| num         | varchar |
-+-------------+---------+
-在 SQL 中，id 是该表的主键。
-id 是一个自增列。
-</code></pre>
-<p>找出所有至少连续出现三次的数字。</p>
-<p>返回的结果表中的数据可以按 <strong>任意顺序</strong> 排列。</p>
-<p>结果格式如下面的例子所示：</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Logs 表：
-+----+-----+
-| id | num |
-+----+-----+
-| 1  | 1   |
-| 2  | 1   |
-| 3  | 1   |
-| 4  | 2   |
-| 5  | 1   |
-| 6  | 2   |
-| 7  | 2   |
-+----+-----+
-输出：
-Result 表：
-+-----------------+
-| ConsecutiveNums |
-+-----------------+
-| 1               |
-+-----------------+
-解释：1 是唯一连续出现至少三次的数字。
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">with base as(
-    select *, row_number() over(partition by num order by id) as rn from Logs
-),
-seq as(
-    select *, id - rn as diff from base 
-),
-rpq as (
-    select num, count(*) as ct from seq group by num, diff having count(*) &gt;= 3
-)
-select distinct num as ConsecutiveNums from rpq;
-</code></pre>
-<p><strong>有时候不要忘记distinct</strong></p>
-<hr>
-<h3 id="1164-指定日期的产品价格"><a href="#1164-指定日期的产品价格" class="headerlink" title="1164. 指定日期的产品价格"></a>1164. 指定日期的产品价格</h3><p>产品数据表: <code>Products</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| product_id    | int     |
-| new_price     | int     |
-| change_date   | date    |
-+---------------+---------+
-(product_id, change_date) 是此表的主键（具有唯一值的列组合）。
-这张表的每一行分别记录了 某产品 在某个日期 更改后 的新价格。
-</code></pre>
-<p>一开始，所有产品价格都为 10。</p>
-<p>编写一个解决方案，找出在 <code>2019-08-16</code> 所有产品的价格。</p>
-<p>以 <strong>任意顺序</strong> 返回结果表。</p>
-<p>结果格式如下例所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Products 表:
-+------------+-----------+-------------+
-| product_id | new_price | change_date |
-+------------+-----------+-------------+
-| 1          | 20        | 2019-08-14  |
-| 2          | 50        | 2019-08-14  |
-| 1          | 30        | 2019-08-15  |
-| 1          | 35        | 2019-08-16  |
-| 2          | 65        | 2019-08-17  |
-| 3          | 20        | 2019-08-18  |
-+------------+-----------+-------------+
-输出：
-+------------+-------+
-| product_id | price |
-+------------+-------+
-| 2          | 50    |
-| 1          | 35    |
-| 3          | 10    |
-+------------+-------+
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">with base as(
-    select *, row_number()over (partition by product_id order by change_date DESC) as rn from Products where change_date &lt;= &#39;2019-08-16&#39;
-),
-seq as (
-    select product_id, new_price as price from base where rn = 1
-)
-select product_id, price from seq union all select distinct product_id, 10 as price from (
-    select product_id, min(change_date) as mi from Products group by product_id
-)t  where mi &gt; &#39;2019-08-16&#39;;
-</code></pre>
-<p>归纳：<br>想要得到某一列的最大最小值，并用其与某个数进行比较，需要先max、min（窗口或者聚合函数），然后再等值查询，或者rownumber配合ASC、DESC，然后再后续查询中使用rn&#x3D;1，或者直接使用order by+limit</p>
-<h4 id="（1）非相关子查询-等值比较"><a href="#（1）非相关子查询-等值比较" class="headerlink" title="（1）非相关子查询 + 等值比较"></a>（1）非相关子查询 + 等值比较</h4><p><strong>使用场景</strong>：<strong>全局只有一个最值</strong>（整个表的最大值&#x2F;最小值），不依赖分组。</p>
-<ul>
-<li>特点：子查询返回单行，可以直接用 <code>=</code> 比较。</li>
-<li>示例：找出工资最高的员工</li>
-</ul>
-<pre><code class="language-sql">select *
-from Employee
-where salary = (select max(salary) from Employee);
-</code></pre>
-<hr>
-<h4 id="（2）相关子查询"><a href="#（2）相关子查询" class="headerlink" title="（2）相关子查询"></a>（2）相关子查询</h4><p><strong>使用场景</strong>：<strong>分组后的最值</strong>（每个客户&#x2F;部门的最小&#x2F;最大日期），外层表的条件依赖子查询。</p>
-<ul>
-<li>特点：子查询里需要引用外层的列，每行执行一次，保证返回单行。</li>
-<li>示例：找每个客户的首单</li>
-</ul>
-<pre><code class="language-sql">select *
-from Delivery d1
-where order_date = (
-  select min(order_date)
-  from Delivery d2
-  where d2.customer_id = d1.customer_id
-);
-</code></pre>
-<p>这里子查询里的 <code>d2.customer_id = d1.customer_id</code> 绑定了外层查询的 <code>d1.customer_id</code>。</p>
-<p>每次外层取一行，子查询就只计算该客户的最小订单日期。</p>
-<p>也可以写成这种形式：</p>
-<pre><code class="language-sql">select *
-from (
-  select customer_id, min(order_date)
-  from Delivery 
-  group by customer_id
-)t ;
-</code></pre>
-<hr>
-<h4 id="（3）窗口函数-条件筛选"><a href="#（3）窗口函数-条件筛选" class="headerlink" title="（3）窗口函数 + 条件筛选"></a>（3）窗口函数 + 条件筛选</h4><p><strong>使用场景</strong>：数据库支持窗口函数（MySQL 8+ &#x2F; PostgreSQL &#x2F; Oracle &#x2F; SQL Server），<strong>需要按组取前几名&#x2F;最值。</strong></p>
-<p>也可以使用max、min的窗口函数形式来获取每个组别的最值</p>
-<ul>
-<li>特点：写法简洁，可同时保留分组内排序信息。</li>
-<li>示例：找每个客户的首单</li>
-</ul>
-<pre><code class="language-sql">with t as (
-  select *,
-         row_number() over(partition by customer_id order by order_date) as rn
-  from Delivery
-)
-select *
-from t
-where rn = 1;
-</code></pre>
-<ul>
-<li>如果要处理并列情况，可以用 <code>rank()</code> 或 <code>dense_rank()</code>。</li>
-</ul>
-<hr>
-<h4 id="（4）ORDER-BY-LIMIT"><a href="#（4）ORDER-BY-LIMIT" class="headerlink" title="（4）ORDER BY + LIMIT"></a>（4）ORDER BY + LIMIT</h4><p><strong>使用场景</strong>：<strong>只需要全表范围内的最值</strong>，且只取前 N 条（不分组）。</p>
-<ul>
-<li>特点：简单高效，但无法直接应对「每组最值」问题。</li>
-<li>示例：找工资最高的员工（Top 1）</li>
-</ul>
-<pre><code class="language-sql">select *
-from Employee
-order by salary desc
-limit 1;
-</code></pre>
-<ul>
-<li>如果需要每组最值，就不适合，只能配合窗口函数或子查询。</li>
-</ul>
-<hr>
-<h4 id="对比总结"><a href="#对比总结" class="headerlink" title="对比总结"></a>对比总结</h4><table>
-<thead>
-<tr>
-<th>方法</th>
-<th>适用场景</th>
-<th>优点</th>
-<th>局限</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>非相关子查询</strong></td>
-<td>全表唯一最值</td>
-<td>简单</td>
-<td>只能处理单个全局最值</td>
-</tr>
-<tr>
-<td><strong>相关子查询</strong></td>
-<td>每组最值（需要依赖外层条件）</td>
-<td>通用，不要求窗口函数</td>
-<td>子查询多次执行，性能较差</td>
-</tr>
-<tr>
-<td><strong>窗口函数</strong></td>
-<td>每组最值&#x2F;前 N 个</td>
-<td>高效简洁，现代 SQL 推荐</td>
-<td>需要数据库支持窗口函数</td>
-</tr>
-<tr>
-<td><strong>ORDER BY + LIMIT</strong></td>
-<td>全表前 N 个</td>
-<td>简洁高效</td>
-<td>不能分组，只能处理全局最值</td>
-</tr>
-</tbody></table>
-<hr>
-<p>👉 快速记忆：</p>
-<ul>
-<li><strong>全局最值</strong> → 非相关子查询 或 <code>order by + limit</code></li>
-<li><strong>分组最值</strong> → 相关子查询 或 窗口函数</li>
-<li><strong>要前 N 名&#x2F;并列情况</strong> → 窗口函数最佳</li>
-</ul>
-<hr>
-<h3 id="1204-最后一个能进入巴士的人"><a href="#1204-最后一个能进入巴士的人" class="headerlink" title="1204.最后一个能进入巴士的人"></a>1204.最后一个能进入巴士的人</h3><p>表: <code>Queue</code></p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| person_id   | int     |
-| person_name | varchar |
-| weight      | int     |
-| turn        | int     |
-+-------------+---------+
-person_id 是这个表具有唯一值的列。
-该表展示了所有候车乘客的信息。
-表中 person_id 和 turn 列将包含从 1 到 n 的所有数字，其中 n 是表中的行数。
-turn 决定了候车乘客上巴士的顺序，其中 turn=1 表示第一个上巴士，turn=n 表示最后一个上巴士。
-weight 表示候车乘客的体重，以千克为单位。
-</code></pre>
-<p>有一队乘客在等着上巴士。然而，巴士有<code>1000</code> <strong>千克</strong> 的重量限制，所以其中一部分乘客可能无法上巴士。</p>
-<p>编写解决方案找出 <strong>最后一个</strong> 上巴士且不超过重量限制的乘客，并报告 <code>person_name</code> 。题目测试用例确保顺位第一的人可以上巴士且不会超重。</p>
-<p>返回结果格式如下所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Queue 表
-+-----------+-------------+--------+------+
-| person_id | person_name | weight | turn |
-+-----------+-------------+--------+------+
-| 5         | Alice       | 250    | 1    |
-| 4         | Bob         | 175    | 5    |
-| 3         | Alex        | 350    | 2    |
-| 6         | John Cena   | 400    | 3    |
-| 1         | Winston     | 500    | 6    |
-| 2         | Marie       | 200    | 4    |
-+-----------+-------------+--------+------+
-输出：
-+-------------+
-| person_name |
-+-------------+
-| John Cena   |
-+-------------+
-解释：
-为了简化，Queue 表按 turn 列由小到大排序。
-+------+----+-----------+--------+--------------+
-| Turn | ID | Name      | Weight | Total Weight |
-+------+----+-----------+--------+--------------+
-| 1    | 5  | Alice     | 250    | 250          |
-| 2    | 3  | Alex      | 350    | 600          |
-| 3    | 6  | John Cena | 400    | 1000         | (最后一个上巴士)
-| 4    | 2  | Marie     | 200    | 1200         | (无法上巴士)
-| 5    | 4  | Bob       | 175    | ___          |
-| 6    | 1  | Winston   | 500    | ___          |
-+------+----+-----------+--------+--------------+
-</code></pre>
-<p>解答：</p>
-<p><strong>PS：SQL 聚合函数（如 <code>MAX()</code>）和普通列之间没有自动的“行对齐”关系。</strong></p>
-<p>不能直接写成！：</p>
-<pre><code class="language-sql">select person_name, max(total_weight) from (
-    select * , sum(weight)over (order by turn) as total_weight from Queue
-)t where total_weight &lt;= 1000;
-
--- 结果只会返回
-| person_id | person_name | weight | turn |
-| --------- | ----------- | ------ | ---- |
-| 5         | Alice       | 250    | 1    |
-| 4         | Bob         | 175    | 5    |
-| 3         | Alex        | 350    | 2    |
-| 6         | John Cena   | 400    | 3    |
-| 1         | Winston     | 500    | 6    |
-| 2         | Marie       | 200    | 4    |
-
-| person_name | max(total_weight) |
-| ----------- | ----------------- |
-| Alice       | 1000              |
-
--- 而不是正确输出
-| person_name |
-| ----------- |
-| John Cena   |
-</code></pre>
-<h4 id="（1）子查询-等值过滤"><a href="#（1）子查询-等值过滤" class="headerlink" title="（1）子查询+等值过滤"></a>（1）子查询+等值过滤</h4><pre><code class="language-sql"># Write your MySQL query statement below
-with base as(
-    select * , sum(weight)over (order by turn) as total_weight from Queue
-)
-select person_name from base where total_weight = (
-    select max(total_weight) as mx from base where total_weight &lt;= 1000
-);
-</code></pre>
-<hr>
-<h4 id="（2）ORDER-BY-LIMIT"><a href="#（2）ORDER-BY-LIMIT" class="headerlink" title="（2）ORDER BY+LIMIT"></a>（2）ORDER BY+LIMIT</h4><pre><code class="language-sql"># Write your MySQL query statement below
-select person_name from (
-    select * , sum(weight)over (order by turn) as total_weight from Queue
-)t where total_weight &lt;= 1000 order by total_weight DESC limit 1;
-</code></pre>
-<hr>
-<h3 id="1907-按分类统计薪水"><a href="#1907-按分类统计薪水" class="headerlink" title="1907. 按分类统计薪水"></a>1907. 按分类统计薪水</h3><p>表: <code>Accounts</code></p>
-<pre><code>+-------------+------+
-| 列名        | 类型  |
-+-------------+------+
-| account_id  | int  |
-| income      | int  |
-+-------------+------+
-在 SQL 中，account_id 是这个表的主键。
-每一行都包含一个银行帐户的月收入的信息。
-</code></pre>
-<p>查询每个工资类别的银行账户数量。 工资类别如下：</p>
-<ul>
-<li><code>&quot;Low Salary&quot;</code>：所有工资 <strong>严格低于</strong> <code>20000</code> 美元。</li>
-<li><code>&quot;Average Salary&quot;</code>： <strong>包含</strong> 范围内的所有工资 <code>[$20000, $50000]</code> 。</li>
-<li><code>&quot;High Salary&quot;</code>：所有工资 <strong>严格大于</strong> <code>50000</code> 美元。</li>
-</ul>
-<p>结果表 <strong>必须</strong> 包含所有三个类别。 如果某个类别中没有帐户，则报告 <code>0</code> 。</p>
-<p>按 <strong>任意顺序</strong> 返回结果表。</p>
-<p>查询结果格式如下示例。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Accounts 表:
-+------------+--------+
-| account_id | income |
-+------------+--------+
-| 3          | 108939 |
-| 2          | 12747  |
-| 8          | 87709  |
-| 6          | 91796  |
-+------------+--------+
-输出：
-+----------------+----------------+
-| category       | accounts_count |
-+----------------+----------------+
-| Low Salary     | 1              |
-| Average Salary | 0              |
-| High Salary    | 3              |
-+----------------+----------------+
-解释：
-低薪: 有一个账户 2.
-中等薪水: 没有.
-高薪: 有三个账户，他们是 3, 6和 8.
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">select &#39;Low Salary&#39; as category, sum(case when income &lt; 20000 then 1 else 0 end) as accounts_count
-from Accounts
-Union all
-select &#39;Average Salary&#39; as category, sum(case when income &gt;= 20000 and income &lt;= 50000 then 1 else 0 end) as accounts_count
-from Accounts
-Union all
-select &#39;High Salary&#39; as category, sum(case when income &gt; 50000 then 1 else 0 end) as accounts_count
-from Accounts;
-</code></pre>
-<hr>
-<h3 id="626-换座位"><a href="#626-换座位" class="headerlink" title="626. 换座位"></a>626. 换座位</h3><p>表: <code>Seat</code></p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| id          | int     |
-| student     | varchar |
-+-------------+---------+
-id 是该表的主键（唯一值）列。
-该表的每一行都表示学生的姓名和 ID。
-ID 序列始终从 1 开始并连续增加。
-</code></pre>
-<p>编写解决方案来交换每两个连续的学生的座位号。如果学生的数量是奇数，则最后一个学生的id不交换。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入: 
-Seat 表:
-+----+---------+
-| id | student |
-+----+---------+
-| 1  | Abbot   |
-| 2  | Doris   |
-| 3  | Emerson |
-| 4  | Green   |
-| 5  | Jeames  |
-+----+---------+
-输出: 
-+----+---------+
-| id | student |
-+----+---------+
-| 1  | Doris   |
-| 2  | Abbot   |
-| 3  | Green   |
-| 4  | Emerson |
-| 5  | Jeames  |
-+----+---------+
-解释:
-请注意，如果学生人数为奇数，则不需要更换最后一名学生的座位。
-</code></pre>
-<p>解答：</p>
-<h4 id="（1）嵌套查询"><a href="#（1）嵌套查询" class="headerlink" title="（1）嵌套查询"></a>（1）嵌套查询</h4><pre><code class="language-sql"># Write your MySQL query statement below
-with base as(
-    select *, lead(student, 1)over (order by id) as exchange_nxt, lag(student, 1)over (order by id) as exchange_pre from Seat
-)
-select id, IFNULL((case when (id % 2) != 0 then exchange_nxt else exchange_pre end), student) as student from base;
-</code></pre>
-<h4 id="（2）CASE-WHEN"><a href="#（2）CASE-WHEN" class="headerlink" title="（2）CASE WHEN"></a>（2）CASE WHEN</h4><pre><code class="language-sql"># Write your MySQL query statement below
-select case 
-        when id % 2 = 1 and id &lt; (select max(id) from Seat)
-            then id + 1
-        when id % 2 = 0 
-            then id - 1
-        else id
-        end as id, student
-    from Seat
-order by id;
-</code></pre>
-<p>在 SQL 里，<code>CASE</code> 可以写两种形式：</p>
-<h5 id="a-简单-CASE"><a href="#a-简单-CASE" class="headerlink" title="a. 简单 CASE"></a>a. 简单 CASE</h5><p>直接对某个表达式的值做匹配：</p>
-<pre><code class="language-sql">CASE column_name
-    WHEN &#39;A&#39; THEN &#39;类型1&#39;
-    WHEN &#39;B&#39; THEN &#39;类型2&#39;
-    ELSE &#39;其他&#39;
-END
-</code></pre>
-<h5 id="b-搜索-CASE-（最常用）"><a href="#b-搜索-CASE-（最常用）" class="headerlink" title="b. 搜索 CASE （最常用）"></a>b. 搜索 CASE （最常用）</h5><p>条件判断灵活，可以写比较、范围等：</p>
-<pre><code class="language-sql">CASE
-    WHEN score &gt;= 90 THEN &#39;优秀&#39;
-    WHEN score &gt;= 60 THEN &#39;及格&#39;
-    ELSE &#39;不及格&#39;
-END
-</code></pre>
-<h5 id="c-作为一个字段输出"><a href="#c-作为一个字段输出" class="headerlink" title="c. 作为一个字段输出"></a>c. 作为一个字段输出</h5><pre><code class="language-sql">SELECT name,
-       CASE WHEN age &lt; 18 THEN &#39;未成年&#39;
-            WHEN age &lt; 60 THEN &#39;成年人&#39;
-            ELSE &#39;老年人&#39;
-       END AS age_group
-FROM users;
-</code></pre>
-<h5 id="d-在聚合函数里做条件统计"><a href="#d-在聚合函数里做条件统计" class="headerlink" title="d. 在聚合函数里做条件统计"></a>d. 在聚合函数里做条件统计</h5><pre><code class="language-sql">SELECT
-    SUM(CASE WHEN status = &#39;success&#39; THEN 1 ELSE 0 END) AS success_count,
-    SUM(CASE WHEN status = &#39;fail&#39; THEN 1 ELSE 0 END)    AS fail_count
-FROM logs;
-</code></pre>
-<p>常用于 <strong>条件计数</strong>。</p>
-<h5 id="e-排序（ORDER-BY）"><a href="#e-排序（ORDER-BY）" class="headerlink" title="e. 排序（ORDER BY）"></a>e. 排序（ORDER BY）</h5><pre><code class="language-sql">SELECT *
-FROM orders
-ORDER BY
-  CASE 
-    WHEN status = &#39;vip&#39; THEN 1
-    WHEN status = &#39;normal&#39; THEN 2
-    ELSE 3
-  END;
-</code></pre>
-<hr>
-<h3 id="1341-电影评分"><a href="#1341-电影评分" class="headerlink" title="1341. 电影评分"></a>1341. 电影评分</h3><p>表：<code>Movies</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| movie_id      | int     |
-| title         | varchar |
-+---------------+---------+
-movie_id 是这个表的主键(具有唯一值的列)。
-title 是电影的名字。
-</code></pre>
-<p>表：<code>Users</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| user_id       | int     |
-| name          | varchar |
-+---------------+---------+
-user_id 是表的主键(具有唯一值的列)。
-&#39;name&#39; 列具有唯一值。
-</code></pre>
-<p>表：<code>MovieRating</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| movie_id      | int     |
-| user_id       | int     |
-| rating        | int     |
-| created_at    | date    |
-+---------------+---------+
-(movie_id, user_id) 是这个表的主键(具有唯一值的列的组合)。
-这个表包含用户在其评论中对电影的评分 rating 。
-created_at 是用户的点评日期。 
-</code></pre>
-<p>请你编写一个解决方案：</p>
-<ul>
-<li>查找评论电影数量最多的用户名。如果出现平局，返回字典序较小的用户名。</li>
-<li>查找在 <code>February 2020</code> <strong>平均评分最高</strong> 的电影名称。如果出现平局，返回字典序较小的电影名称。</li>
-</ul>
-<p><strong>字典序</strong> ，即按字母在字典中出现顺序对字符串排序，字典序较小则意味着排序靠前。</p>
-<p>返回结果格式如下例所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Movies 表：
-+-------------+--------------+
-| movie_id    |  title       |
-+-------------+--------------+
-| 1           | Avengers     |
-| 2           | Frozen 2     |
-| 3           | Joker        |
-+-------------+--------------+
-Users 表：
-+-------------+--------------+
-| user_id     |  name        |
-+-------------+--------------+
-| 1           | Daniel       |
-| 2           | Monica       |
-| 3           | Maria        |
-| 4           | James        |
-+-------------+--------------+
-MovieRating 表：
-+-------------+--------------+--------------+-------------+
-| movie_id    | user_id      | rating       | created_at  |
-+-------------+--------------+--------------+-------------+
-| 1           | 1            | 3            | 2020-01-12  |
-| 1           | 2            | 4            | 2020-02-11  |
-| 1           | 3            | 2            | 2020-02-12  |
-| 1           | 4            | 1            | 2020-01-01  |
-| 2           | 1            | 5            | 2020-02-17  | 
-| 2           | 2            | 2            | 2020-02-01  | 
-| 2           | 3            | 2            | 2020-03-01  |
-| 3           | 1            | 3            | 2020-02-22  | 
-| 3           | 2            | 4            | 2020-02-25  | 
-+-------------+--------------+--------------+-------------+
-输出：
-Result 表：
-+--------------+
-| results      |
-+--------------+
-| Daniel       |
-| Frozen 2     |
-+--------------+
-解释：
-Daniel 和 Monica 都点评了 3 部电影（&quot;Avengers&quot;, &quot;Frozen 2&quot; 和 &quot;Joker&quot;） 但是 Daniel 字典序比较小。
-Frozen 2 和 Joker 在 2 月的评分都是 3.5，但是 Frozen 2 的字典序比较小。
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">with base as(
-    select *, avg(rating) as avg_rate from (
-        select *, date_format(created_at, &#39;%Y-%m&#39;) as created_month from MovieRating 
-        where date_format(created_at, &#39;%Y-%m&#39;) = &#39;2020-02&#39;
-    )a group by movie_id
-),
-seq as (
-    select movie_id from base where avg_rate = (
-        select max(avg_rate) from base 
-    )
-),
-base2 as(
-    select s.user_id from(
-        select t.user_id, rank() over(order by ct DESC) as rk from(
-            select user_id, count(*) as ct from  MovieRating group by user_id
-        )t
-    )s where s.rk = 1
-)
-select min(a.name) as results from Users a join base2 b on a.user_id = b.user_id union all
-    select min(a.title) as results from Movies a join seq b on a.movie_id = b.movie_id;
-</code></pre>
-<p><strong>PS:</strong></p>
-<p>（1）如果需要获取某一列中不同值的总数，eg:id列1,2,3出现的次数，可以</p>
-<pre><code class="language-sql">select count(*) from emp group by id
-</code></pre>
-<p>（2）等值子查询只能返回一个结果，子查询里select的数值不能超过一行</p>
-<hr>
-<h3 id="1321-餐厅营业额变化增长"><a href="#1321-餐厅营业额变化增长" class="headerlink" title="1321. 餐厅营业额变化增长"></a>1321. 餐厅营业额变化增长</h3><p>表: <code>Customer</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| customer_id   | int     |
-| name          | varchar |
-| visited_on    | date    |
-| amount        | int     |
-+---------------+---------+
-在 SQL 中，(customer_id, visited_on) 是该表的主键。
-该表包含一家餐馆的顾客交易数据。
-visited_on 表示 (customer_id) 的顾客在 visited_on 那天访问了餐馆。
-amount 是一个顾客某一天的消费总额。
-</code></pre>
-<p>你是餐馆的老板，现在你想分析一下可能的营业额变化增长（每天至少有一位顾客）。</p>
-<p>计算以 7 天（某日期 + 该日期前的 6 天）为一个时间段的顾客消费平均值。<code>average_amount</code> 要 <strong>保留两位小数。</strong></p>
-<p>结果按 <code>visited_on</code> <strong>升序排序</strong>。</p>
-<p>返回结果格式的例子如下。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Customer 表:
-+-------------+--------------+--------------+-------------+
-| customer_id | name         | visited_on   | amount      |
-+-------------+--------------+--------------+-------------+
-| 1           | Jhon         | 2019-01-01   | 100         |
-| 2           | Daniel       | 2019-01-02   | 110         |
-| 3           | Jade         | 2019-01-03   | 120         |
-| 4           | Khaled       | 2019-01-04   | 130         |
-| 5           | Winston      | 2019-01-05   | 110         | 
-| 6           | Elvis        | 2019-01-06   | 140         | 
-| 7           | Anna         | 2019-01-07   | 150         |
-| 8           | Maria        | 2019-01-08   | 80          |
-| 9           | Jaze         | 2019-01-09   | 110         | 
-| 1           | Jhon         | 2019-01-10   | 130         | 
-| 3           | Jade         | 2019-01-10   | 150         | 
-+-------------+--------------+--------------+-------------+
-输出：
-+--------------+--------------+----------------+
-| visited_on   | amount       | average_amount |
-+--------------+--------------+----------------+
-| 2019-01-07   | 860          | 122.86         |
-| 2019-01-08   | 840          | 120            |
-| 2019-01-09   | 840          | 120            |
-| 2019-01-10   | 1000         | 142.86         |
-+--------------+--------------+----------------+
-解释：
-第一个七天消费平均值从 2019-01-01 到 2019-01-07 是restaurant-growth/restaurant-growth/ (100 + 110 + 120 + 130 + 110 + 140 + 150)/7 = 122.86
-第二个七天消费平均值从 2019-01-02 到 2019-01-08 是 (110 + 120 + 130 + 110 + 140 + 150 + 80)/7 = 120
-第三个七天消费平均值从 2019-01-03 到 2019-01-09 是 (120 + 130 + 110 + 140 + 150 + 80 + 110)/7 = 120
-第四个七天消费平均值从 2019-01-04 到 2019-01-10 是 (130 + 110 + 140 + 150 + 80 + 110 + 130 + 150)/7 = 142.86
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">select visited_on, total_amount as amount, round(total_amount / 7, 2) as average_amount from( 
-    select visited_on, sum(new_amount)over (order by visited_on ROWS 6 PRECEDING) total_amount from (
-        select visited_on, sum(amount) new_amount from Customer group by visited_on
-    )s
-)t where visited_on &gt;= (
-    select min(visited_on) + 6 from Customer
-);
-</code></pre>
-<p>窗口函数可以选择操作数据的范围</p>
-<p>eg：</p>
-<pre><code class="language-sql">取当前行和前五行：ROWS between 5 preceding and current row --共6行
-取当前行和后五行：ROWS between current row and 5 following --共6行
-取前五行和后五行：ROWS between 5 preceding and 5 folowing --共11行
-</code></pre>
-<hr>
-<h3 id="602-好友申请ll：谁有最多的好友"><a href="#602-好友申请ll：谁有最多的好友" class="headerlink" title="602.好友申请ll：谁有最多的好友"></a>602.好友申请ll：谁有最多的好友</h3><p><code>RequestAccepted</code> 表：</p>
-<pre><code>+----------------+---------+
-| Column Name    | Type    |
-+----------------+---------+
-| requester_id   | int     |
-| accepter_id    | int     |
-| accept_date    | date    |
-+----------------+---------+
-(requester_id, accepter_id) 是这张表的主键(具有唯一值的列的组合)。
-这张表包含发送好友请求的人的 ID ，接收好友请求的人的 ID ，以及好友请求通过的日期。
-</code></pre>
-<p>编写解决方案，找出拥有最多的好友的人和他拥有的好友数目。</p>
-<p>生成的测试用例保证拥有最多好友数目的只有 1 个人。</p>
-<p>查询结果格式如下例所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-RequestAccepted 表：
-+--------------+-------------+-------------+
-| requester_id | accepter_id | accept_date |
-+--------------+-------------+-------------+
-| 1            | 2           | 2016/06/03  |
-| 1            | 3           | 2016/06/08  |
-| 2            | 3           | 2016/06/08  |
-| 3            | 4           | 2016/06/09  |
-+--------------+-------------+-------------+
-输出：
-+----+-----+
-| id | num |
-+----+-----+
-| 3  | 3   |
-+----+-----+
-解释：
-编号为 3 的人是编号为 1 ，2 和 4 的人的好友，所以他总共有 3 个好友，比其他人都多。
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">with base as (
-    select accepter_id, count(*) as accepted_num 
-    from RequestAccepted 
-    group by accepter_id
-),
-seq as (
-    select requester_id, count(*) as requested_num 
-    from RequestAccepted 
-    group by requester_id
-),
-seq1 as (
-    -- 左连接
-    select a.accepter_id as id, 
-           ifnull(a.accepted_num,0) + ifnull(b.requested_num,0) as num
-    from base a 
-    left join seq b on a.accepter_id = b.requester_id
-    
-    union
-    
-    -- 右连接（补齐右边独有的行）
-    select b.requester_id as id, 
-           ifnull(a.accepted_num,0) + ifnull(b.requested_num,0) as num
-    from base a 
-    right join seq b on a.accepter_id = b.requester_id
-)
-select id, num
-from seq1
-where num = (select max(num) from seq1);
-</code></pre>
-<ul>
-<li><code>union</code> 保证把两边独有的 id 都保留下来，等价于 FULL OUTER JOIN。</li>
-<li><code>ifnull(...,0)</code> 是避免 NULL 相加导致结果为 NULL。</li>
-<li>最后取最大值即可。</li>
-</ul>
-<hr>
-<h3 id="585-2016年的投资"><a href="#585-2016年的投资" class="headerlink" title="585.2016年的投资"></a>585.2016年的投资</h3><p><code>Insurance</code> 表：</p>
-<pre><code>+-------------+-------+
-| Column Name | Type  |
-+-------------+-------+
-| pid         | int   |
-| tiv_2015    | float |
-| tiv_2016    | float |
-| lat         | float |
-| lon         | float |
-+-------------+-------+
-pid 是这张表的主键(具有唯一值的列)。
-表中的每一行都包含一条保险信息，其中：
-pid 是投保人的投保编号。
-tiv_2015 是该投保人在 2015 年的总投保金额，tiv_2016 是该投保人在 2016 年的总投保金额。
-lat 是投保人所在城市的纬度。题目数据确保 lat 不为空。
-lon 是投保人所在城市的经度。题目数据确保 lon 不为空。
-</code></pre>
-<p>编写解决方案报告 2016 年 (<code>tiv_2016</code>) 所有满足下述条件的投保人的投保金额之和：</p>
-<ul>
-<li>他在 2015 年的投保额 (<code>tiv_2015</code>) 至少跟一个其他投保人在 2015 年的投保额相同。</li>
-<li>他所在的城市必须与其他投保人都不同（也就是说 (<code>lat, lon</code>) 不能跟其他任何一个投保人完全相同）。</li>
-</ul>
-<p><code>tiv_2016</code> 四舍五入的 <strong>两位小数</strong> 。</p>
-<p>查询结果格式如下例所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Insurance 表：
-+-----+----------+----------+-----+-----+
-| pid | tiv_2015 | tiv_2016 | lat | lon |
-+-----+----------+----------+-----+-----+
-| 1   | 10       | 5        | 10  | 10  |
-| 2   | 20       | 20       | 20  | 20  |
-| 3   | 10       | 30       | 20  | 20  |
-| 4   | 10       | 40       | 40  | 40  |
-+-----+----------+----------+-----+-----+
-输出：
-+----------+
-| tiv_2016 |
-+----------+
-| 45.00    |
-+----------+
-解释：
-表中的第一条记录和最后一条记录都满足两个条件。
-tiv_2015 值为 10 与第三条和第四条记录相同，且其位置是唯一的。
-
-第二条记录不符合任何一个条件。其 tiv_2015 与其他投保人不同，并且位置与第三条记录相同，这也导致了第三条记录不符合题目要求。
-因此，结果是第一条记录和最后一条记录的 tiv_2016 之和，即 45 。
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">select round(sum(tiv_2016), 2) as tiv_2016 from (
-    select a.pid, a.tiv_2016 from Insurance a where a.tiv_2015 in (
-        select b.tiv_2015 from Insurance b where a.pid &lt;&gt; b.pid
-    ) and not exists (
-        select 1 
-        from Insurance b 
-        where a.pid &lt;&gt; b.pid 
-        and a.lat = b.lat 
-        and a.lon = b.lon
-    )
-)t;
-</code></pre>
-<p><strong>用 <code>in</code> 替代 <code>=</code></strong></p>
-<ul>
-<li>保证可以匹配多行 <code>tiv_2015</code>，避免语法错误。</li>
-<li>逻辑：只要 <code>a.tiv_2015</code> 在别的记录中出现过，就符合。</li>
-</ul>
-<p><strong>用 <code>not exists</code> 替代 <code>lat != ... or lon != ...</code></strong></p>
-<ul>
-<li>若写法是“只要某个纬度不同就通过”，会误判。</li>
-<li><strong><code>not exists</code> 的逻辑是“不能存在一条记录跟我纬度和经度都相同”。</strong></li>
-</ul>
-<p><strong>逻辑清晰且无歧义</strong></p>
-<ul>
-<li>保证有相同 <code>tiv_2015</code>；</li>
-<li>保证没有相同 <code>(lat, lon)</code>。</li>
-</ul>
-<hr>
-<p>补充：</p>
-<p>SQL执行顺序：</p>
-<ul>
-<li><strong>FROM</strong> Employee</li>
-<li><strong>WHERE</strong> salary &gt; 5000 （先筛掉工资不够的行）</li>
-<li><strong>GROUP BY</strong> dept （按部门分组）</li>
-<li><strong>COUNT(*)</strong> 统计每组人数</li>
-<li><strong>HAVING</strong> 过滤出人数 ≥3 的部门</li>
-<li><strong>SELECT</strong> 输出 dept, cnt</li>
-<li><strong>ORDER BY</strong> 按 cnt 降序</li>
-<li><strong>LIMIT</strong> 取前 5 个部门</li>
-</ul>
-<p>char_length(col)返回该列的字符数</p>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/Leetcode/" style="color: #ff7d73">Leetcode</a>
-        </span>
-        
-        <span class="tag">
-            
-            <a href="/tags/SQL/" style="color: #ffa2c4">SQL</a>
-        </span>
-        
-    </div>
-    <a href="/2022/05/26/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%95/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2021/12/13/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/">
-        <h2 class="post-title">数据建模</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                数据建模
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2021/12/13
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="1-数据预处理"><a href="#1-数据预处理" class="headerlink" title="1. 数据预处理"></a>1. 数据预处理</h2><h3 id="（1）数据清洗"><a href="#（1）数据清洗" class="headerlink" title="（1）数据清洗"></a>（1）数据清洗</h3><h4 id="1-1-缺失值处理"><a href="#1-1-缺失值处理" class="headerlink" title="1.1 缺失值处理"></a>1.1 缺失值处理</h4><h4 id="1-2-异常值处理"><a href="#1-2-异常值处理" class="headerlink" title="1.2 异常值处理"></a>1.2 异常值处理</h4><h4 id="1-3-数据规约"><a href="#1-3-数据规约" class="headerlink" title="1.3 数据规约"></a>1.3 数据规约</h4><h4 id="1-4-数据变换"><a href="#1-4-数据变换" class="headerlink" title="1.4 数据变换"></a>1.4 数据变换</h4><h2 id="1-数据分析"><a href="#1-数据分析" class="headerlink" title="1. 数据分析"></a>1. 数据分析</h2><h3 id="（1）初步分析"><a href="#（1）初步分析" class="headerlink" title="（1）初步分析"></a>（1）初步分析</h3><h5 id="查看样例数据"><a href="#查看样例数据" class="headerlink" title="查看样例数据"></a>查看样例数据</h5><p>data.head(5)</p>
-<h5 id="查看形状"><a href="#查看形状" class="headerlink" title="查看形状"></a>查看形状</h5><p>data.shape()</p>
-<h3 id="（2）质量分析"><a href="#（2）质量分析" class="headerlink" title="（2）质量分析"></a>（2）质量分析</h3><h5 id="判断唯一索引是否有重复值"><a href="#判断唯一索引是否有重复值" class="headerlink" title="判断唯一索引是否有重复值"></a>判断唯一索引是否有重复值</h5><p>data[‘ . ‘].nunique() &#x3D;&#x3D; data.shape[0]</p>
-<h5 id="缺失值检验"><a href="#缺失值检验" class="headerlink" title="缺失值检验"></a>缺失值检验</h5><p>data.isnull().sum()</p>
-<h5 id="异常值检测"><a href="#异常值检测" class="headerlink" title="异常值检测"></a>异常值检测</h5><p>​	打印各个属性的直方图</p>
-<pre><code class="language-python">sns.set()
-for col in cols:
-    statistic = data.describe()
-    plt.figure(figsize=(6,6))
-    sns.hisplot(data[col], kde=True) # kde核密度曲线，若与直方图走向一致则说明没有异常值
-    plt.title...
-    plt.show()
-</code></pre>
-<h5 id="规律一致性检测"><a href="#规律一致性检测" class="headerlink" title="规律一致性检测"></a>规律一致性检测</h5><p>对于单变量且离散数据，可以用以下的方法进行简要判断</p>
-<p>​	判断train表与test表是否出自同一分布</p>
-<pre><code class="language-python">train_count = train.shape[0]
-test_count = test.shape[0]
-features = [&#39;Pclass&#39;, &#39;Sex&#39;, &#39;Age&#39;, &#39;SibSp&#39;, &#39;Parch&#39;, &#39;Fare&#39;, &#39;Cabin&#39;, &#39;Embarked&#39;]
-
-i = 1
-plt.figure(figsize=(18, 18))
-for feature in features:
-    plt.subplot(3, 3, i)
-    (train[feature].value_counts().sort_index()/train_count).plot()
-    (test[feature].value_counts().sort_index()/test_count).plot()
-    plt.legend([&#39;train&#39;, &#39;test&#39;])
-    plt.xlabel(feature)
-    plt.ylabel(&#39;radio&#39;)
-    plt.show
-    i+=1
-</code></pre>
-<p>同时还可以进行多变量联合分布</p>
-<p>指的是将离散变量两两组合，然后查看这个新变量的相对占比分布。例如特征1有0&#x2F;1两个取值水平，特征2有A&#x2F;B两个取值水平，则联合分布中就将存在0A、0B、1A、1B四种不同取值水平，然后进一步查看这四种不同取值水平出现的分布情况。</p>
-<pre><code class="language-python">def combine_feature(df):
-    cols = df.columns
-    feature1 = df[cols[0]].astype(str).values.tolist()
-    feature2 = df[cols[1]].astype(str).values.tolist()
-    return pd.Series([feature1[i]+&#39;&amp;&#39;+feature2[i] for i in range(df.shape[0])])
-
-cols = [features[0], features[1]]
-
-# 查看合并后结果
-train_com = combine_feature(train[cols])
-
-train_dis = train_com.value_counts().sort_index()/train_count
-test_dis = combine_feature(test[cols]).value_counts().sort_index()/test_count
-
-# 创建新的index
-index_dis = pd.Series(train_dis.index.tolist() + test_dis.index.tolist()).drop_duplicates().sort_values()
-
-# 对缺失值填补为0
-(index_dis.map(train_dis).fillna(0)).plot()
-(index_dis.map(train_dis).fillna(0)).plot()
-
-# 绘图
-plt.legend([&#39;train&#39;,&#39;test&#39;])
-plt.xlabel(&#39;&amp;&#39;.join(cols))
-plt.ylabel(&#39;ratio&#39;)
-plt.show()
-</code></pre>
-<h2 id="2-数据预处理"><a href="#2-数据预处理" class="headerlink" title="2. 数据预处理"></a>2. 数据预处理</h2><h3 id="（1）缺失值填充"><a href="#（1）缺失值填充" class="headerlink" title="（1）缺失值填充"></a>（1）缺失值填充</h3><p>分别依据情况将缺失值填充为均值或众数（对于离散型数据）或前向后向值（对于连续型数据）</p>
-<pre><code class="language-python">data[col] = data[col].fillna(data[col].mean()/data[col].mode()[0])
-
-data[col].ffill(inplcae=True)# 前向填充
-data[col].bfill(inplace=True)# 后向填充
-</code></pre>
-<h3 id="（2）将object类型转换为字典编码"><a href="#（2）将object类型转换为字典编码" class="headerlink" title="（2）将object类型转换为字典编码"></a>（2）将object类型转换为字典编码</h3><p>data.info()查看数据类型</p>
-<pre><code class="language-python">def change_object_cols(se):
-    # 1. 获取该列的唯一值，并转成列表
-    value = se.unique().tolist()
-    
-    # 2. 对唯一值排序，保证编码的顺序固定（从小到大）
-    value.sort()
-    
-    # 3. 构造一个映射表：唯一值 → 数字索引
-    #    例如：[&#39;C&#39;, &#39;Q&#39;, &#39;S&#39;] → &#123; &#39;C&#39;:0, &#39;Q&#39;:1, &#39;S&#39;:2 &#125;
-    mapping = pd.Series(range(len(value)), index=value)
-    
-    # 4. 将原始序列 se 映射成数值序列
-    return se.map(mapping).values
-
-
-for col in cols:
-    data[col] = change_object_cols(col)
-</code></pre>
-<h2 id="3-特征工程"><a href="#3-特征工程" class="headerlink" title="3. 特征工程"></a>3. 特征工程</h2><h3 id="（1）确定离散、连续变量"><a href="#（1）确定离散、连续变量" class="headerlink" title="（1）确定离散、连续变量"></a>（1）确定离散、连续变量</h3><p>这是个很好的问题 👍。在 Kaggle 这种建模比赛里，区分 <strong>离散字段（categorical features）</strong> 和 <strong>连续字段（numerical features）</strong> 是特征工程的第一步，直接影响后续的编码方式、特征衍生、模型效果。一般的经验如下：</p>
-<hr>
-<ol>
-<li><strong>离散字段（Categorical Features）的判定</strong></li>
-</ol>
-<p>常见特征类型：</p>
-<ul>
-<li><strong>字符串型</strong>：比如性别（Sex）、职业（job_title）。</li>
-<li><strong>整数型但取值有限</strong>：例如舱位等级（Pclass: 1&#x2F;2&#x2F;3）、星期几（1–7）、地区编号。</li>
-<li><strong>ID类特征</strong>：如 PassengerId、订单号，虽然是字符串&#x2F;数字，但每个取值都唯一 → 通常丢弃或转化为计数特征。</li>
-</ul>
-<p>📌 经验：</p>
-<ul>
-<li><strong>唯一值数量远小于样本数</strong>（如几种类别，而不是几千上万），基本都算离散变量。</li>
-<li><strong>整数型变量</strong>要小心，比如邮编、编号，它们表面是数字，其实是分类特征。</li>
-<li><strong>高基数特征</strong>（类别数太多）：<ul>
-<li>可以尝试 <strong>频率编码（frequency encoding）</strong></li>
-<li>或 <strong>target encoding &#x2F; mean encoding</strong>（比赛里常用，但要注意泄露，要交叉验证编码）</li>
-</ul>
-</li>
-</ul>
-<hr>
-<ol start="2">
-<li><strong>连续字段（Numerical Features）的判定</strong></li>
-</ol>
-<p>常见特征类型：</p>
-<ul>
-<li><strong>实数型</strong>：身高、体重、金额、时间差。</li>
-<li><strong>取值范围大且近似连续的整数</strong>：年龄（0–100）、乘客数量、房价。</li>
-</ul>
-<p>📌 经验：</p>
-<ul>
-<li>数值的大小 <strong>有顺序且差值有意义</strong>（例如价格 100 和 200 相差一倍） → 连续特征。</li>
-<li>对于这些特征，常用的处理包括：<ul>
-<li>标准化（StandardScaler）、归一化（MinMaxScaler）</li>
-<li>分箱（binning），转化为类别 → 提高树模型稳定性</li>
-</ul>
-</li>
-</ul>
-<hr>
-<ol start="3">
-<li><strong>混合情况（容易误判的字段）</strong></li>
-</ol>
-<ul>
-<li><strong>Age（年龄）</strong>：是连续的，但可以尝试分箱（儿童&#x2F;青年&#x2F;中年&#x2F;老年），当做离散变量。</li>
-<li><strong>Fare（票价）</strong>：连续型，但分布通常长尾，可以对数化（log transform）。</li>
-<li><strong>Cabin（船舱号）</strong>：原始是字符串（离散），但如果只取首字母（A&#x2F;B&#x2F;C&#x2F;D&#x2F;E&#x2F;F），相当于类别。</li>
-</ul>
-<p>📌 Kaggle 常见技巧：</p>
-<ul>
-<li><strong>连续变量离散化</strong>（binning）后有时比直接用效果更好，尤其在树模型中。</li>
-<li>同一个特征既保留原始数值，又加一个分箱类别特征，让模型自己选择。</li>
-</ul>
-<hr>
-<ol start="4">
-<li><strong>比赛经验总结</strong></li>
-</ol>
-<ul>
-<li><strong>EDA（探索性数据分析）优先</strong>：先用 <code>describe()</code>、<code>value_counts()</code>、直方图、箱线图，直观判断分布。</li>
-<li><strong>看唯一值个数（nunique）</strong>：<ul>
-<li>nunique ≪ 样本数 → 倾向离散</li>
-<li>nunique ≈ 样本数 → 可能是 ID，直接舍弃或做 count encoding</li>
-</ul>
-</li>
-<li><strong>树模型 vs 线性模型的不同</strong>：<ul>
-<li>树模型（LightGBM、XGBoost、CatBoost）：不太怕离散编码（甚至 CatBoost 可以直接处理类别）。</li>
-<li>线性模型、神经网络：更依赖标准化和 One-Hot。</li>
-</ul>
-</li>
-<li><strong>比赛 Top 选手习惯</strong>：同一个特征会做多种处理方式（原始连续 &#x2F; 分箱类别 &#x2F; 平滑编码），让模型选择。</li>
-</ul>
-<hr>
-<p>✅ <strong>一句话经验</strong>：</p>
-<ul>
-<li>“值的大小有顺序和间距意义 → 连续特征”</li>
-<li>“值只是标签、没有数值含义 → 离散特征”</li>
-<li>模型前期：多做几种处理方式（连续 &#x2F; 离散化 &#x2F; target encoding），交给模型和 CV 去筛选。</li>
-</ul>
-<h3 id="（2）连续变量处理："><a href="#（2）连续变量处理：" class="headerlink" title="（2）连续变量处理："></a>（2）连续变量处理：</h3><h4 id="无穷值处理："><a href="#无穷值处理：" class="headerlink" title="无穷值处理："></a>无穷值处理：</h4><p>天花板盖帽法：即将inf改为最大的显式数值</p>
-<pre><code class="language-python">inf_cols = [&#39;avg_purchases_lag3&#39;, &#39;avg_purchases_lag6&#39;, &#39;avg_purchases_lag12&#39;]
-merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].replace(np.inf, -99).max().max())
-</code></pre>
-<p>整体流程</p>
-<ol>
-<li>拿到数据及其对应的解释，划分连续型字段与离散型字段，重点关注object类型，是否存在时序类型、文本类型字段</li>
-<li>正确性校验：是否unique</li>
-<li>特征变化：连续变量：考虑是否归一化、分箱，离散型变量：考虑是否要独热编码、自然数编码</li>
-<li>考虑缺失值：（1）numpy.NAN；（2）none；（3）特殊缺失值：空格（可能会被识别转换成字符串）——&gt;业务方面的判断。</li>
-</ol>
-<p>用均值、众数、预测值进行填充。或者可以先用特殊字符代表，比如说离散性数据进行独热编码后可以用-1表示缺失值</p>
-<ol start="5">
-<li>异常值分析：识别方式：（1）三倍标准差（对于趋近于标准正态分布的数据）、（2）箱线图法；处理方法：（1）天花板盖帽法；（2）单独识别异常值为某一类</li>
-</ol>
-<p>特征工程：</p>
-<p>（2）根据业务进行扩展：eg：金额连续型——&gt;均值、总额、方差、偏度、离散型——&gt;众数…</p>
-<p>根据业务含义划分离散字段category_cols与连续字段numeric_cols。</p>
-<p>对非数值型的离散字段进行字典排序编码。</p>
-<p>为了能够更方便统计，进行缺失值的处理，对离散字段统一用-1进行填充。</p>
-<p>对离散型字段探查发现有正无穷值，这是特征提取以及模型所不能接受的，因此需要对无限值进行处理，此处采用最大值进行替换。</p>
-<p>去除与transaction交易记录表格重复的列，以及merchant_id的重复记录。</p>
-<p>特征工程</p>
-<p>通过特征工程新建了很多特征，包含了一些冗余、稀疏特征，虽然最终选用树模型时都可以筛选出最有效的特征，但是过多的特征会影响到建模的效率。因此需要我们提前进行特征筛选，根据与标签相关性初筛出特征。</p>
-<p>初筛：<br>Filter相关系数特征筛选方法</p>
-<p>使用corr，得出前300个特征</p>
-<p>模型训练需要与超参数的选定过程绑定在一起（使模型具有一定的泛化能力）</p>
-<p><strong>Filter 特征筛选</strong>：通过统计指标（相关性、卡方检验、互信息等）先对原始特征进行“粗筛”，去掉明显无关或冗余的特征。</p>
-<p><strong>随机森林建模</strong>：用筛选后的特征训练一个随机森林模型，得到基准性能。</p>
-<p><strong>网格搜索调优</strong>：在筛选后的特征集上，用交叉验证和网格搜索寻找随机森林的最佳超参数组合。</p>
-<p>Wrapper方法</p>
-<p><strong>Wrapper 特征筛选</strong>：利用模型性能作为评价标准，逐步选择或剔除特征（例如递归特征消除 RFE）。</p>
-<p><strong>LightGBM 建模</strong>：用筛选出的特征训练 LightGBM 模型，作为基准模型。</p>
-<p><strong>TPE 调优</strong>：通过贝叶斯优化（TPE 算法）高效搜索 LightGBM 的超参数，提升性能。</p>
-<p>使用tpe调优前，最好先用warpper方法训练一次lgb先</p>
-<p><strong>Voting 是一种固定规则的集成方法，通过对多个基模型的预测结果直接做多数投票（分类）或平均（回归）来得到最终输出；而 Stacking 则是更灵活的堆叠方法，它把多个基模型的预测结果作为新的特征，再训练一个“元学习器”去自动学习最优的加权组合方式，从而通常能比简单投票获得更强的泛化性能。</strong></p>
-<p>Stacking流程：在第一层训练过程中，每一个基模型经过5折交叉验证后会得到5个训练集上结果拼接成的验证集结果，以及5个测试集上的结果平均后的总测试集结果，之后在第二层学习过程中，所有基模型的验证集结果作为训练的x，目标是真实标签y，然后学习x的权重参数a，最终对所有基模型的总测试集结果应用学习完毕的权重a进行组合得到最终结果</p>
-<hr>
-<h4 id="🔹-第一层（基模型训练）"><a href="#🔹-第一层（基模型训练）" class="headerlink" title="🔹 第一层（基模型训练）"></a>🔹 第一层（基模型训练）</h4><ul>
-<li>每个基模型做 <strong>5 折交叉验证</strong>：<ul>
-<li><strong>训练集 OOF 预测</strong>：每一折的验证集预测拼接 → 得到完整的 OOF 预测结果（对应训练集所有样本）。</li>
-<li><strong>测试集预测</strong>：每一折在训练完毕后对测试集预测 → 5 次预测结果取平均，得到该基模型在测试集上的最终预测。</li>
-</ul>
-</li>
-</ul>
-<p>👉 输出：</p>
-<ul>
-<li><code>OOF_i</code>：基模型 i 的训练集预测（n 行 1 列）。</li>
-<li><code>Test_i</code>：基模型 i 的测试集预测（m 行 1 列）。</li>
-</ul>
-<hr>
-<h4 id="🔹-第二层（元学习器）"><a href="#🔹-第二层（元学习器）" class="headerlink" title="🔹 第二层（元学习器）"></a>🔹 第二层（元学习器）</h4><ul>
-<li><p><strong>输入特征 X</strong>：所有基模型的 OOF 拼接 → 维度 <code>(n, k)</code>，k 为基模型数量。</p>
-</li>
-<li><p><strong>目标 y</strong>：真实标签（n 行 1 列）。</p>
-</li>
-<li><p><strong>训练</strong>：用贝叶斯岭回归（或别的模型）学习一个函数：</p>
-<p>y^&#x3D;a1⋅OOF1+a2⋅OOF2+⋯+ak⋅OOFk+b\hat{y} &#x3D; a_1 \cdot OOF_1 + a_2 \cdot OOF_2 + \dots + a_k \cdot OOF_k + b</p>
-</li>
-</ul>
-<p>👉 元学习器本质上是在学习一组 <strong>权重参数 a</strong>，告诉我们“每个基模型在最终预测中该占多大比重”。</p>
-<hr>
-<h4 id="🔹-最终预测"><a href="#🔹-最终预测" class="headerlink" title="🔹 最终预测"></a>🔹 最终预测</h4><ul>
-<li><p>把学习到的权重 a 应用到测试集的预测：</p>
-<p>y^test&#x3D;a1⋅Test1+a2⋅Test2+⋯+ak⋅Testk+b\hat{y}_{test} &#x3D; a_1 \cdot Test_1 + a_2 \cdot Test_2 + \dots + a_k \cdot Test_k + b</p>
-</li>
-</ul>
-<p>👉 最终结果就是 <strong>测试集上各基模型预测结果的加权组合</strong>。</p>
-<p>交叉验证（Cross Validation，简称 CV）是一种常用的模型评估方法，用来检验机器学习模型在<strong>未见过的数据上的泛化能力</strong>。它的核心思想是：把已有的数据集划分成多个部分，轮流用其中一部分做验证集，剩余部分做训练集，最终综合评估结果。</p>
-<hr>
-<h4 id="为什么需要交叉验证？"><a href="#为什么需要交叉验证？" class="headerlink" title="为什么需要交叉验证？"></a>为什么需要交叉验证？</h4><p>如果只用一次<strong>训练集 &#x2F; 测试集划分</strong>来评估模型，结果可能会受到划分方式的偶然性影响（比如某次划分刚好测试集比较难）。交叉验证通过多次划分并取平均，可以更稳定地反映模型的真实性能。</p>
-<hr>
-<h4 id="常见的交叉验证方法"><a href="#常见的交叉验证方法" class="headerlink" title="常见的交叉验证方法"></a>常见的交叉验证方法</h4><ol>
-<li><strong>k 折交叉验证（k-Fold CV）</strong><ul>
-<li>将数据集平均分成 k 份。</li>
-<li>每次用其中 1 份作为验证集，剩下 k-1 份作为训练集。</li>
-<li>重复 k 次，得到 k 个结果，取平均值作为最终性能。</li>
-<li>常见选择：k &#x3D; 5 或 10。</li>
-</ul>
-</li>
-<li><strong>留一交叉验证（LOOCV, Leave-One-Out CV）</strong><ul>
-<li>特殊情况：k 等于样本数。</li>
-<li>每次只留 1 个样本做验证，其余作为训练。</li>
-<li>计算量大，但对小样本数据很有用。</li>
-</ul>
-</li>
-<li><strong>分层交叉验证（Stratified k-Fold CV）</strong><ul>
-<li>用于分类问题。</li>
-<li>保证每折中的类别比例与整体数据集一致，避免某些类别在某折中消失。</li>
-</ul>
-</li>
-<li><strong>重复交叉验证（Repeated k-Fold CV）</strong><ul>
-<li>在 k 折交叉验证的基础上，重复多次（每次随机划分）。</li>
-<li>可以进一步降低划分的偶然性。</li>
-</ul>
-</li>
-</ol>
-<hr>
-<h4 id="交叉验证的优点"><a href="#交叉验证的优点" class="headerlink" title="交叉验证的优点"></a>交叉验证的优点</h4><ul>
-<li>更稳定和可靠的性能估计。</li>
-<li>避免单次划分可能造成的高估或低估。</li>
-<li>在样本较少时能更充分利用数据。</li>
-</ul>
-<hr>
-<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>假设有 100 条数据，采用 <strong>5 折交叉验证</strong>：</p>
-<ul>
-<li>第一次：第 1–20 条做验证，21–100 条做训练。</li>
-<li>第二次：第 21–40 条做验证，其他做训练。</li>
-<li>…依此类推，总共 5 次。<br> 最后取 5 次验证结果的平均作为模型最终得分。</li>
-</ul>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" style="color: #03a9f4">数据建模</a>
-        </span>
-        
-    </div>
-    <a href="/2021/12/13/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2021/11/15/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90%E6%9C%AF%E8%AF%AD/">
-        <h2 class="post-title">统计分析术语</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                统计分析
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2021/11/15
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="统计分析术语"><a href="#统计分析术语" class="headerlink" title="统计分析术语"></a>统计分析术语</h2><ol>
-<li>二分位数</li>
-<li>第一四分位数</li>
-</ol>
-<hr>
-<p><strong>箱型图解读要点</strong></p>
-<ol>
-<li><strong>异常值</strong><ul>
-<li>如果数据存在离群点（超出 [Q1−1.5⋅IQR,Q3+1.5⋅IQR][Q1-1.5·IQR, Q3+1.5·IQR] 的范围），会在箱型图外以圆点或星号标注。</li>
-</ul>
-</li>
-<li><strong>箱体高度（IQR &#x3D; Q3 – Q1）</strong><ul>
-<li><strong>箱子很短</strong>：数据高度集中，分布较均匀。</li>
-<li><strong>箱子很长</strong>：数据分布离散，差异较大。</li>
-</ul>
-</li>
-<li><strong>中位数位置</strong><ul>
-<li><strong>中位数接近箱体底部（Q1）</strong>：说明数据偏大（右偏，长尾在高值方向）。</li>
-<li><strong>中位数接近箱体顶部（Q3）</strong>：说明数据偏小（左偏，长尾在低值方向）。</li>
-<li>中位数是否居中，可以反映数据的 <strong>偏斜程度</strong>。</li>
-</ul>
-</li>
-<li><strong>上下须（Whiskers）长度</strong><ul>
-<li>须比较长：说明四分位数之外的数据差异较大 → <strong>方差、标准差大</strong>。</li>
-<li>须比较短：说明四分位数之外的数据较集中。</li>
-</ul>
-</li>
-<li><strong>箱型图的边缘并不是极值</strong><ul>
-<li>箱体的边缘是 <strong>Q1、Q3</strong>，而不是最小值、最大值。</li>
-<li>须的终点才接近“最大值&#x2F;最小值”，但仍可能不是极值（因为须长度有限制）。</li>
-</ul>
-</li>
-</ol>
-<hr>
-<p>📌 <strong>一句话记忆</strong>：</p>
-<ul>
-<li><strong>箱子 &#x3D; 中心 50% 数据</strong>，</li>
-<li><strong>线（须） &#x3D; 更广的分布范围</strong>，</li>
-<li><strong>点 &#x3D; 异常值</strong>，</li>
-<li><strong>中位数位置 &#x3D; 偏斜方向</strong>。</li>
-</ul>
-<ol>
-<li>假设检验</li>
-<li>显著性水平：当原假设为真时，拒绝原假设的概率</li>
-<li>功效：当原假设为假时，能检测出这种错误并得出正确结论的概率</li>
-<li>置信区间：用来估计总体参数可能范围的一个区间，反映了我们对总体参数估计的信任度</li>
-<li>p值：出现极端情况的概率，当原假设为真时，出现比当前抽样分布更加极端的情况的概率</li>
-<li>p与$\alpha$的关系：p小于a，则小概率事件发生，则拒绝H0</li>
-<li>一类错误：当零假设为真时，拒绝</li>
-<li>二类错误：当零假设为假时，接受</li>
-<li>原假设与备择假设</li>
-<li>中心极限定理</li>
-<li>大数定理：随着试验次数的增加，样本平均值趋近总体的期望值</li>
-<li>卡方检验：分析变量之间是否独立</li>
-<li>方差分析：比较三个或更多的均值是否差异</li>
-<li>z检验适用于大样本，总体方差已知</li>
-<li>t检验适用于小样本，总体方差未知</li>
-<li>最大似然估计</li>
-<li>最小二乘估计</li>
-<li>交叉验证</li>
-</ol>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90/" style="color: #00a596">统计分析</a>
-        </span>
-        
-    </div>
-    <a href="/2021/11/15/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90%E6%9C%AF%E8%AF%AD/" class="go-post">阅读全文</a>
 </div>
 
 
