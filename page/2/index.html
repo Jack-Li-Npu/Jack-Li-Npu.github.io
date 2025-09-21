@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>Leetcode sql题目记录2 | KING!BOB!</title>
+    <title>KING!BOB!</title>
     <meta name="author" content="KING BOB" />
     <meta name="description" content="LET'S MAKE IT HAPPEN" />
     <meta name="keywords" content="" />
@@ -47,9 +47,7 @@
 
 
 
-
-
-
+<script src="/js/lib/home.js"></script>
 
 <link rel="stylesheet" href="/css/main.css" />
 
@@ -159,17 +157,39 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div class="article">
-    <div>
-        <h1>Leetcode sql题目记录2</h1>
-    </div>
-    <div class="info">
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2021/9/9
+            <div id="home-head">
+    <div
+        id="home-background"
+        ref="homeBackground"
+        data-images="/images/background2.jpg"
+    ></div>
+    <div id="home-info" @click="homeClick">
+        <span class="loop"></span>
+        <span class="loop"></span>
+        <span class="loop"></span>
+        <span class="loop"></span>
+        <span class="info">
+            <div class="wrap">
+                <h1>KING!BOB!</h1>
+                <h3></h3>
+                <h5>LET&#39;S MAKE IT HAPPEN</h5>
+            </div>
         </span>
+    </div>
+</div>
+<div
+    id="home-posts-wrap"
+    ref="homePostsWrap"
+    true
+>
+    <div id="home-posts">
+        
+
+<div class="post">
+    <a href="/2021/09/09/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%952/">
+        <h2 class="post-title">Leetcode sql题目记录2</h2>
+    </a>
+    <div class="category-and-date">
         
         <span class="category">
             <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">
@@ -180,26 +200,19 @@
             </a>
         </span>
         
-        
-        <span class="tags">
+        <span class="date">
             <span class="icon">
-                <i class="fa-solid fa-tags fa-fw"></i>
+                <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            
-            
-            <span class="tag">
-                
-                <a href="/tags/Leetcode/" style="color: #ffa2c4">
-                    Leetcode
-                </a>
-            </span>
-            
+            2021/9/9
         </span>
         
+        
     </div>
-    
-    <div class="content" v-pre>
-        <h2 id="Leetcode-sql题目记录2"><a href="#Leetcode-sql题目记录2" class="headerlink" title="Leetcode  sql题目记录2"></a>Leetcode  sql题目记录2</h2><p>本博客仅记录**高频 SQL 50 题（进阶版）**中的中等难度题目，后续不定期更新</p>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <h2 id="Leetcode-sql题目记录2"><a href="#Leetcode-sql题目记录2" class="headerlink" title="Leetcode  sql题目记录2"></a>Leetcode  sql题目记录2</h2><p>本博客仅记录**高频 SQL 50 题（进阶版）**中的中等难度题目，后续不定期更新</p>
 <h3 id="1398-购买了产品A和产品B却没有购买产品C的顾客"><a href="#1398-购买了产品A和产品B却没有购买产品C的顾客" class="headerlink" title="1398.购买了产品A和产品B却没有购买产品C的顾客"></a>1398.购买了产品A和产品B却没有购买产品C的顾客</h3><p> <code>Customers</code> 表：</p>
 <pre><code>+---------------------+---------+
 | Column Name         | Type    |
@@ -1634,17 +1647,69 @@ select * from base1;
 <p>补充：</p>
 <p>将null转化为0——&gt;IFNULL(a.column, 0)</p>
 
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/Leetcode/" style="color: #ff7d73">Leetcode</a>
+        </span>
+        
+    </div>
+    <a href="/2021/09/09/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%952/" class="go-post">阅读全文</a>
+</div>
+
+
+        <div class="page-current">
+    
+    <a class="page-num" href="/">
+        <i class="fa-solid fa-caret-left fa-fw"></i>
+    </a>
+    <a class="page-num" href="/">1</a>
+    <span class="page-omit">...</span>
+    
+    <span class="current">2</span>
+    
+    
+    
+    
+</div>
+
     </div>
     
-    
-    
-    
-    <div id="comment">
-        <div id="giscus-container" class="giscus"></div>
+    <div id="home-card">
+        <div id="card-style">
+    <div id="card-div">
+        <div class="avatar">
+            <img src="/images/pic.jpg" alt="avatar" />
+        </div>
+        <div class="name">KING BOB</div>
+        <div class="description">
+            <p>Description<br>…</p>
+
+        </div>
+        
+        
+        <div class="friend-links">
+            
+            <div class="friend-link">
+                <a target="_blank" rel="noopener" href="https://argvchs.github.io">Argvchs</a>
+            </div>
+            
+        </div>
+        
     </div>
-    
-    
-    
+</div>
+
+    </div>
     
 </div>
 
@@ -1687,29 +1752,6 @@ select * from base1;
     style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
 ></canvas>
 <script src="/js/background.min.js"></script>
-    
-    
-<script
-    src="https://giscus.app/client.js"
-    data-repo="Jack-Li-Npu/comment"
-    data-repo-id="R_kgDOPviQNg"
-    data-category="Announcements"
-    data-category-id="DIC_kwDOPviQNs4Cva-O"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="bottom"
-    data-theme="preferred_color_scheme"
-    data-lang=""
-    crossorigin
-    async
-></script>
-
-
-
-
-
     
 <!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
   return axios.get('https://v1.hitokoto.cn?c=i')

@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <title>朴素贝叶斯：从理论到实践 | KING!BOB!</title>
+    <meta name="author" content="KING BOB" />
+    <meta name="description" content="LET'S MAKE IT HAPPEN" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/pic.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css" />
+<script src="/js/lib/math.js"></script>
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>KING!BOB!</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;KING!BOB!</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>朴素贝叶斯：从理论到实践</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/21
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00bcd4">
+                    机器学习
+                </a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+<h1 id="朴素贝叶斯：从理论到实践"><a href="#朴素贝叶斯：从理论到实践" class="headerlink" title="朴素贝叶斯：从理论到实践"></a>朴素贝叶斯：从理论到实践</h1><h2 id="一-朴素贝叶斯基本方法"><a href="#一-朴素贝叶斯基本方法" class="headerlink" title="一. 朴素贝叶斯基本方法"></a>一. 朴素贝叶斯基本方法</h2><p>朴素贝叶斯是一种基于贝叶斯定理与特征条件独立性假设的分类方法。它的基本思想非常简单直接：对于给定的待分类项，求解在此项出现的条件下各个类别出现的概率，哪个最大，就将其归为哪个类别。</p>
+<h3 id="a-学习联合概率分布-P-X-Y"><a href="#a-学习联合概率分布-P-X-Y" class="headerlink" title="a. 学习联合概率分布 P(X, Y)"></a>a. 学习联合概率分布 P(X, Y)</h3><p>首先，我们需要理解模型要学习什么。设输入特征空间 $\mathcal{X} \subseteq \mathbb{R}^n$ 为 n 维向量的集合，输出空间为类标记集合 $\mathcal{Y} &#x3D; {c_1, c_2, …, c_k}$。训练数据集 $T &#x3D; {(x_1, y_1), (x_2, y_2), …, (x_N, y_N)}$ 由 $P(X, Y)$ 独立同分布产生。</p>
+<p>朴素贝叶斯法的目的，就是通过训练数据集来<strong>学习联合概率分布 $P(X, Y)$</strong>。具体来说，这个联合分布可以分解为：<br>$$P(X, Y) &#x3D; P(Y) \cdot P(X|Y)$$</p>
+<p>其中：</p>
+<ul>
+<li>$P(Y)$ 是<strong>先验概率</strong>，即在没有任何特征信息的情况下，某一类别 $c_k$ 出现的概率。</li>
+<li>$P(X|Y)$ 是<strong>条件概率分布</strong>，即在已知类别为 $c_k$ 的条件下，特征 $X$ 取特定值 $x$ 的概率。</li>
+</ul>
+<h3 id="b-条件独立性的强假设与“朴素”之名"><a href="#b-条件独立性的强假设与“朴素”之名" class="headerlink" title="b. 条件独立性的强假设与“朴素”之名"></a>b. 条件独立性的强假设与“朴素”之名</h3><p>条件概率 $P(X&#x3D;x|Y&#x3D;c_k)$ 是几乎所有概率模型中最难估计的部分。因为 $X &#x3D; (x^{(1)}, x^{(2)}, …, x^{(n)})$ 是一个维度非常高的向量，其可能的取值组合是指数级增长的。直接在有限的数据集上估计如此复杂的分布几乎是不可能的。</p>
+<p>为了克服这个障碍，朴素贝叶斯法做出了一个强有力的、也是其被称为“朴素”的假设：<strong>特征条件独立性</strong>。即假设所有特征在类别确定的条件下都是相互独立的。</p>
+<p>这个假设意味着，一个特征出现的概率与其他特征是否出现无关。虽然这个假设在现实中很少真正成立（例如，在文本中，“人工智能”这个词的出现显然与“深度学习”相关），但它极大地简化了计算。基于此假设，条件概率可以分解为：<br>$$P(X&#x3D;x|Y&#x3D;c_k) &#x3D; P(x^{(1)}, x^{(2)}, …, x^{(n)} | Y&#x3D;c_k) &#x3D; \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)$$</p>
+<h3 id="c-贝叶斯定理"><a href="#c-贝叶斯定理" class="headerlink" title="c. 贝叶斯定理"></a>c. 贝叶斯定理</h3><p>学习到联合概率后，我们如何进行分类？这就要用到<strong>贝叶斯定理</strong>。贝叶斯定理为我们提供了在观察到特征 $X$ 后，估计类别 $Y$ 的概率（称为后验概率）的方法：<br>$$P(Y&#x3D;c_k | X&#x3D;x) &#x3D; \frac{P(X&#x3D;x| Y&#x3D;c_k) \cdot P(Y&#x3D;c_k)}{P(X&#x3D;x)} &#x3D; \frac{P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)}{\sum_{k} P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)}$$</p>
+<p>其中，$P(X&#x3D;x)$ 是证据（Evidence），对于所有类别 $c_k$ 来说都是一个常数归一化因子，确保所有后验概率之和为1。</p>
+<h3 id="d-生成模型"><a href="#d-生成模型" class="headerlink" title="d. 生成模型"></a>d. 生成模型</h3><p>由于朴素贝叶斯方法学习了联合概率分布 $P(X, Y)$，它实际上<strong>学习到了数据是如何生成的机制</strong>：它知道每个类别 $c_k$ 本身出现的先验概率 $P(Y&#x3D;c_k)$，以及在这个类别下，生成每个特征 $x^{(j)}$ 的概率 $P(x^{(j)}|Y&#x3D;c_k)$。因此，它属于<strong>生成模型</strong>（Generative Model）。与之相对的是判别模型（Discriminative Model，如逻辑回归、SVM），后者直接学习决策边界 $P(Y|X)$ 而不关心数据的生成方式。</p>
+<h3 id="e-后验概率最大化与分类决策"><a href="#e-后验概率最大化与分类决策" class="headerlink" title="e. 后验概率最大化与分类决策"></a>e. 后验概率最大化与分类决策</h3><p>朴素贝叶斯的分类器即为将后验概率最大的类别作为输出。因此，对于给定的输入 $x$，其预测的类别 $\hat{y}$ 是：<br>$$\hat{y} &#x3D; \arg \max_{c_k \in \mathcal{Y}} P(Y&#x3D;c_k | X&#x3D;x)$$</p>
+<p>由于分母 $P(X&#x3D;x)$ 对所有 $c_k$ 都相同，我们可以将其忽略，得到等价的公式：<br>$$\hat{y} &#x3D; \arg \max_{c_k \in \mathcal{Y}} P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)$$</p>
+<p>这就是朴素贝叶斯分类器最终使用的决策函数。</p>
+<hr>
+<h2 id="二-参数估计"><a href="#二-参数估计" class="headerlink" title="二. 参数估计"></a>二. 参数估计</h2><p>在现实中，我们无法知道真实的概率 $P(Y&#x3D;c_k)$ 和 $P(x^{(j)}|Y&#x3D;c_k)$，只能从训练集中进行估计。最常用的方法就是<strong>极大似然估计（MLE）</strong>。</p>
+<p><strong>极大似然估计</strong>的核心思想是：在已知随机变量属于某种分布（如伯努利分布、多项分布、高斯分布）但参数未知的情况下，寻找一组参数，使得当前观测到的样本数据出现的概率（似然度）最大。</p>
+<h3 id="a-先验概率的极大似然估计"><a href="#a-先验概率的极大似然估计" class="headerlink" title="a. 先验概率的极大似然估计"></a>a. 先验概率的极大似然估计</h3><p>$$P(Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k)}{N}, \quad k&#x3D;1,2,…,K$$<br>其中 $I$ 是指示函数，当 $y_i &#x3D; c_k$ 时为1，否则为0。即，$P(Y&#x3D;c_k)$ 的估计值是训练集中类别为 $c_k$ 的样本所占的比例。</p>
+<h3 id="b-条件概率的极大似然估计"><a href="#b-条件概率的极大似然估计" class="headerlink" title="b. 条件概率的极大似然估计"></a>b. 条件概率的极大似然估计</h3><p>条件概率的估计取决于特征所遵循的分布。对于第 $j$ 个特征 $x^{(j)}$，其取值集合为 ${a_{j1}, a_{j2}, …, a_{jS_j}}$，则条件概率的极大似然估计为：<br>$$P(x^{(j)} &#x3D; a_{jl} | Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(x_i^{(j)} &#x3D; a_{jl}, y_i &#x3D; c_k)}{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k)}$$<br>即，在类别为 $c_k$ 的样本中，第 $j$ 个特征取值 $a_{jl}$ 的样本所占的比例。</p>
+<hr>
+<h2 id="三-学习与分类算法"><a href="#三-学习与分类算法" class="headerlink" title="三. 学习与分类算法"></a>三. 学习与分类算法</h2><h3 id="a-朴素贝叶斯算法"><a href="#a-朴素贝叶斯算法" class="headerlink" title="a. 朴素贝叶斯算法"></a>a. 朴素贝叶斯算法</h3><p>结合上面的公式，朴素贝叶斯算法可以清晰地分为两步：</p>
+<h4 id="步骤一：学习（训练）"><a href="#步骤一：学习（训练）" class="headerlink" title="步骤一：学习（训练）"></a>步骤一：学习（训练）</h4><p>基于训练数据集 $T$，利用极大似然估计法计算以下参数：</p>
+<ol>
+<li>估计先验概率：$P(Y&#x3D;c_k)$ for $k&#x3D;1,2,…,K$。</li>
+<li>对于每个特征 $j&#x3D;1,2,…,n$，估计条件概率 $P(x^{(j)} &#x3D; a_{jl} | Y&#x3D;c_k)$ for $k&#x3D;1,2,…,K$ and $l&#x3D;1,2,…,S_j$。</li>
+</ol>
+<h4 id="步骤二：分类（预测）"><a href="#步骤二：分类（预测）" class="headerlink" title="步骤二：分类（预测）"></a>步骤二：分类（预测）</h4><p>对于一个新的实例 $x_{\text{new}} &#x3D; (x_{\text{new}}^{(1)}, x_{\text{new}}^{(2)}, …, x_{\text{new}}^{(n)})$，计算所有类别的后验概率（的分子部分）：<br>$$P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x_{\text{new}}^{(j)} | Y&#x3D;c_k), \quad k&#x3D;1,2,…,K$$<br>确定实例 $x_{\text{new}}$ 的类别：<br>$$\hat{y} &#x3D; \arg \max_{c_k} \left[ P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x_{\text{new}}^{(j)} | Y&#x3D;c_k) \right]$$</p>
+<h3 id="b-贝叶斯估计与平滑技术"><a href="#b-贝叶斯估计与平滑技术" class="headerlink" title="b. 贝叶斯估计与平滑技术"></a>b. 贝叶斯估计与平滑技术</h3><p>极大似然估计有一个显著的缺陷：如果训练集中某个特征值和某个类别的组合从未出现过，那么其条件概率的估计值会为0。这会导致一个问题，在预测时，只要有一个特征的条件概率为0，无论其他特征多么强地指向某个类别，整个连乘的结果都会变成0，从而影响分类的准确性。</p>
+<p>例如，在垃圾邮件分类中，训练集里“彩票”这个词从未在正常邮件中出现过（即 $P(\text{“彩票”} | Y&#x3D;\text{正常}) &#x3D; 0$），那么任何包含“彩票”这个词的邮件都会被直接判为垃圾邮件，这显然是不合理的。</p>
+<p>为了解决这个问题，我们引入<strong>贝叶斯估计</strong>（或称为<strong>平滑技术</strong>）。最常用的方法是<strong>拉普拉斯平滑（Laplace Smoothing）</strong>。</p>
+<ul>
+<li><p><strong>先验概率的贝叶斯估计</strong>：<br>  $$P_{\lambda}(Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k) + \lambda}{N + K \lambda}$$<br>  当 $\lambda&#x3D;1$ 时，称为拉普拉斯平滑。$K$ 是类别数量。</p>
+</li>
+<li><p><strong>条件概率的贝叶斯估计</strong>：<br>  $$P_{\lambda}(x^{(j)} &#x3D; a_{jl} | Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(x_i^{(j)} &#x3D; a_{jl}, y_i &#x3D; c_k) + \lambda}{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k) + S_j \lambda}$$<br>  其中 $\lambda \geq 0$。当 $\lambda&#x3D;0$ 时，就是极大似然估计。当 $\lambda&#x3D;1$ 时，即为拉普拉斯平滑。$S_j$ 是第 $j$ 个特征可能取值的个数。</p>
+</li>
+</ul>
+<p>拉普拉斯平滑等价于给每个特征的计数加上一个小的正数 $\lambda$（通常是1），从而避免了零概率问题。在样本数量足够大时，先验概率和条件概率的先验（即加上的 $\lambda$）的影响会变得微乎其微，估计值会逐渐趋近于实际的极大似然估计值。</p>
+<p><strong>总结</strong>：朴素贝叶斯法因其简单、高效且在某些领域（尤其是文本分析）效果出色而经久不衰。其核心在于通过条件独立性假设简化联合概率的估计，并利用贝叶斯定理实现分类。</p>
+<hr>
+<h2 id="四-代码实践"><a href="#四-代码实践" class="headerlink" title="四. 代码实践"></a>四. 代码实践</h2><pre><code class="language-python">import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score, ConfusionMatrixDisplay
+
+# 1. 加载数据
+iris = load_iris()
+X, y = iris.data, iris.target
+
+# 2. 划分训练集与测试集
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# 3. 使用朴素贝叶斯分类器
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# 4. 预测
+y_pred = model.predict(X_test)
+
+# 5. 打印准确率
+print(&quot;测试集准确率:&quot;, accuracy_score(y_test, y_pred))
+
+# 6. 可视化部分一：降维到二维并绘制散点图
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+
+plt.figure(figsize=(10, 5))
+
+# 原始类别分布
+plt.subplot(1, 2, 1)
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap=&quot;viridis&quot;, edgecolor=&quot;k&quot;)
+plt.title(&quot;Iris 原始类别分布 (PCA 2D)&quot;)
+plt.xlabel(&quot;PCA1&quot;)
+plt.ylabel(&quot;PCA2&quot;)
+
+# 预测类别分布
+y_all_pred = model.predict(X)
+plt.subplot(1, 2, 2)
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y_all_pred, cmap=&quot;viridis&quot;, edgecolor=&quot;k&quot;)
+plt.title(&quot;Naive Bayes 预测结果 (PCA 2D)&quot;)
+plt.xlabel(&quot;PCA1&quot;)
+plt.ylabel(&quot;PCA2&quot;)
+
+plt.tight_layout()
+plt.show()
+
+# 7. 可视化部分二：混淆矩阵
+ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap=&quot;Blues&quot;)
+plt.title(&quot;混淆矩阵&quot;)
+plt.show()
+</code></pre>
+<p>可视化结果</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509211813850.png" alt="image-20250921181339683"></p>
+<p> Gaussian Naive Bayes 在鸢尾花数据集上的表现比较好，超过九成样本预测正确。考虑到该数据集是经典的线性可分数据集，这个结果符合预期。</p>
+<h3 id="PCA-二维可视化"><a href="#PCA-二维可视化" class="headerlink" title="PCA 二维可视化"></a>PCA 二维可视化</h3><ul>
+<li>**左图 **：展示真实标签在降维后的二维空间的分布。紫色、青色、黄色分别代表三种鸢尾花。可以看到三个类别在二维投影下有一定分离，但中间区域存在重叠。</li>
+<li>**右图 **：展示模型预测的类别分布。整体形状与左图接近，说明大多数样本被正确分类；但在类别 1 和类别 2 之间，部分点分布混杂，模型容易混淆。</li>
+</ul>
+<hr>
+<h3 id="混淆矩阵"><a href="#混淆矩阵" class="headerlink" title="混淆矩阵"></a>混淆矩阵</h3><ul>
+<li><p>第一类 (Setosa，标签 0)：<strong>15 个样本全部预测正确</strong>，说明 Naive Bayes 对这一类的识别非常准确。</p>
+</li>
+<li><p>第二类 (Versicolor，标签 1)：<strong>14 个预测正确，1 个被误判为类别 2</strong>。</p>
+</li>
+<li><p>第三类 (Virginica，标签 2)：<strong>12 个预测正确，3 个被误判为类别 1</strong>。</p>
+<p>主要错误集中在 <strong>类别 1 和类别 2 之间</strong>，这与 PCA 散点图中它们的重叠区域相吻合。</p>
+</li>
+</ul>
+
+    </div>
+    
+    
+    
+    
+    <div id="comment">
+        <div id="giscus-container" class="giscus"></div>
+    </div>
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2025 - 2025 KING!BOB!
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;KING BOB
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://s4.zstatic.net/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script>
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+    
+    
+<script
+    src="https://giscus.app/client.js"
+    data-repo="Jack-Li-Npu/comment"
+    data-repo-id="R_kgDOPviQNg"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOPviQNs4Cva-O"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="preferred_color_scheme"
+    data-lang=""
+    crossorigin
+    async
+></script>
+
+
+
+
+
+    
+<!-- hexo injector body_end start --><script data-pjax src="https://unpkg.com/oh-my-live2d"></script><script>const oml2d = OML2D.loadOml2d({dockedPosition:"right",mobileDisplay:true,models:[{"path":"https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json","mobilePosition":[-10,23],"mobileScale":0.1,"mobileStageStyle":{"width":180,"height":166},"motionPreloadStrategy":"IDLE","position":[-10,35],"scale":0.15,"stageStyle":{"width":250,"height":250}},{"path":"https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json","scale":0.12,"position":[0,0],"stageStyle":{"width":250},"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180}},{"path":"https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json","scale":0.12,"position":[0,0],"mobileScale":0.08,"mobilePosition":[0,0],"mobileStageStyle":{"width":180},"stageStyle":{"width":250}}],parentElement:document.body,primaryColor:"var(--btn-bg)",sayHello:false,tips:{style: {"width":230,"height":120,"left":"calc(50% - 20px)","top":"-100px"},mobileStyle: {"width":180,"height":80,"left":"calc(50% - 30px)","top":"-100px"},idleTips:{interval:15000,message:function(){
+  return axios.get('https://v1.hitokoto.cn?c=i')
+    .then(function (response) {
+      return response.data.hitokoto ;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+}
+}}});</script><!-- hexo injector body_end end --></body>
+</html>

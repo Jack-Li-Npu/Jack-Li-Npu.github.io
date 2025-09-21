@@ -186,6 +186,170 @@
         
 
 <div class="post">
+    <a href="/2025/09/21/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/">
+        <h2 class="post-title">朴素贝叶斯：从理论到实践</h2>
+    </a>
+    <div class="category-and-date">
+        
+        <span class="category">
+            <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                机器学习
+            </a>
+        </span>
+        
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/9/21
+        </span>
+        
+        
+    </div>
+    <div class="description">
+        <div class="content" v-pre>
+            
+            <meta name="referrer" content="no-referrer" />
+
+<h1 id="朴素贝叶斯：从理论到实践"><a href="#朴素贝叶斯：从理论到实践" class="headerlink" title="朴素贝叶斯：从理论到实践"></a>朴素贝叶斯：从理论到实践</h1><h2 id="一-朴素贝叶斯基本方法"><a href="#一-朴素贝叶斯基本方法" class="headerlink" title="一. 朴素贝叶斯基本方法"></a>一. 朴素贝叶斯基本方法</h2><p>朴素贝叶斯是一种基于贝叶斯定理与特征条件独立性假设的分类方法。它的基本思想非常简单直接：对于给定的待分类项，求解在此项出现的条件下各个类别出现的概率，哪个最大，就将其归为哪个类别。</p>
+<h3 id="a-学习联合概率分布-P-X-Y"><a href="#a-学习联合概率分布-P-X-Y" class="headerlink" title="a. 学习联合概率分布 P(X, Y)"></a>a. 学习联合概率分布 P(X, Y)</h3><p>首先，我们需要理解模型要学习什么。设输入特征空间 $\mathcal{X} \subseteq \mathbb{R}^n$ 为 n 维向量的集合，输出空间为类标记集合 $\mathcal{Y} &#x3D; {c_1, c_2, …, c_k}$。训练数据集 $T &#x3D; {(x_1, y_1), (x_2, y_2), …, (x_N, y_N)}$ 由 $P(X, Y)$ 独立同分布产生。</p>
+<p>朴素贝叶斯法的目的，就是通过训练数据集来<strong>学习联合概率分布 $P(X, Y)$</strong>。具体来说，这个联合分布可以分解为：<br>$$P(X, Y) &#x3D; P(Y) \cdot P(X|Y)$$</p>
+<p>其中：</p>
+<ul>
+<li>$P(Y)$ 是<strong>先验概率</strong>，即在没有任何特征信息的情况下，某一类别 $c_k$ 出现的概率。</li>
+<li>$P(X|Y)$ 是<strong>条件概率分布</strong>，即在已知类别为 $c_k$ 的条件下，特征 $X$ 取特定值 $x$ 的概率。</li>
+</ul>
+<h3 id="b-条件独立性的强假设与“朴素”之名"><a href="#b-条件独立性的强假设与“朴素”之名" class="headerlink" title="b. 条件独立性的强假设与“朴素”之名"></a>b. 条件独立性的强假设与“朴素”之名</h3><p>条件概率 $P(X&#x3D;x|Y&#x3D;c_k)$ 是几乎所有概率模型中最难估计的部分。因为 $X &#x3D; (x^{(1)}, x^{(2)}, …, x^{(n)})$ 是一个维度非常高的向量，其可能的取值组合是指数级增长的。直接在有限的数据集上估计如此复杂的分布几乎是不可能的。</p>
+<p>为了克服这个障碍，朴素贝叶斯法做出了一个强有力的、也是其被称为“朴素”的假设：<strong>特征条件独立性</strong>。即假设所有特征在类别确定的条件下都是相互独立的。</p>
+<p>这个假设意味着，一个特征出现的概率与其他特征是否出现无关。虽然这个假设在现实中很少真正成立（例如，在文本中，“人工智能”这个词的出现显然与“深度学习”相关），但它极大地简化了计算。基于此假设，条件概率可以分解为：<br>$$P(X&#x3D;x|Y&#x3D;c_k) &#x3D; P(x^{(1)}, x^{(2)}, …, x^{(n)} | Y&#x3D;c_k) &#x3D; \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)$$</p>
+<h3 id="c-贝叶斯定理"><a href="#c-贝叶斯定理" class="headerlink" title="c. 贝叶斯定理"></a>c. 贝叶斯定理</h3><p>学习到联合概率后，我们如何进行分类？这就要用到<strong>贝叶斯定理</strong>。贝叶斯定理为我们提供了在观察到特征 $X$ 后，估计类别 $Y$ 的概率（称为后验概率）的方法：<br>$$P(Y&#x3D;c_k | X&#x3D;x) &#x3D; \frac{P(X&#x3D;x| Y&#x3D;c_k) \cdot P(Y&#x3D;c_k)}{P(X&#x3D;x)} &#x3D; \frac{P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)}{\sum_{k} P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)}$$</p>
+<p>其中，$P(X&#x3D;x)$ 是证据（Evidence），对于所有类别 $c_k$ 来说都是一个常数归一化因子，确保所有后验概率之和为1。</p>
+<h3 id="d-生成模型"><a href="#d-生成模型" class="headerlink" title="d. 生成模型"></a>d. 生成模型</h3><p>由于朴素贝叶斯方法学习了联合概率分布 $P(X, Y)$，它实际上<strong>学习到了数据是如何生成的机制</strong>：它知道每个类别 $c_k$ 本身出现的先验概率 $P(Y&#x3D;c_k)$，以及在这个类别下，生成每个特征 $x^{(j)}$ 的概率 $P(x^{(j)}|Y&#x3D;c_k)$。因此，它属于<strong>生成模型</strong>（Generative Model）。与之相对的是判别模型（Discriminative Model，如逻辑回归、SVM），后者直接学习决策边界 $P(Y|X)$ 而不关心数据的生成方式。</p>
+<h3 id="e-后验概率最大化与分类决策"><a href="#e-后验概率最大化与分类决策" class="headerlink" title="e. 后验概率最大化与分类决策"></a>e. 后验概率最大化与分类决策</h3><p>朴素贝叶斯的分类器即为将后验概率最大的类别作为输出。因此，对于给定的输入 $x$，其预测的类别 $\hat{y}$ 是：<br>$$\hat{y} &#x3D; \arg \max_{c_k \in \mathcal{Y}} P(Y&#x3D;c_k | X&#x3D;x)$$</p>
+<p>由于分母 $P(X&#x3D;x)$ 对所有 $c_k$ 都相同，我们可以将其忽略，得到等价的公式：<br>$$\hat{y} &#x3D; \arg \max_{c_k \in \mathcal{Y}} P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x^{(j)} | Y&#x3D;c_k)$$</p>
+<p>这就是朴素贝叶斯分类器最终使用的决策函数。</p>
+<hr>
+<h2 id="二-参数估计"><a href="#二-参数估计" class="headerlink" title="二. 参数估计"></a>二. 参数估计</h2><p>在现实中，我们无法知道真实的概率 $P(Y&#x3D;c_k)$ 和 $P(x^{(j)}|Y&#x3D;c_k)$，只能从训练集中进行估计。最常用的方法就是<strong>极大似然估计（MLE）</strong>。</p>
+<p><strong>极大似然估计</strong>的核心思想是：在已知随机变量属于某种分布（如伯努利分布、多项分布、高斯分布）但参数未知的情况下，寻找一组参数，使得当前观测到的样本数据出现的概率（似然度）最大。</p>
+<h3 id="a-先验概率的极大似然估计"><a href="#a-先验概率的极大似然估计" class="headerlink" title="a. 先验概率的极大似然估计"></a>a. 先验概率的极大似然估计</h3><p>$$P(Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k)}{N}, \quad k&#x3D;1,2,…,K$$<br>其中 $I$ 是指示函数，当 $y_i &#x3D; c_k$ 时为1，否则为0。即，$P(Y&#x3D;c_k)$ 的估计值是训练集中类别为 $c_k$ 的样本所占的比例。</p>
+<h3 id="b-条件概率的极大似然估计"><a href="#b-条件概率的极大似然估计" class="headerlink" title="b. 条件概率的极大似然估计"></a>b. 条件概率的极大似然估计</h3><p>条件概率的估计取决于特征所遵循的分布。对于第 $j$ 个特征 $x^{(j)}$，其取值集合为 ${a_{j1}, a_{j2}, …, a_{jS_j}}$，则条件概率的极大似然估计为：<br>$$P(x^{(j)} &#x3D; a_{jl} | Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(x_i^{(j)} &#x3D; a_{jl}, y_i &#x3D; c_k)}{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k)}$$<br>即，在类别为 $c_k$ 的样本中，第 $j$ 个特征取值 $a_{jl}$ 的样本所占的比例。</p>
+<hr>
+<h2 id="三-学习与分类算法"><a href="#三-学习与分类算法" class="headerlink" title="三. 学习与分类算法"></a>三. 学习与分类算法</h2><h3 id="a-朴素贝叶斯算法"><a href="#a-朴素贝叶斯算法" class="headerlink" title="a. 朴素贝叶斯算法"></a>a. 朴素贝叶斯算法</h3><p>结合上面的公式，朴素贝叶斯算法可以清晰地分为两步：</p>
+<h4 id="步骤一：学习（训练）"><a href="#步骤一：学习（训练）" class="headerlink" title="步骤一：学习（训练）"></a>步骤一：学习（训练）</h4><p>基于训练数据集 $T$，利用极大似然估计法计算以下参数：</p>
+<ol>
+<li>估计先验概率：$P(Y&#x3D;c_k)$ for $k&#x3D;1,2,…,K$。</li>
+<li>对于每个特征 $j&#x3D;1,2,…,n$，估计条件概率 $P(x^{(j)} &#x3D; a_{jl} | Y&#x3D;c_k)$ for $k&#x3D;1,2,…,K$ and $l&#x3D;1,2,…,S_j$。</li>
+</ol>
+<h4 id="步骤二：分类（预测）"><a href="#步骤二：分类（预测）" class="headerlink" title="步骤二：分类（预测）"></a>步骤二：分类（预测）</h4><p>对于一个新的实例 $x_{\text{new}} &#x3D; (x_{\text{new}}^{(1)}, x_{\text{new}}^{(2)}, …, x_{\text{new}}^{(n)})$，计算所有类别的后验概率（的分子部分）：<br>$$P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x_{\text{new}}^{(j)} | Y&#x3D;c_k), \quad k&#x3D;1,2,…,K$$<br>确定实例 $x_{\text{new}}$ 的类别：<br>$$\hat{y} &#x3D; \arg \max_{c_k} \left[ P(Y&#x3D;c_k) \prod_{j&#x3D;1}^{n} P(x_{\text{new}}^{(j)} | Y&#x3D;c_k) \right]$$</p>
+<h3 id="b-贝叶斯估计与平滑技术"><a href="#b-贝叶斯估计与平滑技术" class="headerlink" title="b. 贝叶斯估计与平滑技术"></a>b. 贝叶斯估计与平滑技术</h3><p>极大似然估计有一个显著的缺陷：如果训练集中某个特征值和某个类别的组合从未出现过，那么其条件概率的估计值会为0。这会导致一个问题，在预测时，只要有一个特征的条件概率为0，无论其他特征多么强地指向某个类别，整个连乘的结果都会变成0，从而影响分类的准确性。</p>
+<p>例如，在垃圾邮件分类中，训练集里“彩票”这个词从未在正常邮件中出现过（即 $P(\text{“彩票”} | Y&#x3D;\text{正常}) &#x3D; 0$），那么任何包含“彩票”这个词的邮件都会被直接判为垃圾邮件，这显然是不合理的。</p>
+<p>为了解决这个问题，我们引入<strong>贝叶斯估计</strong>（或称为<strong>平滑技术</strong>）。最常用的方法是<strong>拉普拉斯平滑（Laplace Smoothing）</strong>。</p>
+<ul>
+<li><p><strong>先验概率的贝叶斯估计</strong>：<br>  $$P_{\lambda}(Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k) + \lambda}{N + K \lambda}$$<br>  当 $\lambda&#x3D;1$ 时，称为拉普拉斯平滑。$K$ 是类别数量。</p>
+</li>
+<li><p><strong>条件概率的贝叶斯估计</strong>：<br>  $$P_{\lambda}(x^{(j)} &#x3D; a_{jl} | Y&#x3D;c_k) &#x3D; \frac{\sum_{i&#x3D;1}^{N} I(x_i^{(j)} &#x3D; a_{jl}, y_i &#x3D; c_k) + \lambda}{\sum_{i&#x3D;1}^{N} I(y_i &#x3D; c_k) + S_j \lambda}$$<br>  其中 $\lambda \geq 0$。当 $\lambda&#x3D;0$ 时，就是极大似然估计。当 $\lambda&#x3D;1$ 时，即为拉普拉斯平滑。$S_j$ 是第 $j$ 个特征可能取值的个数。</p>
+</li>
+</ul>
+<p>拉普拉斯平滑等价于给每个特征的计数加上一个小的正数 $\lambda$（通常是1），从而避免了零概率问题。在样本数量足够大时，先验概率和条件概率的先验（即加上的 $\lambda$）的影响会变得微乎其微，估计值会逐渐趋近于实际的极大似然估计值。</p>
+<p><strong>总结</strong>：朴素贝叶斯法因其简单、高效且在某些领域（尤其是文本分析）效果出色而经久不衰。其核心在于通过条件独立性假设简化联合概率的估计，并利用贝叶斯定理实现分类。</p>
+<hr>
+<h2 id="四-代码实践"><a href="#四-代码实践" class="headerlink" title="四. 代码实践"></a>四. 代码实践</h2><pre><code class="language-python">import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.decomposition import PCA
+from sklearn.metrics import accuracy_score, ConfusionMatrixDisplay
+
+# 1. 加载数据
+iris = load_iris()
+X, y = iris.data, iris.target
+
+# 2. 划分训练集与测试集
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y
+)
+
+# 3. 使用朴素贝叶斯分类器
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# 4. 预测
+y_pred = model.predict(X_test)
+
+# 5. 打印准确率
+print(&quot;测试集准确率:&quot;, accuracy_score(y_test, y_pred))
+
+# 6. 可视化部分一：降维到二维并绘制散点图
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+
+plt.figure(figsize=(10, 5))
+
+# 原始类别分布
+plt.subplot(1, 2, 1)
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y, cmap=&quot;viridis&quot;, edgecolor=&quot;k&quot;)
+plt.title(&quot;Iris 原始类别分布 (PCA 2D)&quot;)
+plt.xlabel(&quot;PCA1&quot;)
+plt.ylabel(&quot;PCA2&quot;)
+
+# 预测类别分布
+y_all_pred = model.predict(X)
+plt.subplot(1, 2, 2)
+plt.scatter(X_pca[:, 0], X_pca[:, 1], c=y_all_pred, cmap=&quot;viridis&quot;, edgecolor=&quot;k&quot;)
+plt.title(&quot;Naive Bayes 预测结果 (PCA 2D)&quot;)
+plt.xlabel(&quot;PCA1&quot;)
+plt.ylabel(&quot;PCA2&quot;)
+
+plt.tight_layout()
+plt.show()
+
+# 7. 可视化部分二：混淆矩阵
+ConfusionMatrixDisplay.from_estimator(model, X_test, y_test, cmap=&quot;Blues&quot;)
+plt.title(&quot;混淆矩阵&quot;)
+plt.show()
+</code></pre>
+<p>可视化结果</p>
+<p><img src="https://gitee.com/LCZsecretspace/images/raw/master/202509211813850.png" alt="image-20250921181339683"></p>
+<p> Gaussian Naive Bayes 在鸢尾花数据集上的表现比较好，超过九成样本预测正确。考虑到该数据集是经典的线性可分数据集，这个结果符合预期。</p>
+<h3 id="PCA-二维可视化"><a href="#PCA-二维可视化" class="headerlink" title="PCA 二维可视化"></a>PCA 二维可视化</h3><ul>
+<li>**左图 **：展示真实标签在降维后的二维空间的分布。紫色、青色、黄色分别代表三种鸢尾花。可以看到三个类别在二维投影下有一定分离，但中间区域存在重叠。</li>
+<li>**右图 **：展示模型预测的类别分布。整体形状与左图接近，说明大多数样本被正确分类；但在类别 1 和类别 2 之间，部分点分布混杂，模型容易混淆。</li>
+</ul>
+<hr>
+<h3 id="混淆矩阵"><a href="#混淆矩阵" class="headerlink" title="混淆矩阵"></a>混淆矩阵</h3><ul>
+<li><p>第一类 (Setosa，标签 0)：<strong>15 个样本全部预测正确</strong>，说明 Naive Bayes 对这一类的识别非常准确。</p>
+</li>
+<li><p>第二类 (Versicolor，标签 1)：<strong>14 个预测正确，1 个被误判为类别 2</strong>。</p>
+</li>
+<li><p>第三类 (Virginica，标签 2)：<strong>12 个预测正确，3 个被误判为类别 1</strong>。</p>
+<p>主要错误集中在 <strong>类别 1 和类别 2 之间</strong>，这与 PCA 散点图中它们的重叠区域相吻合。</p>
+</li>
+</ul>
+
+            
+        </div>
+    </div>
+    <div class="post-tags">
+        
+        <span class="icon">
+            <i class="fa-solid fa-tags fa-fw"></i>
+        </span>
+        
+        
+        
+        <span class="tag">
+            
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ff7d73">机器学习</a>
+        </span>
+        
+    </div>
+    <a href="/2025/09/21/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/" class="go-post">阅读全文</a>
+</div>
+
+<div class="post">
     <a href="/2025/09/17/K%E8%BF%91%E9%82%BB%EF%BC%9A%E4%BB%8E%E7%90%86%E8%AE%BA%E5%88%B0%E5%AE%9E%E8%B7%B5/">
         <h2 class="post-title">K近邻算法：从理论到实践</h2>
     </a>
@@ -466,7 +630,7 @@ print(df_results)
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00a596">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">机器学习</a>
         </span>
         
     </div>
@@ -1225,7 +1389,7 @@ plt.show()
         
         <span class="tag">
             
-            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #00a596">机器学习</a>
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="color: #ffa2c4">机器学习</a>
         </span>
         
     </div>
@@ -1672,7 +1836,7 @@ submission.to_csv(&quot;/kaggle/working/submission.csv&quot;, index=False)
         
         <span class="tag">
             
-            <a href="/tags/Kaggle/" style="color: #ffa2c4">Kaggle</a>
+            <a href="/tags/Kaggle/" style="color: #ff7d73">Kaggle</a>
         </span>
         
     </div>
@@ -3079,12 +3243,12 @@ tiv_2015 值为 10 与第三条和第四条记录相同，且其位置是唯一�
         
         <span class="tag">
             
-            <a href="/tags/Leetcode/" style="color: #00a596">Leetcode</a>
+            <a href="/tags/Leetcode/" style="color: #03a9f4">Leetcode</a>
         </span>
         
         <span class="tag">
             
-            <a href="/tags/SQL/" style="color: #00bcd4">SQL</a>
+            <a href="/tags/SQL/" style="color: #ffa2c4">SQL</a>
         </span>
         
     </div>
@@ -3405,7 +3569,7 @@ merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].repla
         
         <span class="tag">
             
-            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" style="color: #00bcd4">数据建模</a>
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BB%BA%E6%A8%A1/" style="color: #00a596">数据建模</a>
         </span>
         
     </div>
@@ -3521,1092 +3685,21 @@ merchant[inf_cols] = merchant[inf_cols].replace(np.inf, merchant[inf_cols].repla
     <a href="/2021/11/15/%E7%BB%9F%E8%AE%A1%E5%88%86%E6%9E%90%E6%9C%AF%E8%AF%AD/" class="go-post">阅读全文</a>
 </div>
 
-<div class="post">
-    <a href="/2021/09/09/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%952/">
-        <h2 class="post-title">Leetcode sql题目记录2</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="category">
-            <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                数据库
-            </a>
-        </span>
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2021/9/9
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="Leetcode-sql题目记录2"><a href="#Leetcode-sql题目记录2" class="headerlink" title="Leetcode  sql题目记录2"></a>Leetcode  sql题目记录2</h2><p>本博客仅记录**高频 SQL 50 题（进阶版）**中的中等难度题目，后续不定期更新</p>
-<h3 id="1398-购买了产品A和产品B却没有购买产品C的顾客"><a href="#1398-购买了产品A和产品B却没有购买产品C的顾客" class="headerlink" title="1398.购买了产品A和产品B却没有购买产品C的顾客"></a>1398.购买了产品A和产品B却没有购买产品C的顾客</h3><p> <code>Customers</code> 表：</p>
-<pre><code>+---------------------+---------+
-| Column Name         | Type    |
-+---------------------+---------+
-| customer_id         | int     |
-| customer_name       | varchar |
-+---------------------+---------+
-customer_id 是这张表中具有唯一值的列。
-customer_name 是顾客的名称。
-</code></pre>
-<p><code>Orders</code> 表：</p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| order_id      | int     |
-| customer_id   | int     |
-| product_name  | varchar |
-+---------------+---------+
-order_id 是这张表中具有唯一值的列。
-customer_id 是购买了名为 &quot;product_name&quot; 产品顾客的id。
-</code></pre>
-<p>请你编写解决方案，报告购买了产品 <strong>“A”</strong>，<strong>“B”</strong> 但没有购买产品 <strong>“C”</strong> 的客户的 customer_id 和 customer_name，因为我们想推荐他们购买这样的产品。</p>
-<p>返回按 <code>customer_id</code> <strong>排序</strong> 的结果表。</p>
-<p>返回结果格式如下所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Customers table:
-+-------------+---------------+
-| customer_id | customer_name |
-+-------------+---------------+
-| 1           | Daniel        |
-| 2           | Diana         |
-| 3           | Elizabeth     |
-| 4           | Jhon          |
-+-------------+---------------+
-
-Orders table:
-+------------+--------------+---------------+
-| order_id   | customer_id  | product_name  |
-+------------+--------------+---------------+
-| 10         |     1        |     A         |
-| 20         |     1        |     B         |
-| 30         |     1        |     D         |
-| 40         |     1        |     C         |
-| 50         |     2        |     A         |
-| 60         |     3        |     A         |
-| 70         |     3        |     B         |
-| 80         |     3        |     D         |
-| 90         |     4        |     C         |
-+------------+--------------+---------------+
-输出：
-+-------------+---------------+
-| customer_id | customer_name |
-+-------------+---------------+
-| 3           | Elizabeth     |
-+-------------+---------------+
-解释：
-只有 customer_id 为 3 的顾客购买了产品 A 和产品 B ，却没有购买产品 C 。
-</code></pre>
-<p><strong>解答：</strong></p>
-<p><strong>（1）最基础解法，逐一子查询</strong></p>
-<pre><code class="language-sql">SELECT c.customer_id, c.customer_name
-FROM Customers c
-WHERE EXISTS (
-    SELECT 1 FROM Orders o WHERE o.customer_id = c.customer_id AND o.product_name = &#39;A&#39;
-)
-AND EXISTS (
-    SELECT 1 FROM Orders o WHERE o.customer_id = c.customer_id AND o.product_name = &#39;B&#39;
-)
-AND NOT EXISTS (
-    SELECT 1 FROM Orders o WHERE o.customer_id = c.customer_id AND o.product_name = &#39;C&#39;
-);
-</code></pre>
-<p>注意：在判断某列不在某个子查询的结果列表里时，如果子查询里有null值，则not in会返回空。因此需要用not exists。</p>
-<p>当 <code>NOT IN</code> 拆成多个比较后，如果其中有一个条件返回 <code>UNKNOWN</code>，整个 AND 结果就不是 <code>TRUE</code>，而是 <strong>UNKNOWN</strong>，最终这条记录就被过滤掉。</p>
-<p>举例：</p>
-<ul>
-<li><code>col1 = 10</code><br> 检查 <code>10 &lt;&gt; 5</code> → TRUE<br> 检查 <code>10 &lt;&gt; NULL</code> → UNKNOWN<br> <code>TRUE AND UNKNOWN</code> → UNKNOWN → 不返回</li>
-</ul>
-<p>所以只要子查询里有 <code>NULL</code>，所有外层行都会因为遇到 <code>UNKNOWN</code> 被排除掉，结果就是空集</p>
-<p><strong>（2）一次扫 Orders 做条件聚合，再跟 Customers 关联</strong></p>
-<pre><code class="language-sql">SELECT c.customer_id, c.customer_name
-FROM Customers c
-JOIN Orders o ON o.customer_id = c.customer_id
-GROUP BY c.customer_id, c.customer_name
-HAVING SUM(o.product_name = &#39;A&#39;) &gt; 0
-   AND SUM(o.product_name = &#39;B&#39;) &gt; 0
-   AND SUM(o.product_name = &#39;C&#39;) = 0
-ORDER BY c.customer_id;
-</code></pre>
-<hr>
-<h3 id="1112-每位学生的最高成绩"><a href="#1112-每位学生的最高成绩" class="headerlink" title="1112.每位学生的最高成绩"></a>1112.每位学生的最高成绩</h3><p>表：<code>Enrollments</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| student_id    | int     |
-| course_id     | int     |
-| grade         | int     |
-+---------------+---------+
-(student_id, course_id) 是该表的主键（具有唯一值的列的组合）。
-grade 不会为 NULL。
-</code></pre>
-<p>编写解决方案，找出每位学生获得的最高成绩和它所对应的科目，若科目成绩并列，取 <code>course_id</code> 最小的一门。查询结果需按 <code>student_id</code> 增序进行排序。</p>
-<p>查询结果格式如下所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Enrollments 表：
-+------------+-------------------+
-| student_id | course_id | grade |
-+------------+-----------+-------+
-| 2          | 2         | 95    |
-| 2          | 3         | 95    |
-| 1          | 1         | 90    |
-| 1          | 2         | 99    |
-| 3          | 1         | 80    |
-| 3          | 2         | 75    |
-| 3          | 3         | 82    |
-+------------+-----------+-------+
-输出：
-+------------+-------------------+
-| student_id | course_id | grade |
-+------------+-----------+-------+
-| 1          | 2         | 99    |
-| 2          | 2         | 95    |
-| 3          | 3         | 82    |
-+------------+-----------+-------+
-</code></pre>
-<p><strong>解答</strong>：</p>
-<pre><code class="language-sql">select student_id, min(course_id)as course_id, grade from(
-    select *, max(grade) over(partition by student_id) as max_score from Enrollments
-)t where grade = max_score group by student_id, grade order by student_id;
-</code></pre>
-<hr>
-<h3 id="1440-计算布尔表达式的值"><a href="#1440-计算布尔表达式的值" class="headerlink" title="1440.计算布尔表达式的值"></a>1440.计算布尔表达式的值</h3><p>表 <code>Variables</code>:</p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| name          | varchar |
-| value         | int     |
-+---------------+---------+
-在 SQL 中，name 是该表主键.
-该表包含了存储的变量及其对应的值.
-</code></pre>
-<p>表 <code>Expressions</code>:</p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| left_operand  | varchar |
-| operator      | enum    |
-| right_operand | varchar |
-+---------------+---------+
-在 SQL 中，(left_operand, operator, right_operand) 是该表主键.
-该表包含了需要计算的布尔表达式.
-operator 是枚举类型, 取值于(&#39;&lt;&#39;, &#39;&gt;&#39;, &#39;=&#39;)
-left_operand 和 right_operand 的值保证存在于 Variables 表单中.
-</code></pre>
-<p>计算表 <code>Expressions</code> 中的布尔表达式。</p>
-<p>返回的结果表 <strong>无顺序要求</strong> 。</p>
-<p>结果格式如下例所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Variables 表:
-+------+-------+
-| name | value |
-+------+-------+
-| x    | 66    |
-| y    | 77    |
-+------+-------+
-
-Expressions 表:
-+--------------+----------+---------------+
-| left_operand | operator | right_operand |
-+--------------+----------+---------------+
-| x            | &gt;        | y             |
-| x            | &lt;        | y             |
-| x            | =        | y             |
-| y            | &gt;        | x             |
-| y            | &lt;        | x             |
-| x            | =        | x             |
-+--------------+----------+---------------+
-
-输出:
-+--------------+----------+---------------+-------+
-| left_operand | operator | right_operand | value |
-+--------------+----------+---------------+-------+
-| x            | &gt;        | y             | false |
-| x            | &lt;        | y             | true  |
-| x            | =        | y             | false |
-| y            | &gt;        | x             | true  |
-| y            | &lt;        | x             | false |
-| x            | =        | x             | true  |
-+--------------+----------+---------------+-------+
-解释：
-如上所示, 你需要通过使用 Variables 表来找到 Expressions 表中的每一个布尔表达式的值.
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">SELECT e.left_operand,
-       e.operator,
-       e.right_operand,
-       CASE
-           WHEN e.operator = &#39;&gt;&#39; AND v1.value &gt; v2.value THEN &#39;true&#39;
-           WHEN e.operator = &#39;&lt;&#39; AND v1.value &lt; v2.value THEN &#39;true&#39;
-           WHEN e.operator = &#39;=&#39; AND v1.value = v2.value THEN &#39;true&#39;
-           ELSE &#39;false&#39;
-       END AS value
-FROM Expressions e
-JOIN Variables v1 ON e.left_operand = v1.name
-JOIN Variables v2 ON e.right_operand = v2.name;
-</code></pre>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
-<li><code>JOIN Variables v1</code> → 获取左操作数的值。</li>
-<li><code>JOIN Variables v2</code> → 获取右操作数的值。</li>
-<li><code>CASE</code> 里根据不同运算符进行比较，返回 <code>true</code> 或 <code>false</code>。</li>
-</ul>
-<p>这样写就能正确对比 <strong>数值</strong>，而不是对比变量名字符串。</p>
-<hr>
-<h3 id="1212-查询球队积分（列转行）"><a href="#1212-查询球队积分（列转行）" class="headerlink" title="1212.查询球队积分（列转行）"></a>1212.查询球队积分（列转行）</h3><p>表: <code>Teams</code></p>
-<pre><code>+---------------+----------+
-| Column Name   | Type     |
-+---------------+----------+
-| team_id       | int      |
-| team_name     | varchar  |
-+---------------+----------+
-team_id 是该表具有唯一值的列。
-表中的每一行都代表一支独立足球队。
-</code></pre>
-<p>表: <code>Matches</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| match_id      | int     |
-| host_team     | int     |
-| guest_team    | int     | 
-| host_goals    | int     |
-| guest_goals   | int     |
-+---------------+---------+
-match_id 是该表具有唯一值的列。
-表中的每一行都代表一场已结束的比赛。
-比赛的主客队分别由它们自己的 id 表示，他们的进球由 host_goals 和 guest_goals 分别表示。
-</code></pre>
-<p>你希望在所有比赛之后计算所有球队的比分。积分奖励方式如下:</p>
-<ul>
-<li>如果球队赢了比赛(即比对手进更多的球)，就得 <strong>3</strong> 分。</li>
-<li>如果双方打成平手(即，与对方得分相同)，则得 <strong>1</strong> 分。</li>
-<li>如果球队输掉了比赛(例如，比对手少进球)，就 <strong>不得分</strong> 。</li>
-</ul>
-<p>编写解决方案，以找出每个队的 <code>team_id</code>，<code>team_name</code> 和 <code>num_points</code>。</p>
-<p>返回的结果根据 <code>num_points</code> <strong>降序排序</strong>，如果有两队积分相同，那么这两队按 <code>team_id</code> <strong>升序排序</strong>。</p>
-<p>返回结果格式如下。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Teams table:
-+-----------+--------------+
-| team_id   | team_name    |
-+-----------+--------------+
-| 10        | Leetcode FC  |
-| 20        | NewYork FC   |
-| 30        | Atlanta FC   |
-| 40        | Chicago FC   |
-| 50        | Toronto FC   |
-+-----------+--------------+
-Matches table:
-+------------+--------------+---------------+-------------+--------------+
-| match_id   | host_team    | guest_team    | host_goals  | guest_goals  |
-+------------+--------------+---------------+-------------+--------------+
-| 1          | 10           | 20            | 3           | 0            |
-| 2          | 30           | 10            | 2           | 2            |
-| 3          | 10           | 50            | 5           | 1            |
-| 4          | 20           | 30            | 1           | 0            |
-| 5          | 50           | 30            | 1           | 0            |
-+------------+--------------+---------------+-------------+--------------+
-输出：
-+------------+--------------+---------------+
-| team_id    | team_name    | num_points    |
-+------------+--------------+---------------+
-| 10         | Leetcode FC  | 7             |
-| 20         | NewYork FC   | 3             |
-| 50         | Toronto FC   | 3             |
-| 30         | Atlanta FC   | 1             |
-| 40         | Chicago FC   | 0             |
-+------------+--------------+---------------+
-</code></pre>
-<p>解答：</p>
-<pre><code class="language-sql">
-SELECT t.team_id,
-       t.team_name,
-       IFNULL(SUM(score), 0) AS num_points
-FROM Teams t
-LEFT JOIN (
-    SELECT host_team AS team_id,
-           CASE 
-               WHEN host_goals &gt; guest_goals THEN 3
-               WHEN host_goals = guest_goals THEN 1
-               ELSE 0 
-           END AS score
-    FROM Matches
-    UNION ALL
-    SELECT guest_team AS team_id,
-           CASE 
-               WHEN guest_goals &gt; host_goals THEN 3
-               WHEN guest_goals = host_goals THEN 1
-               ELSE 0 
-           END AS score
-    FROM Matches
-) m ON t.team_id = m.team_id
-GROUP BY t.team_id, t.team_name
-ORDER BY num_points DESC, t.team_id;
-</code></pre>
-<ul>
-<li><p>没有结果（null）则返回0——&gt;IFNULL(col, 0)</p>
-</li>
-<li><h3 id="思路解析"><a href="#思路解析" class="headerlink" title="思路解析"></a>思路解析</h3><ol>
-<li><code>UNION ALL</code><ul>
-<li>第一段取主队（<code>host_team</code>），根据比分计算积分。</li>
-<li>第二段取客队（<code>guest_team</code>），同样计算积分。</li>
-<li>这样每场比赛会贡献两行数据（主队、客队）。</li>
-</ul>
-</li>
-<li>外层再 <code>JOIN Teams</code> → 确保所有球队都显示，即使一场没打过。</li>
-<li><code>GROUP BY</code> 聚合积分，<code>ORDER BY num_points DESC, team_id</code> 保证排序符合要求。</li>
-</ol>
-</li>
-</ul>
-<p><strong>（列转行）分组后同一组的不同列数值要进行数学操作，可以用union all将不同列转换为同一列在行的方向拼接，再使用窗口函数得到结果</strong></p>
-<hr>
-<h3 id="1445-苹果和桔子（行转列）"><a href="#1445-苹果和桔子（行转列）" class="headerlink" title="1445. 苹果和桔子（行转列）"></a>1445. 苹果和桔子（行转列）</h3><p>表: <code>Sales</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| sale_date     | date    |
-| fruit         | enum    | 
-| sold_num      | int     | 
-+---------------+---------+
-(sale_date, fruit) 是该表主键(具有唯一值的列的组合)。
-该表包含了每一天中&quot;苹果&quot; 和 &quot;桔子&quot;的销售情况。
-</code></pre>
-<p>编写解决方案报告每一天 <strong>苹果</strong> 和 <strong>桔子</strong> 销售的数目的差异.</p>
-<p>返回的结果表, 按照格式为 (‘YYYY-MM-DD’) 的 <code>sale_date</code> 排序.</p>
-<p>返回结果表如下例所示:</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Sales 表:
-+------------+------------+-------------+
-| sale_date  | fruit      | sold_num    |
-+------------+------------+-------------+
-| 2020-05-01 | apples     | 10          |
-| 2020-05-01 | oranges    | 8           |
-| 2020-05-02 | apples     | 15          |
-| 2020-05-02 | oranges    | 15          |
-| 2020-05-03 | apples     | 20          |
-| 2020-05-03 | oranges    | 0           |
-| 2020-05-04 | apples     | 15          |
-| 2020-05-04 | oranges    | 16          |
-+------------+------------+-------------+
-输出：
-+------------+--------------+
-| sale_date  | diff         |
-+------------+--------------+
-| 2020-05-01 | 2            |
-| 2020-05-02 | 0            |
-| 2020-05-03 | 20           |
-| 2020-05-04 | -1           |
-+------------+--------------+
-解释：
-在 2020-05-01, 卖了 10 个苹果 和 8 个桔子 (差异为 10 - 8 = 2).
-在 2020-05-02, 卖了 15 个苹果 和 15 个桔子 (差异为 15 - 15 = 0).
-在 2020-05-03, 卖了 20 个苹果 和 0 个桔子 (差异为 20 - 0 = 20).
-在 2020-05-04, 卖了 15 个苹果 和 16 个桔子 (差异为 15 - 16 = -1).
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">select a.sale_date, a.sold_num - b.sold_num as diff
-from Sales a left join Sales b
-on a.sale_date = b.sale_date 
-where a.fruit = &#39;apples&#39; and b.fruit = &#39;oranges&#39;;
-</code></pre>
-<p><strong>自连接数据表</strong><br> 把 <code>Sales</code> 表取两份：一份叫 <code>a</code>，一份叫 <code>b</code>，然后通过 <code>a.sale_date = b.sale_date</code> 把同一天的苹果和橘子配对到一起。</p>
-<p><strong>限定水果种类</strong><br> 在 <code>where</code> 子句里规定：<code>a.fruit = &#39;apples&#39;</code>，<code>b.fruit = &#39;oranges&#39;</code>，这样就保证 <code>a</code> 表只取苹果的销售数据，<code>b</code> 表只取橘子的销售数据。</p>
-<p><strong>计算销售差值</strong><br> 在 <code>select</code> 里取出日期 (<code>a.sale_date</code>)、苹果销量 (<code>a.sold_num</code>)、橘子销量 (<code>b.sold_num</code>)，并且计算它们的差值 <code>a.sold_num - b.sold_num</code>，命名为 <code>diff</code>。</p>
-<p><strong>方法二：行转列</strong></p>
-<pre><code class="language-sql">
-select sale_date, (apple-orange)as diff from(
-    select sale_date, max(case when fruit = &#39;apples&#39; then sold_num else 0 end) as apple, max(case when fruit = &#39;oranges&#39; then sold_num else 0 end)as orange from Sales group by sale_date
-    )t;
-</code></pre>
-<hr>
-<h3 id="1699-两人之间的通话次数"><a href="#1699-两人之间的通话次数" class="headerlink" title="1699.两人之间的通话次数"></a>1699.两人之间的通话次数</h3><p>表： <code>Calls</code></p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| from_id     | int     |
-| to_id       | int     |
-| duration    | int     |
-+-------------+---------+
-该表没有主键(具有唯一值的列)，它可能包含重复项。
-该表包含 from_id 与 to_id 间的一次电话的时长。
-from_id != to_id
-</code></pre>
-<p>编写解决方案，统计每一对用户 <code>(person1, person2)</code> 之间的通话次数和通话总时长，其中 <code>person1 &lt; person2</code> 。</p>
-<p>以 <strong>任意顺序</strong> 返回结果表。</p>
-<p>返回结果格式如下示例所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Calls 表：
-+---------+-------+----------+
-| from_id | to_id | duration |
-+---------+-------+----------+
-| 1       | 2     | 59       |
-| 2       | 1     | 11       |
-| 1       | 3     | 20       |
-| 3       | 4     | 100      |
-| 3       | 4     | 200      |
-| 3       | 4     | 200      |
-| 4       | 3     | 499      |
-+---------+-------+----------+
-输出：
-+---------+---------+------------+----------------+
-| person1 | person2 | call_count | total_duration |
-+---------+---------+------------+----------------+
-| 1       | 2       | 2          | 70             |
-| 1       | 3       | 1          | 20             |
-| 3       | 4       | 4          | 999            |
-+---------+---------+------------+----------------+
-解释：
-用户 1 和 2 打过 2 次电话，总时长为 70 (59 + 11)。
-用户 1 和 3 打过 1 次电话，总时长为 20。
-用户 3 和 4 打过 4 次电话，总时长为 999 (100 + 200 + 200 + 499)。
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">select a as person1, b as person2, sum(total_count) as call_count, sum(total) as total_duration from(
-select from_id as a, to_id as b, count(*) as total_count, sum(duration) as total from Calls group by
-from_id, to_id 
-union all
-select to_id as a, from_id as b, count(*) as total_count, sum(duration) as total from Calls group by
-to_id, from_id
-)t where a &lt; b group by a, b;
-</code></pre>
-<p><strong>正反向通话拆开统计</strong><br> 先用 <code>from_id → to_id</code> 分组统计每一对通话的次数和总时长，再用 <code>to_id → from_id</code> 反向统计。<br> 这样做的目的是把双方互相拨打的情况都纳入考虑。</p>
-<p><strong><code>union all</code> 合并结果</strong><br> 把正向和反向的结果拼在一起，形成一张“对称”的结果集。<br> 此时，每一对用户 (person1, person2) 会出现两次：一条是正向统计，一条是反向统计。</p>
-<p><strong>统一顺序并再次聚合</strong><br> 在外层查询里，用 <code>where a &lt; b</code> 保证只保留 <code>(小id, 大id)</code> 的组合，消除顺序带来的重复。<br> 然后再按 <code>(a, b)</code> 分组，用 <code>sum(total_count)</code> 和 <code>sum(total)</code> 汇总双方的通话次数和总时长。</p>
-<hr>
-<h3 id="1501-可以放心投资的国家"><a href="#1501-可以放心投资的国家" class="headerlink" title="1501.可以放心投资的国家"></a>1501.可以放心投资的国家</h3><p>表 <code>Person</code>:</p>
-<pre><code>+----------------+---------+
-| Column Name    | Type    |
-+----------------+---------+
-| id             | int     |
-| name           | varchar |
-| phone_number   | varchar |
-+----------------+---------+
-id 是该表具有唯一值的列.
-该表每一行包含一个人的名字和电话号码.
-电话号码的格式是:&#39;xxx-yyyyyyy&#39;, 其中 xxx 是国家码(3 个字符), yyyyyyy 是电话号码(7 个字符), x 和 y 都表示数字. 同时, 国家码和电话号码都可以包含前导 0.
-</code></pre>
-<p>表 <code>Country</code>:</p>
-<pre><code>+----------------+---------+
-| Column Name    | Type    |
-+----------------+---------+
-| name           | varchar |
-| country_code   | varchar |
-+----------------+---------+
-country_code 是该表具有唯一值的列.
-该表每一行包含国家名和国家码. country_code 的格式是&#39;xxx&#39;, x 是数字.
-</code></pre>
-<p>表 <code>Calls</code>:</p>
-<pre><code>+-------------+------+
-| Column Name | Type |
-+-------------+------+
-| caller_id   | int  |
-| callee_id   | int  |
-| duration    | int  |
-+-------------+------+
-该表无主键, 可能包含重复行.
-每一行包含呼叫方 id, 被呼叫方 id 和以分钟为单位的通话时长. caller_id != callee_id
-</code></pre>
-<p>一家电信公司想要投资新的国家。该公司想要投资的国家是: 该国的平均通话时长要严格地大于全球平均通话时长。</p>
-<p>写一个解决方案, 找到所有该公司可以投资的国家。</p>
-<p>返回的结果表 <strong>无顺序要求</strong>。</p>
-<p>结果格式如下例所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Person 表：
-+----+----------+--------------+
-| id | name     | phone_number |
-+----+----------+--------------+
-| 3  | Jonathan | 051-1234567  |
-| 12 | Elvis    | 051-7654321  |
-| 1  | Moncef   | 212-1234567  |
-| 2  | Maroua   | 212-6523651  |
-| 7  | Meir     | 972-1234567  |
-| 9  | Rachel   | 972-0011100  |
-+----+----------+--------------+
-Country 表:
-+----------+--------------+
-| name     | country_code |
-+----------+--------------+
-| Peru     | 051          |
-| Israel   | 972          |
-| Morocco  | 212          |
-| Germany  | 049          |
-| Ethiopia | 251          |
-+----------+--------------+
-Calls 表:
-+-----------+-----------+----------+
-| caller_id | callee_id | duration |
-+-----------+-----------+----------+
-| 1         | 9         | 33       |
-| 2         | 9         | 4        |
-| 1         | 2         | 59       |
-| 3         | 12        | 102      |
-| 3         | 12        | 330      |
-| 12        | 3         | 5        |
-| 7         | 9         | 13       |
-| 7         | 1         | 3        |
-| 9         | 7         | 1        |
-| 1         | 7         | 7        |
-+-----------+-----------+----------+
-输出：
-+----------+
-| country  |
-+----------+
-| Peru     |
-+----------+
-解释：
-国家 Peru 的平均通话时长是 (102 + 102 + 330 + 330 + 5 + 5) / 6 = 145.666667
-国家 Israel 的平均通话时长是 (33 + 4 + 13 + 13 + 3 + 1 + 1 + 7) / 8 = 9.37500
-国家 Morocco 的平均通话时长是 (33 + 4 + 59 + 59 + 3 + 7) / 6 = 27.5000 
-全球平均通话时长 = (2 * (33 + 4 + 59 + 102 + 330 + 5 + 13 + 3 + 1 + 7)) / 20 = 55.70000
-所以, Peru 是唯一的平均通话时长大于全球平均通话时长的国家, 也是唯一的推荐投资的国家.
-</code></pre>
-<p><strong>解答：</strong></p>
-<p><strong>和上一题一个思路，将coller_id和collee_id通过union all转化到同一个表的同一列</strong></p>
-<p>一个表（Calls）中出现两列（caller_id 、callee_id）都是同属一个表（Person）里的属性，用join+union即可全部归纳</p>
-<pre><code class="language-sql">with base as(
-    select c1.caller_id as id, c1.duration as phonetime, p1.phone_number as number from Calls c1 join Person p1 on c1.caller_id = p1.id 
-    union all
-    select c2.callee_id as id, c2.duration as phonetime, p2.phone_number as number from Calls c2 join Person p2 on c2.callee_id = p2.id 
-),
-seq as(
-    select a.id, a.phonetime, b.name as country_name from base a join Country b on substring(a.number, 1, 3) = b.country_code 
-),
-country_avg as (
-    select country_name, avg(phonetime) as avg_time from seq group by country_name
-),
-global_avg as (
-    select avg(phonetime) as avg_global from seq 
-)
-select country_name as country from country_avg where avg_time &gt; (
-    select avg_global from global_avg
-</code></pre>
-<ol>
-<li><strong>提取国家代码</strong>：从<code>Person</code>表中提取每个用户的国家代码（电话号码的前三个字符）。</li>
-<li><strong>计算每个通话的国家</strong>：对于<code>Calls</code>表中的每个通话，无论是呼叫者还是被呼叫者，都需要确定其国家代码，从而将通话时长分配给相应的国家。</li>
-<li><strong>计算每个国家的平均通话时长</strong>：汇总每个国家的所有通话时长，计算其平均值。</li>
-<li><strong>计算全球平均通话时长</strong>：汇总所有通话的通话时长，计算全球平均值。</li>
-<li><strong>比较并筛选国家</strong>：筛选出那些平均通话时长严格大于全球平均通话时长的国家。</li>
-</ol>
-<hr>
-<h3 id="1264-页面描述"><a href="#1264-页面描述" class="headerlink" title="1264.页面描述"></a>1264.页面描述</h3><p>朋友关系列表： <code>Friendship</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| user1_id      | int     |
-| user2_id      | int     |
-+---------------+---------+
-(user1_id, user2_id) 是这张表具有唯一值的列的组合。
-这张表的每一行代表着 user1_id 和 user2_id 之间存在着朋友关系。
-</code></pre>
-<p>喜欢列表： <code>Likes</code></p>
-<pre><code>+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| user_id     | int     |
-| page_id     | int     |
-+-------------+---------+
-(user_id, page_id) 是这张表具有唯一值的列的组合。
-这张表的每一行代表着 user_id 喜欢 page_id。
-</code></pre>
-<p>编写解决方案，向<code>user_id</code> &#x3D; 1 的用户，推荐其朋友们喜欢的页面。不要推荐该用户已经喜欢的页面。</p>
-<p>以 <strong>任意顺序</strong> 返回结果，其中不应当包含重复项。</p>
-<p>返回结果的格式如下例所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Friendship table:
-+----------+----------+
-| user1_id | user2_id |
-+----------+----------+
-| 1        | 2        |
-| 1        | 3        |
-| 1        | 4        |
-| 2        | 3        |
-| 2        | 4        |
-| 2        | 5        |
-| 6        | 1        |
-+----------+----------+
- 
-Likes table:
-+---------+---------+
-| user_id | page_id |
-+---------+---------+
-| 1       | 88      |
-| 2       | 23      |
-| 3       | 24      |
-| 4       | 56      |
-| 5       | 11      |
-| 6       | 33      |
-| 2       | 77      |
-| 3       | 77      |
-| 6       | 88      |
-+---------+---------+
-
-输出：
-+------------------+
-| recommended_page |
-+------------------+
-| 23               |
-| 24               |
-| 56               |
-| 33               |
-| 77               |
-+------------------+
-解释：
-用户1 同 用户2, 3, 4, 6 是朋友关系。
-推荐页面为： 页面23 来自于 用户2, 页面24 来自于 用户3, 页面56 来自于 用户3 以及 页面33 来自于 用户6。
-页面77 同时被 用户2 和 用户3 推荐。
-页面88 没有被推荐，因为 用户1 已经喜欢了它。
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">with base as(
-    select case when user1_id = 1 then user2_id 
-    when user2_id = 1 then user1_id else null end as friend from Friendship
-),
-seq as(
-    select distinct a.page_id from Likes a join base b on a.user_id = b.friend where b.friend is not null
-)
-select page_id as recommended_page from seq a where not exists (
-    select b.page_id from Likes b where b.user_id = 1 and a.page_id = b.page_id
-);
-</code></pre>
-<p>如果等值子查询会返回null，则需要使用not exists+相关子查询</p>
-<hr>
-<h3 id="608-树节点"><a href="#608-树节点" class="headerlink" title="608.树节点"></a>608.树节点</h3><p>表：<code>Tree</code></p>
-<pre><code>+-------------+------+
-| Column Name | Type |
-+-------------+------+
-| id          | int  |
-| p_id        | int  |
-+-------------+------+
-id 是该表中具有唯一值的列。
-该表的每行包含树中节点的 id 及其父节点的 id 信息。
-给定的结构总是一个有效的树。
-</code></pre>
-<p>树中的每个节点可以是以下三种类型之一：</p>
-<ul>
-<li><strong>“Leaf”</strong>：节点是叶子节点。</li>
-<li><strong>“Root”</strong>：节点是树的根节点。</li>
-<li><strong>“lnner”</strong>：节点既不是叶子节点也不是根节点。</li>
-</ul>
-<p>编写一个解决方案来报告树中每个节点的类型。</p>
-<p>以 <strong>任意顺序</strong> 返回结果表。</p>
-<p>结果格式如下所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Tree table:
-+----+------+
-| id | p_id |
-+----+------+
-| 1  | null |
-| 2  | 1    |
-| 3  | 1    |
-| 4  | 2    |
-| 5  | 2    |
-+----+------+
-输出：
-+----+-------+
-| id | type  |
-+----+-------+
-| 1  | Root  |
-| 2  | Inner |
-| 3  | Leaf  |
-| 4  | Leaf  |
-| 5  | Leaf  |
-+----+-------+
-解释：
-节点 1 是根节点，因为它的父节点为空，并且它有子节点 2 和 3。
-节点 2 是一个内部节点，因为它有父节点 1 和子节点 4 和 5。
-节点 3、4 和 5 是叶子节点，因为它们有父节点而没有子节点。
-</code></pre>
-<p><strong>示例 2：</strong></p>
-<pre><code>输入：
-Tree table:
-+----+------+
-| id | p_id |
-+----+------+
-| 1  | null |
-+----+------+
-输出：
-+----+-------+
-| id | type  |
-+----+-------+
-| 1  | Root  |
-+----+-------+
-解释：如果树中只有一个节点，则只需要输出其根属性。
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">
-select id, case when p_id is null then &#39;Root&#39; 
-when id in (select p_id from Tree where p_id is not null) then &#39;Inner&#39;
-else &#39;Leaf&#39; end as type from Tree;
-</code></pre>
-<hr>
-<h3 id="534-游戏玩法分析"><a href="#534-游戏玩法分析" class="headerlink" title="534.游戏玩法分析 |||"></a>534.游戏玩法分析 |||</h3><p>表：<code>Activity</code></p>
-<pre><code>+--------------+---------+
-| Column Name  | Type    |
-+--------------+---------+
-| player_id    | int     |
-| device_id    | int     |
-| event_date   | date    |
-| games_played | int     |
-+--------------+---------+
-（player_id，event_date）是此表的主键（具有唯一值的列）。
-这张表显示了某些游戏的玩家的活动情况。
-每一行是一个玩家的记录，他在某一天使用某个设备注销之前登录并玩了很多游戏（可能是 0 ）。
-</code></pre>
-<p>编写一个解决方案，同时报告每组玩家和日期，以及玩家到 <strong>目前为止</strong> 玩了多少游戏。也就是说，玩家在该日期之前所玩的游戏总数。详细情况请查看示例。</p>
-<p>以 <strong>任意顺序</strong> 返回结果表。</p>
-<p>结果格式如下所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入：
-Activity table:
-+-----------+-----------+------------+--------------+
-| player_id | device_id | event_date | games_played |
-+-----------+-----------+------------+--------------+
-| 1         | 2         | 2016-03-01 | 5            |
-| 1         | 2         | 2016-05-02 | 6            |
-| 1         | 3         | 2017-06-25 | 1            |
-| 3         | 1         | 2016-03-02 | 0            |
-| 3         | 4         | 2018-07-03 | 5            |
-+-----------+-----------+------------+--------------+
-输出：
-+-----------+------------+---------------------+
-| player_id | event_date | games_played_so_far |
-+-----------+------------+---------------------+
-| 1         | 2016-03-01 | 5                   |
-| 1         | 2016-05-02 | 11                  |
-| 1         | 2017-06-25 | 12                  |
-| 3         | 2016-03-02 | 0                   |
-| 3         | 2018-07-03 | 5                   |
-+-----------+------------+---------------------+
-解释：
-对于 ID 为 1 的玩家，2016-05-02 共玩了 5+6=11 个游戏，2017-06-25 共玩了 5+6+1=12 个游戏。
-对于 ID 为 3 的玩家，2018-07-03 共玩了 0+5=5 个游戏。
-请注意，对于每个玩家，我们只关心玩家的登录日期。
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">select player_id, event_date, sum(games_played)over (partition by player_id order by event_date)as games_played_so_far from Activity;
-</code></pre>
-<hr>
-<h3 id="1783-大满贯数量"><a href="#1783-大满贯数量" class="headerlink" title="1783.大满贯数量"></a>1783.大满贯数量</h3><p>表：<code>Players</code></p>
-<pre><code>+----------------+---------+
-| Column Name    | Type    |
-+----------------+---------+
-| player_id      | int     |
-| player_name    | varchar |
-+----------------+---------+
-player_id 是这个表的主键（具有唯一值的列）
-这个表的每一行给出一个网球运动员的 ID 和 姓名
-</code></pre>
-<p>表：<code>Championships</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| year          | int     |
-| Wimbledon     | int     |
-| Fr_open       | int     |
-| US_open       | int     |
-| Au_open       | int     |
-+---------------+---------+
-year 是这个表的主键（具有唯一值的列）
-该表的每一行都包含在每场大满贯网球比赛中赢得比赛的球员的 ID
-</code></pre>
-<p>编写解决方案，找出每一个球员赢得大满贯比赛的次数。结果不包含没有赢得比赛的球员的ID 。</p>
-<p>结果集 <strong>无顺序要求</strong> 。</p>
-<p>结果的格式，如下所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Players 表：
-+-----------+-------------+
-| player_id | player_name |
-+-----------+-------------+
-| 1         | Nadal       |
-| 2         | Federer     |
-| 3         | Novak       |
-+-----------+-------------+
-Championships 表：
-+------+-----------+---------+---------+---------+
-| year | Wimbledon | Fr_open | US_open | Au_open |
-+------+-----------+---------+---------+---------+
-| 2018 | 1         | 1       | 1       | 1       |
-| 2019 | 1         | 1       | 2       | 2       |
-| 2020 | 2         | 1       | 2       | 2       |
-+------+-----------+---------+---------+---------+
-输出：
-+-----------+-------------+-------------------+
-| player_id | player_name | grand_slams_count |
-+-----------+-------------+-------------------+
-| 2         | Federer     | 5                 |
-| 1         | Nadal       | 7                 |
-+-----------+-------------+-------------------+
-解释：
-Player 1 (Nadal) 获得了 7 次大满贯：其中温网 2 次(2018, 2019), 法国公开赛 3 次 (2018, 2019, 2020), 美国公开赛 1 次 (2018)以及澳网公开赛 1 次 (2018) 。
-Player 2 (Federer) 获得了 5 次大满贯：其中温网 1 次 (2020), 美国公开赛 2 次 (2019, 2020) 以及澳网公开赛 2 次 (2019, 2020) 。
-Player 3 (Novak)  没有赢得，因此不包含在结果集中。
-</code></pre>
-<p><strong>解答：</strong></p>
-<p>我用的是列转行的思路进行解答，把比赛名这几列转为新列competition的不同行，把不同比赛的获胜id转为player_id的不同行。</p>
-<pre><code class="language-sql">select a.player_id , a.player_name, count(b.player_id) as grand_slams_count from Players a right join(
-select Wimbledon as player_id, &#39;Wimbledon&#39; as competition from Championships  
-union all
-select Fr_open as player_id, &#39;Fr_open&#39; as competition from Championships  
-union all
-select US_open as player_id, &#39;US_open&#39; as competition from Championships  
-union all
-select Au_open as player_id, &#39;Au_open&#39; as competition from Championships )b 
-on a.player_id = b.player_id group by b.player_id;
-</code></pre>
-<hr>
-<h3 id="1747-应该被禁止的Leetflex账户"><a href="#1747-应该被禁止的Leetflex账户" class="headerlink" title="1747..应该被禁止的Leetflex账户"></a>1747..应该被禁止的Leetflex账户</h3><p>表: <code>LogInfo</code></p>
-<pre><code>+-------------+----------+
-| Column Name | Type     |
-+-------------+----------+
-| account_id  | int      |
-| ip_address  | int      |
-| login       | datetime |
-| logout      | datetime |
-+-------------+----------+
-该表可能包含重复项。
-该表包含有关Leetflex帐户的登录和注销日期的信息。 它还包含了该账户用于登录和注销的网络地址的信息。
-题目确保每一个注销时间都在登录时间之后。
-</code></pre>
-<p>编写解决方案，查找那些应该被禁止的Leetflex帐户编号 <code>account_id</code> 。 如果某个帐户在某一时刻从两个不同的网络地址登录了，则这个帐户应该被禁止。</p>
-<p>可以以 <strong>任何顺序</strong> 返回结果。</p>
-<p>查询结果格式如下例所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-LogInfo table:
-+------------+------------+---------------------+---------------------+
-| account_id | ip_address | login               | logout              |
-+------------+------------+---------------------+---------------------+
-| 1          | 1          | 2021-02-01 09:00:00 | 2021-02-01 09:30:00 |
-| 1          | 2          | 2021-02-01 08:00:00 | 2021-02-01 11:30:00 |
-| 2          | 6          | 2021-02-01 20:30:00 | 2021-02-01 22:00:00 |
-| 2          | 7          | 2021-02-02 20:30:00 | 2021-02-02 22:00:00 |
-| 3          | 9          | 2021-02-01 16:00:00 | 2021-02-01 16:59:59 |
-| 3          | 13         | 2021-02-01 17:00:00 | 2021-02-01 17:59:59 |
-| 4          | 10         | 2021-02-01 16:00:00 | 2021-02-01 17:00:00 |
-| 4          | 11         | 2021-02-01 17:00:00 | 2021-02-01 17:59:59 |
-+------------+------------+---------------------+---------------------+
-输出：
-+------------+
-| account_id |
-+------------+
-| 1          |
-| 4          |
-+------------+
-解释：
-Account ID 1 --&gt; 该账户从 &quot;2021-02-01 09:00:00&quot; 到 &quot;2021-02-01 09:30:00&quot; 在两个不同的网络地址(1 and 2)上激活了。它应该被禁止.
-Account ID 2 --&gt; 该账户在两个不同的网络地址 (6, 7) 激活了，但在不同的时间上.
-Account ID 3 --&gt; 该账户在两个不同的网络地址 (9, 13) 激活了，虽然是同一天，但时间上没有交集.
-Account ID 4 --&gt; 该账户从 &quot;2021-02-01 17:00:00&quot; 到 &quot;2021-02-01 17:00:00&quot; 在两个不同的网络地址 (10 and 11)上激活了。它应该被禁止.
-</code></pre>
-<p><strong>解答：</strong></p>
-<p>同一个id的不同列数值进行对比——&gt;使用自连接。</p>
-<p>注意：使用join时on的条件越少效率越高。</p>
-<pre><code class="language-sql">select account_id from (
-select max(case when b.login &gt; a.login and b.login &lt;= a.logout then a.account_id else 0 end) as account_id
-from LogInfo a join LogInfo b on a.account_id = b.account_id where a.ip_address != b.ip_address group by a.account_id)t where account_id &gt; 0;
-</code></pre>
-<p>若把a.ip_address !&#x3D; b.ip_address写到on中则会报超时</p>
-<pre><code class="language-sql">from LogInfo a join LogInfo b on a.account_id = b.account_id and a.ip_address != b.ip_address group by a.account_id)t where account_id &gt; 0;
-</code></pre>
-<hr>
-<h3 id="184-部门工资最高的员工"><a href="#184-部门工资最高的员工" class="headerlink" title="184.部门工资最高的员工"></a>184.部门工资最高的员工</h3><p>表： <code>Employee</code></p>
-<pre><code>+--------------+---------+
-| 列名          | 类型    |
-+--------------+---------+
-| id           | int     |
-| name         | varchar |
-| salary       | int     |
-| departmentId | int     |
-+--------------+---------+
-在 SQL 中，id是此表的主键。
-departmentId 是 Department 表中 id 的外键（在 Pandas 中称为 join key）。
-此表的每一行都表示员工的 id、姓名和工资。它还包含他们所在部门的 id。
-</code></pre>
-<p>表： <code>Department</code></p>
-<pre><code>+-------------+---------+
-| 列名         | 类型    |
-+-------------+---------+
-| id          | int     |
-| name        | varchar |
-+-------------+---------+
-在 SQL 中，id 是此表的主键列。
-此表的每一行都表示一个部门的 d 及其名称。
-</code></pre>
-<p>查找出每个部门中薪资最高的员工。<br>按 <strong>任意顺序</strong> 返回结果表。<br>查询结果格式如下例所示。</p>
-<p><strong>示例 1:</strong></p>
-<pre><code>输入：
-Employee 表:
-+----+-------+--------+--------------+
-| id | name  | salary | departmentId |
-+----+-------+--------+--------------+
-| 1  | Joe   | 70000  | 1            |
-| 2  | Jim   | 90000  | 1            |
-| 3  | Henry | 80000  | 2            |
-| 4  | Sam   | 60000  | 2            |
-| 5  | Max   | 90000  | 1            |
-+----+-------+--------+--------------+
-Department 表:
-+----+-------+
-| id | name  |
-+----+-------+
-| 1  | IT    |
-| 2  | Sales |
-+----+-------+
-输出：
-+------------+----------+--------+
-| Department | Employee | Salary |
-+------------+----------+--------+
-| IT         | Jim      | 90000  |
-| Sales      | Henry    | 80000  |
-| IT         | Max      | 90000  |
-+------------+----------+--------+
-解释：Max 和 Jim 在 IT 部门的工资都是最高的，Henry 在销售部的工资最高。
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">select b.name as Department, a.name as Employee, a.salary as Salary from (select *, RANK() over(partition by departmentId order by salary DESC) as rk from Employee) a join Department b on a.departmentId = b.id where a.rk = 1;
-</code></pre>
-<hr>
-<h3 id="1549-每件商品的最新订单"><a href="#1549-每件商品的最新订单" class="headerlink" title="1549.每件商品的最新订单"></a>1549.每件商品的最新订单</h3><p>表: <code>Customers</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| customer_id   | int     |
-| name          | varchar |
-+---------------+---------+
-customer_id 是该表主键.
-该表包含消费者的信息.
-</code></pre>
-<p>表: <code>Orders</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| order_id      | int     |
-| order_date    | date    |
-| customer_id   | int     |
-| product_id    | int     |
-+---------------+---------+
-order_id 是该表主键.
-该表包含消费者customer_id产生的订单.
-不会有商品被相同的用户在一天内下单超过一次.
-</code></pre>
-<p>表: <code>Products</code></p>
-<pre><code>+---------------+---------+
-| Column Name   | Type    |
-+---------------+---------+
-| product_id    | int     |
-| product_name  | varchar |
-| price         | int     |
-+---------------+---------+
-product_id 是该表主键.
-该表包含所有商品的信息.
-</code></pre>
-<p>写一个解决方案, 找到每件商品的最新订单(可能有多个).</p>
-<p>返回的结果以 <code>product_name</code> <strong>升序排列</strong>, 如果有排序相同, 再以 <code>product_id</code> <strong>升序</strong>排列. 如果还有排序相同, 再以 <code>order_id</code> <strong>升序</strong>排列.</p>
-<p>查询结果格式如下例所示。</p>
-<p><strong>示例 1：</strong></p>
-<pre><code>输入:
-Customers表：
-+-------------+-----------+
-| customer_id | name      |
-+-------------+-----------+
-| 1           | Winston   |
-| 2           | Jonathan  |
-| 3           | Annabelle |
-| 4           | Marwan    |
-| 5           | Khaled    |
-+-------------+-----------+
-Orders表：
-+----------+------------+-------------+------------+
-| order_id | order_date | customer_id | product_id |
-+----------+------------+-------------+------------+
-| 1        | 2020-07-31 | 1           | 1          |
-| 2        | 2020-07-30 | 2           | 2          |
-| 3        | 2020-08-29 | 3           | 3          |
-| 4        | 2020-07-29 | 4           | 1          |
-| 5        | 2020-06-10 | 1           | 2          |
-| 6        | 2020-08-01 | 2           | 1          |
-| 7        | 2020-08-01 | 3           | 1          |
-| 8        | 2020-08-03 | 1           | 2          |
-| 9        | 2020-08-07 | 2           | 3          |
-| 10       | 2020-07-15 | 1           | 2          |
-+----------+------------+-------------+------------+
-Products表：
-+------------+--------------+-------+
-| product_id | product_name | price |
-+------------+--------------+-------+
-| 1          | keyboard     | 120   |
-| 2          | mouse        | 80    |
-| 3          | screen       | 600   |
-| 4          | hard disk    | 450   |
-+------------+--------------+-------+
-输出：
-+--------------+------------+----------+------------+
-| product_name | product_id | order_id | order_date |
-+--------------+------------+----------+------------+
-| keyboard     | 1          | 6        | 2020-08-01 |
-| keyboard     | 1          | 7        | 2020-08-01 |
-| mouse        | 2          | 8        | 2020-08-03 |
-| screen       | 3          | 3        | 2020-08-29 |
-+--------------+------------+----------+------------+
-解释：
-keyboard 的最新订单在2020-08-01, 在这天有两次下单.
-mouse 的最新订单在2020-08-03, 在这天只有一次下单.
-screen 的最新订单在2020-08-29, 在这天只有一次下单.
-hard disk 没有被下单, 我们不把它包含在结果表中.
-</code></pre>
-<p><strong>解答：</strong></p>
-<pre><code class="language-sql">select a.product_name, a.product_id, b.order_id, b.order_date from Products a left join (select order_date, order_id, product_id, max(order_date) over(partition by product_id) as max_order from Orders)b on a.product_id = b.product_id where b.order_date = b.max_order order by product_name, product_id, order_id;
-</code></pre>
-<p>补充：</p>
-<p>将null转化为0——&gt;IFNULL(a.column, 0)</p>
-
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        <span class="icon">
-            <i class="fa-solid fa-tags fa-fw"></i>
-        </span>
-        
-        
-        
-        <span class="tag">
-            
-            <a href="/tags/Leetcode/" style="color: #03a9f4">Leetcode</a>
-        </span>
-        
-    </div>
-    <a href="/2021/09/09/Leetcode%20%20sql%E9%A2%98%E7%9B%AE%E8%AE%B0%E5%BD%952/" class="go-post">阅读全文</a>
-</div>
-
 
         <div class="page-current">
     
     <span class="current">1</span>
     
+    <a class="page-num" href="/page/2">
+        2
+    </a>
     
     
+    
+    
+    <a class="page-num" href="/page/2/">
+        <i class="fa-solid fa-caret-right fa-fw"></i>
+    </a>
     
 </div>
 
